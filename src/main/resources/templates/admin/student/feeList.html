@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="~{fragments/header :: header}"></head>
+<body class="h-full">
+<link rel="stylesheet" href="/css/item_list.css"/>
+<div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div><br>
+<header class="bg-white shadow">
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">학생회비 납부 명단 조회</h1>
+    </div>
+</header>
+<main>
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <div class="container mx-auto my-8 p-6 bg-gray-100 rounded-lg shadow-md">
+            <form th:object="${studentSearch}">
+                <div class="mb-4 flex items-center">
+                    <input type="text" th:field="*{stuId}" class="border border-gray-300 rounded-lg px-4 py-2 mr-4"
+                           placeholder="학생 학번">
+                    <input type="text" th:field="*{name}" class="border border-gray-300 rounded-lg px-4 py-2 mr-4"
+                           placeholder="학생 이름">
+
+                    <div>
+                        <button type="submit" id="reset-btn" style="border: none; background: none; cursor: pointer">
+                            <span class="material-symbols-outlined" style="color: #0b5ed7; vertical-align: top;">restart_alt</span>
+                        </button>
+
+                        <button type="submit" style="border: none; background: none; cursor: pointer">
+                            <span class="material-symbols-outlined" style="color: #0b5ed7; vertical-align: top;">search</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <a onclick="addTable()" class="mr-3">
+                <span class="material-symbols-outlined" style="color: #0b5ed7; cursor: pointer; font-size: 30px">person_add</span>
+            </a>
+
+            <button type="submit" style="border: none; background: none; cursor: pointer" form="deleteForm" onclick="return confirmDelete()"  class="mr-3">
+                <span class="material-symbols-outlined" style="color: red; vertical-align: top; font-size: 30px">person_off</span>
+            </button>
+
+            <a onclick="addWindow()"  class="mr-3">
+                <span class="material-symbols-outlined" style="color: #20c997; cursor: pointer; font-size: 30px">upload_file</span>
+            </a>
+
+            <div id="tableContainer">
+                <table class="table table-striped">
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div id="windowContainer"></div>
+
+
+            <form id="deleteForm" th:action="@{/admin/student/feeList/delete}" method="post">
+                <table class="min-w-full bg-white rounded-lg shadow-md mt-4">
+                    <thead>
+                    <tr>
+                        <th class="py-3 px-4 text-left w-1/12">선택</th>
+                        <th class="py-3 px-4 text-left w-1/12">#</th>
+                        <th class="py-3 px-4 text-left w-5/12">학번</th>
+                        <th class="py-3 px-4 text-left w-5/12">이름</th>
+                    </tr>
+                    </thead>
+                    <tbody class="text-gray-700">
+                    <tr th:each="student : ${students}" class="hover:bg-gray-100">
+                        <td class="py-3 px-4"><input type="checkbox" name="stuIdList" th:value="${student.stuId}"></td>
+                        <td class="py-3 px-4" th:text="${students.getNumber()*students.getSize() + studentStat.count}"></td>
+                        <td class="py-3 px-4" th:text="${student.stuId}"></td>
+                        <td class="py-3 px-4" th:text="${student.name}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+
+            <div class="pagination">
+                <button class="pagination-button" th:disabled="${students.getNumber()}==0"
+                        th:onclick="|location.href='@{/admin/student/feeList(page=${1}, stuId=${studentSearch.getStuId()}, name=${studentSearch.getName()} ) }'|">
+                    <<</button>
+                <button class="pagination-button" th:disabled="${!students.hasPrevious()}"
+                        th:onclick="|location.href='@{/admin/student/feeList(page=${students.getNumber()}, stuId=${studentSearch.getStuId()}, name=${studentSearch.getName()} ) }'|">
+                    <</button>
+                &nbsp; &nbsp;
+                <span>[[${students.getNumber()+1}]] / [[${students.getTotalElements() == 0 ? 1 : students.getTotalPages()}]] </span>
+                &nbsp; &nbsp;
+                <button class="pagination-button" th:disabled="${!students.hasNext()}"
+                        th:onclick="|location.href='@{/admin/student/feeList(page=${students.getNumber() + 2}, stuId=${studentSearch.getStuId()}, name=${studentSearch.getName()} ) }'|">
+                    ></button>
+                <button class="pagination-button" th:disabled="${!students.hasNext()}"
+                        th:onclick="|location.href='@{/admin/student/feeList(page=${students.getTotalPages()}, stuId=${studentSearch.getStuId()}, name=${studentSearch.getName()} ) }'|">
+                    >></button>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+<script src="/js/admin_fee_list.js"></script>
+</html>

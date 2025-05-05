@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="~{fragments/header :: header}"></head>
+<body class="h-full">
+<div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div><br>
+<header>
+
+</header>
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">계정에 로그인하세요!</h2>
+
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <form class="space-y-6" th:action="|@{/login}|" method="POST">
+            <div>
+                <label for="stuId" class="block text-sm font-medium leading-6 text-gray-900">학번</label>
+                <div class="mt-2">
+                    <input id="stuId" type="text" name="stuId" required class="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                           autocomplete="stuId" placeholder="학번을 입력하세요">
+
+                </div>
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium leading-6 text-gray-900">비밀번호</label>
+                <div class="mt-2">
+                    <input id="password" name="password" type="password" required class="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                           autocomplete="current-password" placeholder="비밀번호를 입력하세요">
+                </div>
+            </div>
+
+            <div class="text-sm flex justify-between">
+                <div>
+                    <label for="remember-me">자동 로그인</label>
+                    <input type="checkbox" id="remember-me" name="remember-me" />
+                </div>
+
+                <a href="/findPassword/info" class="font-semibold text-indigo-600 hover:text-indigo-500">비밀번호를 잊으셨나요?</a>
+            </div>
+
+            <div>
+                <button type="submit" class="flex w-full justify-center rounded-md bg-blue-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-900">로그인</button>
+            </div>
+        </form>
+
+        <p class="mt-10 text-center text-sm text-gray-500">
+            회원이 아니신가요?&nbsp;&nbsp;
+            <a href="/join" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">회원가입</a>
+        </p>
+    </div>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+
+</html>

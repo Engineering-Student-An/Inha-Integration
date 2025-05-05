@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="~{fragments/header :: header}"></head>
+<body class="h-full">
+<div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div><br>
+<link rel="stylesheet" href="/css/board_list.css"/>
+<link rel="stylesheet" href="/css/question_mark.css"/>
+<link rel="stylesheet" href="/css/item_request_list.css"/>
+
+<header class="bg-white shadow">
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 flex items-center">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">자유 게시판</h1>
+        <div class="relative inline-block  hidden md:block">
+            <button class="bg-gray-400 ml-2 text-white rounded-full w-5 h-5 mb-3 flex items-center justify-center hover:bg-gray-600">
+                ?
+            </button>
+            <div class="absolute left-1/2 transform -translate-x-1/2 mt-2 w-48 max-w-full sm:max-w-xs bg-gray-700 text-white text-sm rounded-lg p-3 opacity-0 transition-opacity duration-300 pointer-events-none tooltip">
+                자유 게시판에는 자유롭게 게시글을 개제할 수 있습니다. 😄<br>
+                용량 이슈로 사진이나 파일은 업로드 불가합니다!<br>
+                상대방을 비방하거나 정치적인 게시글은 임의로 삭제될 수 있습니다.<br>
+            </div>
+        </div>
+
+
+    </div>
+</header>
+<main>
+    <article class="bg-gray-50 shadow-2xl rounded-lg p-6 mt-10 mb-4 mx-auto max-w-lg">
+        <h1 class="text-xl font-bold tracking-tight text-gray-900 mb-6">최근 공지 사항</h1>
+            <div class="space-y-4">
+                <div th:each="notice : ${recentNotices}" class="flex items-start">
+                    <div class="flex w-2 h-2 bg-gray-400 rounded-full mr-4 mt-3"></div>
+                    <div class="flex-1">
+                        <p class="text-gray-600" th:text="${notice.name}"></p>
+                        <a th:href="@{/board/{id}(id=${notice.id})}" class="text-blue-700 text-md text-lg font-bold" th:text="${notice.title}"></a>
+                        <p class="mt-3 text-gray-700 italic" th:text="${#strings.length(notice.content) > 20 ? #strings.substring(notice.content, 0, 30) + '...' : notice.content}"></p>
+                        <span class="text-gray-500 text-sm mb-5" th:text="${#temporals.format(notice.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
+                    </div>
+                </div>
+            </div>
+    </article>
+
+    <div class="flex justify-between items-center mr-20">
+        <div class="flex-grow"></div> <!-- 이 요소가 공간을 차지하도록 해줌 -->
+        <div class="flex justify-end items-center mr-10 write-btn" id="write-btn">
+            <div class="label">글 작성</div>
+            <div class="toggle"></div>
+        </div>
+    </div>
+
+
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <table id="boardTable" class="min-w-full bg-white rounded-lg shadow-md">
+            <thead>
+            <tr class="bg-gray-200 text-gray-600">
+                <th class="py-3 px-4 text-left">#</th>
+                <th class="py-3 px-4 text-left" style="width: 40%;">제목</th>
+                <th class="py-3 px-4 text-left">
+                    <div class="flex items-center">
+                        <span class="material-symbols-outlined">thumb_up</span>
+                    </div>
+                </th>
+                <th class="py-3 px-4 text-left">작성자</th>
+                <th class="py-3 px-4 text-left">작성 일자</th>
+            </tr>
+            </thead>
+            <tbody class="text-gray-700">
+            <tr th:each="board : ${boards}" class="hover:bg-gray-100">
+                <td class="py-3 px-4"
+                    th:text="${boards.getTotalElements() - (boards.getNumber() * boards.getSize()) - boardStat.index}"></td>
+                <td class="py-3 px-4">
+                    <a style="color: blue" th:href="@{/board/{id}(id=${board.id})}" th:text="${#strings.length(board.title) > 10 ? #strings.substring(board.title, 0, 10) + '...' : board.title}"></a>
+                </td>
+
+                <td class="py-3 px-4">
+                    <div class="flex items-center">
+                        <span th:text="${board.likeNumber.size()}"></span>
+                    </div>
+                </td>
+
+                <td class="py-3 px-4"
+                    th:utext="${board.stuId=='ADMIN'} ? '<strong>관리자</strong>' : ${board.stuId + ' ' + board.name}"></td>
+
+                <td class="py-3 px-4" th:text="${board.editTime == null} ? ${#temporals.format(board.writeTime, 'yyyy-MM-dd HH:mm')} : ${#temporals.format(board.editTime, 'yyyy-MM-dd HH:mm') + ' (수정)'}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+
+        <div class="pagination">
+            <button class="pagination-button" th:disabled="${boards.getNumber()}==0"
+                    th:onclick="|location.href='@{/board/list(boardPage=${1}) }'|">
+                <<</button>
+            <button class="pagination-button" th:disabled="${!boards.hasPrevious()}"
+                    th:onclick="|location.href='@{/board/list(boardPage=${boards.getNumber()}) }'|">
+                <</button>
+            &nbsp; &nbsp;
+            <span class="pagination-info">[[${boards.getNumber()+1}]] / [[${boards.getTotalElements() == 0 ? 1 : boards.getTotalPages()}]]</span>
+            &nbsp; &nbsp;
+            <button class="pagination-button" th:disabled="${!boards.hasNext()}"
+                    th:onclick="|location.href='@{/board/list(boardPage=${boards.getNumber() + 2}) }'|">
+                ></button>
+            <button class="pagination-button" th:disabled="${!boards.hasNext()}"
+                    th:onclick="|location.href='@{/board/list(boardPage=${boards.getTotalPages()} ) }'|">
+                >></button>
+        </div>
+
+    </div>
+
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+<script src="/js/board_list.js"></script>
+</html>
