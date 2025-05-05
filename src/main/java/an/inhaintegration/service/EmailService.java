@@ -99,4 +99,10 @@ public class EmailService {
         context.setVariable("itemName", itemName);
         return templateEngine.process(type, context);
     }
+
+    // 이메일 검증 메서드
+    public boolean validateEmail(String email) {
+
+        return !email.contains("@") || !email.contains(".");
+    }
 }
