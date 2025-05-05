@@ -1,7 +1,7 @@
 package an.inhaintegration.controller;
 
 import an.inhaintegration.domain.Student;
-import an.inhaintegration.dto.LoginRequest;
+import an.inhaintegration.dto.LoginRequestDto;
 import an.inhaintegration.dto.UserRequestDto;
 import an.inhaintegration.service.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,7 +51,7 @@ public class HomeController {
     @GetMapping("/login")
     public String loginPage(Model model) {
 
-        model.addAttribute("loginRequest", new LoginRequest());
+        model.addAttribute("loginRequestDto", new LoginRequestDto());
 
         return "home/login";
     }

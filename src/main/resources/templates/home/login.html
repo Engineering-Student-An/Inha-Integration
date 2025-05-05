@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" >
 <head th:replace="~{fragments/header :: header}"></head>
-<body class="h-full">
+<body class="min-h-screen flex flex-col">
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div><br>
 <header>
 
@@ -12,10 +12,10 @@
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form class="space-y-6" th:action="|@{/login}|" method="POST">
             <div>
-                <label for="stuId" class="block text-sm font-medium leading-6 text-gray-900">학번</label>
+                <label for="loginId" class="block text-sm font-medium leading-6 text-gray-900">로그인 ID</label>
                 <div class="mt-2">
-                    <input id="stuId" type="text" name="stuId" required class="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                           autocomplete="stuId" placeholder="학번을 입력하세요">
+                    <input id="loginId" type="text" name="loginId" required class="block w-full rounded-md border-0 py-1.5 pl-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                           autocomplete="loginId" placeholder="ID를 입력하세요">
 
                 </div>
             </div>
