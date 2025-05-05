@@ -1,17 +1,23 @@
 package an.inhaintegration.service;
 
+import an.inhaintegration.domain.Student;
+import an.inhaintegration.dto.UserRequestDto;
 import an.inhaintegration.repository.BoardRepository;
 import an.inhaintegration.repository.RentalRepository;
 import an.inhaintegration.repository.ReplyRepository;
 import an.inhaintegration.repository.StudentRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+
+import java.util.regex.Pattern;
 
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class StudentService {
 
@@ -21,17 +27,49 @@ public class StudentService {
     private final ReplyRepository replyRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-//    // 학번 중복 검증
-//    public boolean checkStuIdDuplicate(String stuId){
-//        return studentRepository.existsByStuId(stuId);
-//    }
-//
-//    // 회원가입
-//    public void join(JoinRequest joinRequest, String email){
-//        joinRequest.setPassword(bCryptPasswordEncoder.encode(joinRequest.getPassword()));
-//
-//        studentRepository.save(joinRequest.toEntity(email));
-//    }
+    // 학번 중복 검증 메서드
+    public boolean checkStuIdDuplicate(String stuId){
+        return studentRepository.existsByStuId(stuId);
+    }
+
+    // 회원가입 검증 메서드
+    public void validateJoin(@Valid UserRequestDto userRequestDto, BindingResult bindingResult) {
+
+        if (checkStuIdDuplicate(userRequestDto.getStuId())) {
+            bindingResult.addError(new FieldError("userRequestDto",
+                    "stuId", "이미 가입되어 있습니다!"));
+        }
+
+        if (!userRequestDto.getPassword().equals(userRequestDto.getPasswordCheck())) {
+            bindingResult.addError(new FieldError("userRequestDto",
+                    "passwordCheck", "비밀번호가 동일하지 않습니다!"));
+        }
+
+
+        if (!Pattern.compile("^\\d{3}-\\d{3,4}-\\d{4}$").matcher(userRequestDto.getPhoneNumber()).matches()) {
+            bindingResult.addError(new FieldError("userRequestDto",
+                    "phoneNumber", "전화번호 형식이 올바르지 않습니다!"));
+        }
+    }
+
+    // 회원가입
+    @Transactional
+    public void join(UserRequestDto userRequestDto, String email){
+
+        String encodedPassword = bCryptPasswordEncoder.encode(userRequestDto.getPassword());
+
+        Student newStudent = Student.builder()
+                .loginId(userRequestDto.getLoginId())
+                .stuId(userRequestDto.getStuId())
+                .name(userRequestDto.getName())
+                .password(encodedPassword)
+                .phoneNumber(userRequestDto.getPhoneNumber())
+                .role(userRequestDto.getRole())
+                .email(email)
+                .build();
+
+        studentRepository.save(newStudent);
+    }
 //
 //    public boolean passwordCheck(String stuId, String password) {
 //        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
