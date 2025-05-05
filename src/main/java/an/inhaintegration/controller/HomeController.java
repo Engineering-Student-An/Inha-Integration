@@ -2,16 +2,17 @@ package an.inhaintegration.controller;
 
 import an.inhaintegration.domain.Student;
 import an.inhaintegration.dto.LoginRequest;
+import an.inhaintegration.dto.UserRequestDto;
 import an.inhaintegration.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -23,7 +24,8 @@ public class HomeController {
     private final BoardService boardService;
     private final FeeStudentService feeStudentService;
     private final RentalService rentalService;
-    private final InhaEEService inhaEEService;
+    private final CrawlingInhaEEService crawlingInhaEEService;
+    private final EmailService emailService;
 
     @GetMapping(value = {"", "/"})
     public String index() {
@@ -40,8 +42,8 @@ public class HomeController {
 
         model.addAttribute("rentalList", (loginStudent == null) ? null : rentalService.findMyRentalINGList(loginStudent.getId()));
         model.addAttribute("recentNotice", boardService.findRecentNotice());
-        model.addAttribute("importantPosts", inhaEEService.importantPostParser());
-        model.addAttribute("recentPosts", inhaEEService.recentPostParser());
+        model.addAttribute("importantPosts", crawlingInhaEEService.importantPostParser());
+        model.addAttribute("recentPosts", crawlingInhaEEService.recentPostParser());
 
         return "home/dashboard";
     }
@@ -74,120 +76,80 @@ public class HomeController {
         return "redirect:/";
     }
 
-//    @GetMapping("/join")
-//    public String joinPage(Model model) {
-//        model.addAttribute("joinRequest", new JoinRequest());
-//        return "home/join/join";
-//    }
-//
-//    @PostMapping("/join")
-//    public String join(@Valid @ModelAttribute JoinRequest joinRequest,
-//                       BindingResult bindingResult,
-//                       HttpSession session, Model model) {
-//
-//        if (studentService.checkStuIdDuplicate(joinRequest.getStuId())) {
-//            bindingResult.addError(new FieldError("joinRequest",
-//                    "stuId", "이미 가입되어 있습니다!"));
-//        }
-//
-//        if (!joinRequest.getPassword().equals(joinRequest.getPasswordCheck())) {
-//            bindingResult.addError(new FieldError("joinRequest",
-//                    "passwordCheck", "비밀번호가 동일하지 않습니다!"));
-//        }
-//
-//
-//        if (!Pattern.compile("^\\d{3}-\\d{3,4}-\\d{4}$").matcher(joinRequest.getPhoneNumber()).matches()) {
-//            bindingResult.addError(new FieldError("joinRequest",
-//                    "phoneNumber", "전화번호 형식이 올바르지 않습니다!"));
-//        }
-//
-////        List<String> readRequest = readOneExcel(joinRequest.getStuId());
-//        List<String> readRequest = feeStudentService.findOne(joinRequest.getStuId());
-//        if(readRequest.get(0).isEmpty()){
-//            bindingResult.addError(new FieldError("joinRequest",
-//                    "stuId", "학생회비 납부 명단에 존재하지 않는 학번입니다!"));
-//        }else if(!readRequest.get(1).equals(joinRequest.getName())){
-//            bindingResult.addError(new FieldError("joinRequest",
-//                    "name", "학번과 일치하지 않는 이름입니다!"));
-//        }
-//
-//
-//        if (bindingResult.hasErrors()) {
-//            return "home/join/join";
-//        }
-//        model.addAttribute("joinRequest.phoneNumber", joinRequest.getPhoneNumber());
-//        session.setAttribute("joinRequest", joinRequest);
-//        return "home/join/joinMessage";
-//
-//    }
-//
-//    private final EmailService emailService;
-//
-//    @GetMapping("/join/verify")
-//    public String verifyEmail(Model model, HttpSession session) {
-//
-//        session.setAttribute("joinRequest", (JoinRequest) session.getAttribute("joinRequest"));
-//        model.addAttribute("emailForm", new EmailForm());
-//        model.addAttribute("verifyCodeForm", new VerifyCodeForm());
-//        model.addAttribute("isSent", false);
-//
-//        return "home/join/verifyEmail";
-//    }
-//
-//    @PostMapping("/join/verify")
-//    public String sendEmail(@ModelAttribute EmailForm emailForm,
-//                            BindingResult bindingResult,
-//                            @ModelAttribute VerifyCodeForm verifyCodeForm,
-//                            HttpSession session, Model model) {
-//
-//        String email = emailForm.getEmail();
-//        if(email.isEmpty()) {
-//            bindingResult.addError(new FieldError("emailForm",
-//                    "email", "이메일 주소를 입력해주세요!"));
-//        } else if(!email.contains("@") || !email.contains(".")) {
-//            bindingResult.addError(new FieldError("emailForm",
-//                    "email", "이메일 주소가 올바르지 않습니다!"));
-//        }
-//
-//        session.setAttribute("joinRequest", (JoinRequest) session.getAttribute("joinRequest"));
-//        if(bindingResult.hasErrors()) {
-//            return "home/join/verifyEmail";
-//        }
-//
-//        String authCode = emailService.createVerifyCode();
-//        emailService.sendEmail(email, authCode, "email/joinEmail");
-//        session.setAttribute("verifyCode", authCode);
-//
-//        model.addAttribute("isSent", true);
-//
-//
-//        return "home/join/verifyEmail";
-//    }
-//
-//    @PostMapping("/join/verify/code")
-//    public String verifyCodeCheck(@ModelAttribute("verifyCodeForm") VerifyCodeForm verifyCodeForm,
-//                                  @RequestParam("email") String email,
-//                                  HttpSession session, Model model) {
-//
-//        // 메일 보낸 인증 문자
-//        String verifyCode = (String) session.getAttribute("verifyCode");
-//
-//        // 인증 문자와 동일한지 검증
-//        if(!verifyCodeForm.getCode().equals(verifyCode)) {
-//            model.addAttribute("errorMessage", "인증 문자가 일치하지 않습니다! 다시 시도해주세요!");
-//            model.addAttribute("nextUrl", "/join/verify");
-//            return "error/errorMessage";
-//        }
-//
-//        // 인증 문자 동일하면 회원가입
-//        JoinRequest joinRequest = (JoinRequest) session.getAttribute("joinRequest");
-//        studentService.join(joinRequest, email);
-//
-//        model.addAttribute("errorMessage", "회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.");
-//        model.addAttribute("nextUrl", "/login");
-//        return "error/errorMessage";
-//
-//    }
+    @GetMapping("/join")
+    public String joinPage(Model model) {
+        model.addAttribute("userRequestDto", new UserRequestDto());
+        return "home/join/join";
+    }
+
+    @PostMapping("/join")
+    public String join(@Valid @ModelAttribute UserRequestDto userRequestDto,
+                       BindingResult bindingResult,
+                       HttpSession session, Model model) {
+
+        studentService.validateJoin(userRequestDto, bindingResult);             // 회원가입 정보 검증
+        feeStudentService.validateFeeStudent(userRequestDto, bindingResult);    // 학생회비 납부 여부 검증
+
+        if (bindingResult.hasErrors()) return "home/join/join";
+
+        model.addAttribute("userRequestDto.phoneNumber", userRequestDto.getPhoneNumber());
+        session.setAttribute("userRequestDto", userRequestDto);
+
+        return "home/join/joinMessage";
+    }
+
+    @GetMapping("/join/verify")
+    public String verifyEmail(Model model, HttpSession session) {
+
+        session.setAttribute("userRequestDto", (UserRequestDto) session.getAttribute("userRequestDto"));
+        model.addAttribute("isSent", false);
+
+        return "home/join/verifyEmail";
+    }
+
+    @PostMapping("/join/verify")
+    public String sendEmail(@RequestParam("email") String email, HttpSession session, Model model) {
+
+        session.setAttribute("userRequestDto", (UserRequestDto) session.getAttribute("userRequestDto"));
+
+        if(emailService.validateEmail(email)) {
+            model.addAttribute("emailError", "이메일 주소가 올바르지 않습니다!");
+            return "home/join/verifyEmail";
+        }
+
+        String authCode = emailService.createVerifyCode();
+        emailService.sendEmail(email, authCode, "email/joinEmail");
+        session.setAttribute("verifyCode", authCode);
+
+        model.addAttribute("isSent", true);
+        model.addAttribute("email", email);
+
+        return "home/join/verifyEmail";
+    }
+
+    @PostMapping("/join/verify/code")
+    public String verifyCodeCheck(@RequestParam("email") String email,
+                                  @RequestParam("inputCode") String inputCode,
+                                  HttpSession session, Model model) {
+
+        // 메일 보낸 인증 문자
+        String verifyCode = (String) session.getAttribute("verifyCode");
+
+        // 인증 문자와 동일한지 검증
+        if(!inputCode.equals(verifyCode)) {
+            model.addAttribute("errorMessage", "인증 문자가 일치하지 않습니다! 다시 시도해주세요!");
+            model.addAttribute("nextUrl", "/join/verify");
+            return "error/errorMessage";
+        }
+
+        // 인증 문자 동일하면 회원가입
+        studentService.join((UserRequestDto) session.getAttribute("userRequestDto"), email);
+
+        model.addAttribute("errorMessage", "회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.");
+        model.addAttribute("nextUrl", "/login");
+        return "error/errorMessage";
+
+    }
 //
 //    @GetMapping("/findPassword/info")
 //    public String findPasswordForm(Model model) {
