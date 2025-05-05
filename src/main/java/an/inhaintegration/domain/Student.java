@@ -22,7 +22,6 @@ public class Student {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
     private String stuId;
 
     private String provider;
@@ -51,5 +50,13 @@ public class Student {
 
     public void editEmail(String email) {
         this.email = email;
+    }
+
+    // oauth 로그인 후 정보 추가
+    public void addInfoAfterOauth(String stuId, String name, String phoneNumber) {
+        this.stuId = stuId;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.role = StudentRole.USER;
     }
 }

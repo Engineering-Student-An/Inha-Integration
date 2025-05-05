@@ -31,7 +31,6 @@ public class SecurityConfig {
 
         // 폼 로그인 설정
         http.formLogin((auth) -> auth.loginPage("/login")
-
                         .loginProcessingUrl("/login")
                         .usernameParameter("loginId")
                         .passwordParameter("password")

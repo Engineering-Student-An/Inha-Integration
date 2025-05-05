@@ -1,11 +1,15 @@
 package an.inhaintegration.service;
 
 import an.inhaintegration.domain.Student;
+import an.inhaintegration.dto.OauthUserRequestDto;
 import an.inhaintegration.dto.UserRequestDto;
+import an.inhaintegration.exception.StudentNotFoundException;
 import an.inhaintegration.repository.BoardRepository;
 import an.inhaintegration.repository.RentalRepository;
 import an.inhaintegration.repository.ReplyRepository;
 import an.inhaintegration.repository.StudentRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -45,7 +49,6 @@ public class StudentService {
                     "passwordCheck", "비밀번호가 동일하지 않습니다!"));
         }
 
-
         if (!Pattern.compile("^\\d{3}-\\d{3,4}-\\d{4}$").matcher(userRequestDto.getPhoneNumber()).matches()) {
             bindingResult.addError(new FieldError("userRequestDto",
                     "phoneNumber", "전화번호 형식이 올바르지 않습니다!"));
@@ -69,6 +72,26 @@ public class StudentService {
                 .build();
 
         studentRepository.save(newStudent);
+    }
+
+    @Transactional
+    public void updateOauthInfo(OauthUserRequestDto oauthUserRequestDto, HttpServletRequest request) {
+
+        // 세션에서 로그인한 사용자 가져오기
+        HttpSession session = request.getSession();
+        Student loginStudent = (Student) session.getAttribute("loginStudent");
+
+        if (loginStudent == null) throw new StudentNotFoundException();
+
+        // DB에서 해당 학생 엔티티 조회
+        Student student = studentRepository.findById(loginStudent.getId())
+                .orElseThrow((StudentNotFoundException::new));
+
+        // stuId 업데이트
+        student.addInfoAfterOauth(oauthUserRequestDto.getStuId(), oauthUserRequestDto.getName(), oauthUserRequestDto.getPhoneNumber());
+
+        // 세션 정보도 업데이트 (선택적)
+        session.setAttribute("loginStudent", student);
     }
 //
 //    public boolean passwordCheck(String stuId, String password) {

@@ -43,7 +43,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         String name = oAuth2UserInfo.getName();
         String picture = oAuth2UserInfo.getPicture();
 
-        Student student = studentRepository.findByLoginId(email).orElseGet(() -> {
+        Student student = studentRepository.findByLoginIdAndProvider(email, provider).orElseGet(() -> {
             Student newStudent = Student.builder()
                     .loginId(email)
                     .name(name)

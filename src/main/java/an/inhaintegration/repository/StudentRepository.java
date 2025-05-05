@@ -11,4 +11,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     Optional<Student> findByStuId(String stuId);
 
     boolean existsByStuId(String stuId);
+
+    // OAuth 로그인 용 회원 조회 메서드
+    Optional<Student> findByLoginIdAndProvider(String email, String provider);
 }
