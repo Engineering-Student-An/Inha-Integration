@@ -16,15 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-//@RequiredArgsConstructor
-public class InhaEEService {
+public class CrawlingInhaEEService {
 
     private final RestTemplate restTemplate;
     private final String url;
     private final ResponseEntity<String> response;
 
 
-    public InhaEEService() {
+    public CrawlingInhaEEService() {
         // RestTemplate 인스턴스 생성
         this.restTemplate = new RestTemplate();
 

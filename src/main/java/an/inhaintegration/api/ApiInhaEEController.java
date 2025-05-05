@@ -1,7 +1,7 @@
 package an.inhaintegration.api;
 
 import an.inhaintegration.dto.ParserDto;
-import an.inhaintegration.service.InhaEEService;
+import an.inhaintegration.service.CrawlingInhaEEService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,11 +14,11 @@ import java.util.List;
 @RequestMapping("/api")
 public class ApiInhaEEController {
 
-    private final InhaEEService inhaEEService;
+    private final CrawlingInhaEEService crawlingInhaEEService;
 
     @GetMapping("/importantPosts")
     public List<ParserDto> fetchImportantPosts() {
-        return inhaEEService.importantPostParser();
+        return crawlingInhaEEService.importantPostParser();
     }
 
 }
