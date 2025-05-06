@@ -1,6 +1,7 @@
 package an.inhaintegration.service;
 
 import an.inhaintegration.domain.Item;
+import an.inhaintegration.dto.ItemSearch;
 import an.inhaintegration.exception.ItemNotFoundException;
 import an.inhaintegration.repository.ItemRepository;
 import an.inhaintegration.repository.RentalRepository;
@@ -71,4 +72,16 @@ public class ItemService {
     }
 
 
+    public Page<Item> findItemsBySearch(int page, ItemSearch itemSearch) {
+
+        // 검색 조건 추가해서 조회
+        if (itemSearch.getCategory() != null && itemSearch.getName() != null) {
+            PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by("category").and(Sort.by("name")));
+            return findItemsByCategoryAndName(itemSearch.getCategory(), itemSearch.getName(), pageRequest);
+        }
+
+        // 모든 물품 조회
+        PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by("category").and(Sort.by("name")));
+        return findAllItems(pageRequest);
+    }
 }

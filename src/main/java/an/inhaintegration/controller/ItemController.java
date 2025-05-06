@@ -1,50 +1,35 @@
-//package an.inhaintegration.controller;
-//
-//import an.rentalinhaee.domain.ItemRequest;
-//import an.rentalinhaee.domain.Student;
-//import an.rentalinhaee.domain.dto.ItemRequestForm;
-//import an.rentalinhaee.repository.ItemSearch;
-//import an.rentalinhaee.service.ItemRequestService;
-//import an.rentalinhaee.service.ItemService;
-//import jakarta.servlet.http.HttpSession;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.data.domain.PageRequest;
-//import org.springframework.data.domain.Sort;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.ui.Model;
-//import org.springframework.validation.BindingResult;
-//import org.springframework.validation.FieldError;
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.ModelAttribute;
-//import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestParam;
-//
-//@Controller
-//@RequiredArgsConstructor
-//public class ItemController {
-//
-//    private final ItemService itemService;
-//    private final ItemRequestService itemRequestService;
-//
-//    @GetMapping("/item/list")
-//    public String list(@ModelAttribute("itemSearch") ItemSearch itemSearch,
-//                       @RequestParam(required = false, defaultValue = "1", value = "page") int page, Model model) {
-//
-//        PageRequest pageRequest;
-//
-//        // 학번, 이름 모두 포함하는 학생들 추가
-//        if (itemSearch.getCategory() != null && itemSearch.getName() != null) {
-//            pageRequest = PageRequest.of(page - 1, 10, Sort.by("category").and(Sort.by("name")));
-//            model.addAttribute("items", itemService.findItemsByCategoryAndName(itemSearch.getCategory(), itemSearch.getName(), pageRequest));
-//        } else {
-//            pageRequest = PageRequest.of(page - 1, 10, Sort.by("category").and(Sort.by("name")));
-//            model.addAttribute("items", itemService.findAllItems(pageRequest));
-//        }
-//
-//        model.addAttribute("itemSearch", itemSearch);
-//        return "item/list";
-//    }
-//
+package an.inhaintegration.controller;
+
+import an.inhaintegration.domain.Student;
+import an.inhaintegration.domain.oauth2.CustomUserDetails;
+import an.inhaintegration.dto.ItemSearch;
+import an.inhaintegration.service.ItemRequestService;
+import an.inhaintegration.service.ItemService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+@RequiredArgsConstructor
+public class ItemController {
+
+    private final ItemService itemService;
+    private final ItemRequestService itemRequestService;
+
+    @GetMapping("/item/list")
+    public String list(@ModelAttribute("itemSearch") ItemSearch itemSearch,
+                       @RequestParam(required = false, defaultValue = "1", value = "page") int page, Model model) {
+
+        model.addAttribute("items", itemService.findItemsBySearch(page, itemSearch));
+        model.addAttribute("itemSearch", itemSearch);
+        return "item/list";
+    }
+
+    //
 //    @GetMapping("/item/request/list")
 //    public String requestList(Model model) {
 //
@@ -86,11 +71,14 @@
 //        return "redirect:/item/request/list";
 //    }
 //
-//    @ModelAttribute("loginStudent")
-//    public Student loginStudent(HttpSession session) {
-//        if(session.getAttribute("loginStudent") != null) {
-//            return (Student) session.getAttribute("loginStudent");
-//        }
-//        return null;
-//    }
-//}
+    @ModelAttribute("loginStudent")
+    public Student loginStudent() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof CustomUserDetails) {
+            return ((CustomUserDetails) principal).getStudent();
+        }
+
+        return null;
+    }
+}

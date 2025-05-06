@@ -10,7 +10,6 @@ import an.inhaintegration.repository.RentalRepository;
 import an.inhaintegration.repository.ReplyRepository;
 import an.inhaintegration.repository.StudentRepository;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,10 +30,10 @@ public class StudentService {
     private final BoardRepository boardRepository;
     private final ReplyRepository replyRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final LoginStudentUtil loginStudentUtil;
 
     // 학번 중복 검증 메서드
     public boolean checkStuIdDuplicate(String stuId){
+
         return studentRepository.existsByStuId(stuId);
     }
 
@@ -77,35 +76,31 @@ public class StudentService {
     }
 
     @Transactional
-    public void updateOauthInfo(OauthUserRequestDto oauthUserRequestDto, HttpServletRequest request) {
+    public void updateOauthInfo(Long studentId, OauthUserRequestDto oauthUserRequestDto, HttpServletRequest request) {
 
-        // 세션에서 로그인한 사용자 가져오기
-        Student loginStudent = loginStudentUtil.getLoginStudent().orElseThrow(StudentNotFoundException::new);
+        // 로그인한 회원 조회
+        Student loginStudent = studentRepository.findById(studentId).orElseThrow(StudentNotFoundException::new);
 
         // 추가적인 정보 업데이트
         loginStudent.addInfoAfterOauth(oauthUserRequestDto.getStuId(), oauthUserRequestDto.getName(), oauthUserRequestDto.getPhoneNumber());
 
         // 영속성 컨텍스트에 loginStudent가 관리되고 있지 않으므로 save() 메서드를 호출해줘야함 (더티체킹이 일어나지 않기 때문)
         studentRepository.save(loginStudent);
-
-        // 세션에 최신화 된 학생 정보로 업데이트
-        HttpSession session = request.getSession();
-        session.setAttribute("loginStudent", loginStudent);
     }
 
     // 비밀번호 검증 메서드
-    public boolean passwordCheck(String password) {
+    public boolean passwordCheck(Long studentId, String password) {
 
-        Student loginStudent = loginStudentUtil.getLoginStudent().orElseThrow(StudentNotFoundException::new);
+        Student loginStudent = studentRepository.findById(studentId).orElseThrow(StudentNotFoundException::new);
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder.matches(password, loginStudent.getPassword());
     }
 
-    public void validateChangePassword(@Valid ChangePasswordRequestDto changePasswordRequestDto, BindingResult bindingResult) {
+    public void validateChangePassword(Long studentId, @Valid ChangePasswordRequestDto changePasswordRequestDto, BindingResult bindingResult) {
 
         // 현재 비밀번호와 동일하게 변경하려는 경우
-        if(passwordCheck(changePasswordRequestDto.getChangePassword())){
+        if(passwordCheck(studentId, changePasswordRequestDto.getChangePassword())){
             bindingResult.addError(new FieldError("changePasswordRequestDto",
                     "changePassword", "현재 비밀번호와 동일하게 변경 불가합니다!"));
         }
@@ -120,17 +115,16 @@ public class StudentService {
 
     // 비밀번호 변경
     @Transactional
-    public void changePassword(ChangePasswordRequestDto changePasswordRequestDto) {
+    public void changePassword(Long studentId, ChangePasswordRequestDto changePasswordRequestDto) {
 
-        Student loginStudent = loginStudentUtil.getLoginStudent().orElseThrow(StudentNotFoundException::new);
+        Student loginStudent = studentRepository.findById(studentId).orElseThrow(StudentNotFoundException::new);
 
         loginStudent.editPassword(bCryptPasswordEncoder.encode(changePasswordRequestDto.getChangePassword()));
-        studentRepository.save(loginStudent);
     }
 
-    public String validateEmail(String inputEmail) {
+    public String validateEmail(Long studentId, String inputEmail) {
 
-        Student loginStudent = loginStudentUtil.getLoginStudent().orElseThrow(StudentNotFoundException::new);
+        Student loginStudent = studentRepository.findById(studentId).orElseThrow(StudentNotFoundException::new);
         String email = loginStudent.getEmail();
 
         if(inputEmail.equals(email)) return "현재 이메일 주소와 동일합니다!";    // 현재 이메일과 동일한 경우
@@ -142,13 +136,11 @@ public class StudentService {
     }
 
     @Transactional
-    public void editEmail(String email) {
+    public void editEmail(Long studentId, String email) {
 
-        Student loginStudent = loginStudentUtil.getLoginStudent().orElseThrow(StudentNotFoundException::new);
+        Student loginStudent = studentRepository.findById(studentId).orElseThrow(StudentNotFoundException::new);
 
         loginStudent.editEmail(email);
-
-        studentRepository.save(loginStudent);
     }
 
 //    private final BoardService boardService;

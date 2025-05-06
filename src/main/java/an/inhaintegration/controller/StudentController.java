@@ -1,14 +1,16 @@
 package an.inhaintegration.controller;
 
 import an.inhaintegration.domain.Student;
+import an.inhaintegration.domain.oauth2.CustomUserDetails;
 import an.inhaintegration.dto.ChangePasswordRequestDto;
 import an.inhaintegration.service.EmailService;
-import an.inhaintegration.service.LoginStudentUtil;
 import an.inhaintegration.service.StudentService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,7 +26,6 @@ public class StudentController {
 
     private final StudentService studentService;
     private final EmailService emailService;
-    private final LoginStudentUtil loginStudentUtil;
 
     @GetMapping("/my-page")
     public String changeInfo() {
@@ -33,10 +34,10 @@ public class StudentController {
     }
 
     @GetMapping("/my-page/password/verify")
-    public String changePassword(Model model) {
+    public String changePassword(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
 
         // Oauth 로그인 시 사용 불가능
-        if(loginStudentUtil.isOauthLogin()) {
+        if(userDetails.getStudent().getProvider() != null) {
             model.addAttribute("errorMessage", "소셜 로그인은 비밀번호 변경이 불가합니다!");
             model.addAttribute("nextUrl", "/my-page");
             return "error/errorMessage";
@@ -50,10 +51,11 @@ public class StudentController {
     }
 
     @PostMapping("/my-page/password/verify")
-    public String changePassword(@RequestParam("password") String password, Model model){
+    public String changePassword(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                 @RequestParam("password") String password, Model model){
 
         // 현재 비밀번호와 다른 경우
-        if(!studentService.passwordCheck(password)) {
+        if(!studentService.passwordCheck(userDetails.getId(), password)) {
             model.addAttribute("errorMessage", "현재 비밀번호와 동일하지 않습니다!");
             model.addAttribute("nextUrl", "/my-page/password/verify");
 
@@ -108,16 +110,17 @@ public class StudentController {
     }
 
     @PostMapping("/my-page/password")
-    public String changePasswordForm(@Valid @ModelAttribute("changePasswordRequestDto") ChangePasswordRequestDto changePasswordRequestDto,
+    public String changePasswordForm(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                     @Valid @ModelAttribute("changePasswordRequestDto") ChangePasswordRequestDto changePasswordRequestDto,
                                      BindingResult bindingResult, Model model) {
 
-        studentService.validateChangePassword(changePasswordRequestDto, bindingResult);
+        studentService.validateChangePassword(userDetails.getId(), changePasswordRequestDto, bindingResult);
 
         if(bindingResult.hasErrors()) {
             return "student/changePassword";
         }
 
-        studentService.changePassword(changePasswordRequestDto);
+        studentService.changePassword(userDetails.getId(),changePasswordRequestDto);
 
         model.addAttribute("errorMessage", "비밀번호가 변경되었습니다!");
         model.addAttribute("nextUrl", "/my-page");
@@ -133,9 +136,10 @@ public class StudentController {
     }
 
     @PostMapping("/my-page/email")
-    public String changeEmailSend(@RequestParam("email") String email, Model model, HttpServletRequest request) {
+    public String changeEmailSend(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                  @RequestParam("email") String email, Model model, HttpServletRequest request) {
 
-        String errorMessage = studentService.validateEmail(email);
+        String errorMessage = studentService.validateEmail(userDetails.getId(), email);
         if(errorMessage != null) {
             model.addAttribute("emailError", errorMessage);
             return "student/changeEmail";
@@ -152,7 +156,8 @@ public class StudentController {
     }
 
     @PostMapping("/my-page/email/verify")
-    public String verifyCodeCheck(@RequestParam("email") String email,
+    public String verifyCodeCheck(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                  @RequestParam("email") String email,
                                   @RequestParam("code") String code,
                                   HttpSession session, Model model) {
 
@@ -166,7 +171,7 @@ public class StudentController {
             return "error/errorMessage";
         }
 
-        studentService.editEmail(email);
+        studentService.editEmail(userDetails.getId(), email);
 
         model.addAttribute("errorMessage", "이메일이 변경되었습니다!");
         model.addAttribute("nextUrl", "/my-page");
@@ -176,6 +181,12 @@ public class StudentController {
 
     @ModelAttribute("loginStudent")
     public Student loginStudent() {
-        return loginStudentUtil.getLoginStudent().orElse(null);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof CustomUserDetails) {
+            return ((CustomUserDetails) principal).getStudent();
+        }
+
+        return null;
     }
 }

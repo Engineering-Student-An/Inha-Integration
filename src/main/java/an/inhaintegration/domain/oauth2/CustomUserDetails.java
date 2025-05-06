@@ -64,4 +64,8 @@ public class CustomUserDetails implements UserDetails {
     public Student getStudent() {
         return this.student;
     }
+
+    public Long getId() {
+        return student.getId();
+    }
 }

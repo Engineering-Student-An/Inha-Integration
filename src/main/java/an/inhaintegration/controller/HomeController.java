@@ -1,16 +1,18 @@
 package an.inhaintegration.controller;
 
 import an.inhaintegration.domain.Student;
+import an.inhaintegration.domain.oauth2.CustomUserDetails;
 import an.inhaintegration.dto.LoginRequestDto;
 import an.inhaintegration.dto.OauthUserRequestDto;
 import an.inhaintegration.dto.UserRequestDto;
-import an.inhaintegration.exception.StudentNotFoundException;
 import an.inhaintegration.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,7 +30,6 @@ public class HomeController {
     private final RentalService rentalService;
     private final CrawlingInhaEEService crawlingInhaEEService;
     private final EmailService emailService;
-    private final LoginStudentUtil loginStudentUtil;
 
     @GetMapping(value = {"", "/"})
     public String index() {
@@ -37,11 +38,12 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String home(Model model, HttpSession session) {
+    public String home(@AuthenticationPrincipal CustomUserDetails userDetails,
+                       Model model, HttpSession session) {
 
         session.setAttribute("previousPage", "/home");
 
-        model.addAttribute("rentalList", rentalService.findMyRentalINGList());
+        model.addAttribute("rentalList", rentalService.findMyRentalINGList((userDetails == null) ? null : userDetails.getId()));
         model.addAttribute("recentNotice", boardService.findRecentNotice());
         model.addAttribute("importantPosts", crawlingInhaEEService.importantPostParser());
         model.addAttribute("recentPosts", crawlingInhaEEService.recentPostParser());
@@ -70,23 +72,20 @@ public class HomeController {
     public String oauthUpdate(Model model) {
 
         model.addAttribute("oauthUserRequestDto", new OauthUserRequestDto());
+
         return "home/join/addInfoAfterOauth";
     }
 
     @PostMapping("/oauth")
-    public String validateStuId(@Valid @ModelAttribute OauthUserRequestDto oauthUserRequestDto,
-                       BindingResult bindingResult, Model model, HttpServletRequest request) {
+    public String validateStuId(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                @Valid @ModelAttribute OauthUserRequestDto oauthUserRequestDto,
+                                BindingResult bindingResult, Model model, HttpServletRequest request) {
 
         feeStudentService.validateOauthFeeStudent(oauthUserRequestDto, bindingResult);    // oauth 로그인 후 학생회비 납부 여부 검증
 
         if (bindingResult.hasErrors()) return "home/join/addInfoAfterOauth";
 
-        try {
-            studentService.updateOauthInfo(oauthUserRequestDto, request);
-        } catch (StudentNotFoundException ex) {
-            model.addAttribute("errorMessage", "오류가 발생했습니다! 로그인 페이지로 이동합니다.");
-            model.addAttribute("nextUrl", "/login");
-        }
+        studentService.updateOauthInfo(userDetails.getId(), oauthUserRequestDto, request);
 
         model.addAttribute("errorMessage", "정보 입력이 완료되었습니다! 대시보드로 이동합니다.");
         model.addAttribute("nextUrl", "/home");
@@ -98,13 +97,13 @@ public class HomeController {
     public String joinPage(Model model) {
 
         model.addAttribute("userRequestDto", new UserRequestDto());
+
         return "home/join/join";
     }
 
     @PostMapping("/join")
     public String join(@Valid @ModelAttribute UserRequestDto userRequestDto,
-                       BindingResult bindingResult,
-                       HttpSession session, Model model) {
+                       BindingResult bindingResult, HttpSession session, Model model) {
 
         studentService.validateJoin(userRequestDto, bindingResult);             // 회원가입 정보 검증
         feeStudentService.validateFeeStudent(userRequestDto, bindingResult);    // 학생회비 납부 여부 검증
@@ -298,14 +297,12 @@ public class HomeController {
 
     @ModelAttribute("loginStudent")
     public Student loginStudent() {
-        return loginStudentUtil.getLoginStudent().orElse(null);
-    }
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        @ModelAttribute("loginStudent")
-    public Student loginStudent(HttpSession session) {
-        if(session.getAttribute("loginStudent") != null) {
-            return (Student) session.getAttribute("loginStudent");
+        if (principal instanceof CustomUserDetails) {
+            return ((CustomUserDetails) principal).getStudent();
         }
+
         return null;
     }
 
