@@ -2,7 +2,7 @@ package an.inhaintegration.controller;
 
 import an.inhaintegration.domain.Student;
 import an.inhaintegration.domain.oauth2.CustomUserDetails;
-import an.inhaintegration.dto.ItemSearch;
+import an.inhaintegration.dto.ItemSearchDto;
 import an.inhaintegration.service.ItemRequestService;
 import an.inhaintegration.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +21,10 @@ public class ItemController {
     private final ItemRequestService itemRequestService;
 
     @GetMapping("/item/list")
-    public String list(@ModelAttribute("itemSearch") ItemSearch itemSearch,
+    public String list(@ModelAttribute("itemSearchDto") ItemSearchDto itemSearchDto,
                        @RequestParam(required = false, defaultValue = "1", value = "page") int page, Model model) {
 
-        model.addAttribute("items", itemService.findItemsBySearch(page, itemSearch));
-        model.addAttribute("itemSearch", itemSearch);
+        model.addAttribute("items", itemService.findItemsBySearch(page, itemSearchDto));
         return "item/list";
     }
 

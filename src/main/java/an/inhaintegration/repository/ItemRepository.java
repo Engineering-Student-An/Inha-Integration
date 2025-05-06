@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
     Page<Item> findItemsByCategoryContainingAndNameContaining(String category, String name, Pageable pageable);
+
+    boolean existsByName(String name);
 }

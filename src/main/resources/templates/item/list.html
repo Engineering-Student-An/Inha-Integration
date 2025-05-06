@@ -13,7 +13,7 @@
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div class="container mx-auto my-8 p-6 bg-gray-100 rounded-lg shadow-md">
 
-            <form th:object="${itemSearch}">
+            <form th:object="${itemSearchDto}">
                 <!-- 검색 필드 추가 -->
                 <div class="mb-4 flex items-center">
                     <input type="text" placeholder="물품 카테고리" th:field="*{category}" class="border border-gray-300 rounded-lg px-4 py-2 mr-4" />
@@ -56,19 +56,19 @@
 
             <div class="pagination">
                 <button class="pagination-button" th:disabled="${items.getNumber()}==0"
-                        th:onclick="|location.href='@{/item/list(page=${1}, category=${itemSearch.getCategory()}, name=${itemSearch.getName()} ) }'|">
+                        th:onclick="|location.href='@{/item/list(page=${1}, category=${itemSearchDto.getCategory()}, name=${itemSearchDto.getName()} ) }'|">
                     <<</button>
                 <button class="pagination-button" th:disabled="${!items.hasPrevious()}"
-                        th:onclick="|location.href='@{/item/list(page=${items.getNumber()}, category=${itemSearch.getCategory()}, name=${itemSearch.getName()} ) }'|">
+                        th:onclick="|location.href='@{/item/list(page=${items.getNumber()}, category=${itemSearchDto.getCategory()}, name=${itemSearchDto.getName()} ) }'|">
                     <</button>
                 &nbsp; &nbsp;
                 <span class="pagination-info">[[${items.getNumber()+1}]] / [[${items.getTotalElements() == 0 ? 1 : items.getTotalPages()}]]</span>
                 &nbsp; &nbsp;
                 <button class="pagination-button" th:disabled="${!items.hasNext()}"
-                        th:onclick="|location.href='@{/item/list(page=${items.getNumber() + 2}, category=${itemSearch.getCategory()}, name=${itemSearch.getName()} ) }'|">
+                        th:onclick="|location.href='@{/item/list(page=${items.getNumber() + 2}, category=${itemSearchDto.getCategory()}, name=${itemSearchDto.getName()} ) }'|">
                     ></button>
                 <button class="pagination-button" th:disabled="${!items.hasNext()}"
-                        th:onclick="|location.href='@{/item/list(page=${items.getTotalPages()}, category=${itemSearch.getCategory()}, name=${itemSearch.getName()} ) }'|">
+                        th:onclick="|location.href='@{/item/list(page=${items.getTotalPages()}, category=${itemSearchDto.getCategory()}, name=${itemSearchDto.getName()} ) }'|">
                     >></button>
             </div>
         </div>

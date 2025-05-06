@@ -13,9 +13,10 @@
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div class="max-w-md mx-auto bg-white shadow-md rounded-xl p-6">
 
-            <form th:object="${form}" method="post">
+            <form th:object="${itemRequestDto}" method="post">
 
                 <input type="hidden" th:field="*{id}" />
+                <input type="hidden" name="_method" value="patch" />
 
                 <div class="mb-4">
                     <label th:for="category" class="block text-sm font-medium text-gray-700">카테고리</label>
@@ -40,7 +41,7 @@
 
                 <div class="mb-4">
                     <label th:for="stockQuantity" class="block text-sm font-medium text-gray-700">대여중인 수량 : [[*{ingStockQuantity}]]</label>
-                    <input type="hidden" th:field="*{ingStockQuantity}" th:value="${form.ingStockQuantity}">
+                    <input type="hidden" th:field="*{ingStockQuantity}" th:value="${itemRequestDto.ingStockQuantity}">
                 </div>
 
                 <button type="submit" style="border: none; background: none; cursor: pointer">

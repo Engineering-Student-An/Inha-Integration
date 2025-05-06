@@ -1,8 +1,7 @@
 package an.inhaintegration.service;
 
 import an.inhaintegration.domain.Item;
-import an.inhaintegration.dto.ItemSearch;
-import an.inhaintegration.exception.ItemNotFoundException;
+import an.inhaintegration.dto.ItemSearchDto;
 import an.inhaintegration.repository.ItemRepository;
 import an.inhaintegration.repository.RentalRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,24 +23,6 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final RentalRepository rentalRepository;
-
-    @Transactional
-    public void saveItem(Item item){
-        itemRepository.save(item);
-    }
-
-    @Transactional
-    public void updateItem(Long itemId, String name, int allStockQuantity, String category){
-        Item item = itemRepository.findById(itemId).orElseThrow(ItemNotFoundException::new);
-        item.updateInfo(name, allStockQuantity, category);
-    }
-
-    @Transactional
-    public void deleteItem(Long itemId){
-
-        Item item = itemRepository.findById(itemId).orElseThrow(ItemNotFoundException::new);
-        itemRepository.delete(item);
-    }
 
     public List<Item> findAllItems() {
         return itemRepository.findAll();
@@ -72,12 +53,12 @@ public class ItemService {
     }
 
 
-    public Page<Item> findItemsBySearch(int page, ItemSearch itemSearch) {
+    public Page<Item> findItemsBySearch(int page, ItemSearchDto itemSearchDto) {
 
         // 검색 조건 추가해서 조회
-        if (itemSearch.getCategory() != null && itemSearch.getName() != null) {
+        if (itemSearchDto.getCategory() != null && itemSearchDto.getName() != null) {
             PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by("category").and(Sort.by("name")));
-            return findItemsByCategoryAndName(itemSearch.getCategory(), itemSearch.getName(), pageRequest);
+            return findItemsByCategoryAndName(itemSearchDto.getCategory(), itemSearchDto.getName(), pageRequest);
         }
 
         // 모든 물품 조회

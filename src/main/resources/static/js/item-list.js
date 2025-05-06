@@ -32,3 +32,11 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href='/rental';
     });
 });
+
+// 물품 삭제 함수
+function deleteItem() {
+    if (confirm("물품 삭제 시 해당 물품의 대여 기록도 삭제 됩니다.\n정말 물품을 삭제하겠습니까?")) {
+        document.getElementById("delete-form").submit();
+    }
+    return false;
+}
