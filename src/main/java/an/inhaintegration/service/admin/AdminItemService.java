@@ -3,7 +3,7 @@ package an.inhaintegration.service.admin;
 import an.inhaintegration.domain.Item;
 import an.inhaintegration.domain.Student;
 import an.inhaintegration.domain.StudentRole;
-import an.inhaintegration.dto.ItemRequestDto;
+import an.inhaintegration.dto.item.ItemRequestDto;
 import an.inhaintegration.exception.ItemNotFoundException;
 import an.inhaintegration.exception.StudentNotAuthorizedException;
 import an.inhaintegration.exception.StudentNotFoundException;
@@ -99,7 +99,7 @@ public class AdminItemService {
     }
 
     // Item -> ItemRequestDto 변환 메서드
-    public ItemRequestDto mapItemToRequestDto(Long itemId) {
+    public ItemRequestDto mapItemToItemRequestDto(Long itemId) {
 
         Item item = itemRepository.findById(itemId).orElseThrow(ItemNotFoundException::new);
 

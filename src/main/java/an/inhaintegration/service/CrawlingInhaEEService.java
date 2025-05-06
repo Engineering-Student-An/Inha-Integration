@@ -1,6 +1,6 @@
 package an.inhaintegration.service;
 
-import an.inhaintegration.dto.ParserDto;
+import an.inhaintegration.dto.crawling.CrawlingInhaEEResponseDto;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -50,11 +50,11 @@ public class CrawlingInhaEEService {
         response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
     }
 
-    public List<ParserDto> importantPostParser() {
+    public List<CrawlingInhaEEResponseDto> importantPostParser() {
 
         String html = response.toString();
 
-        List<ParserDto> result = new ArrayList<>();
+        List<CrawlingInhaEEResponseDto> result = new ArrayList<>();
 
         // HTML 파싱
         Document document = Jsoup.parse(html);
@@ -69,18 +69,18 @@ public class CrawlingInhaEEService {
             String link = headline.select("td._artclTdTitle a").attr("href");
             String date = headline.select("td._artclTdRdate").text();
 
-            ParserDto parserDto = new ParserDto(title, link, date);
-            result.add(parserDto);
+            CrawlingInhaEEResponseDto crawlingInhaEEResponseDto = new CrawlingInhaEEResponseDto(title, link, date);
+            result.add(crawlingInhaEEResponseDto);
         }
         
         return result;
     }
 
-    public List<ParserDto> recentPostParser() {
+    public List<CrawlingInhaEEResponseDto> recentPostParser() {
 
         String html = response.toString();
 
-        List<ParserDto> result = new ArrayList<>();
+        List<CrawlingInhaEEResponseDto> result = new ArrayList<>();
 
         // HTML 파싱
         Document document = Jsoup.parse(html);
@@ -105,8 +105,8 @@ public class CrawlingInhaEEService {
 
             if(title.isEmpty()) continue;
 
-            ParserDto parserDto = new ParserDto(title, link, date);
-            result.add(parserDto);
+            CrawlingInhaEEResponseDto crawlingInhaEEResponseDto = new CrawlingInhaEEResponseDto(title, link, date);
+            result.add(crawlingInhaEEResponseDto);
 
             if(result.size() == 5) break;
         }

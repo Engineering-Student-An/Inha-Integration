@@ -1,6 +1,7 @@
 package an.inhaintegration.controller;
 
 import an.inhaintegration.domain.Student;
+import an.inhaintegration.domain.oauth2.CustomOauth2UserDetails;
 import an.inhaintegration.domain.oauth2.CustomUserDetails;
 import an.inhaintegration.dto.LoginRequestDto;
 import an.inhaintegration.dto.OauthUserRequestDto;
@@ -110,7 +111,6 @@ public class HomeController {
 
         if (bindingResult.hasErrors()) return "home/join/join";
 
-        model.addAttribute("userRequestDto.phoneNumber", userRequestDto.getPhoneNumber());
         session.setAttribute("userRequestDto", userRequestDto);
 
         return "home/join/joinMessage";
@@ -301,6 +301,8 @@ public class HomeController {
 
         if (principal instanceof CustomUserDetails) {
             return ((CustomUserDetails) principal).getStudent();
+        } else if (principal instanceof CustomOauth2UserDetails) {
+            return ((CustomOauth2UserDetails) principal).getStudent();
         }
 
         return null;

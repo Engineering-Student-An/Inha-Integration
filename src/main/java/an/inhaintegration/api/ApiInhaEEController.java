@@ -1,6 +1,6 @@
 package an.inhaintegration.api;
 
-import an.inhaintegration.dto.ParserDto;
+import an.inhaintegration.dto.crawling.CrawlingInhaEEResponseDto;
 import an.inhaintegration.service.CrawlingInhaEEService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ public class ApiInhaEEController {
     private final CrawlingInhaEEService crawlingInhaEEService;
 
     @GetMapping("/importantPosts")
-    public List<ParserDto> fetchImportantPosts() {
+    public List<CrawlingInhaEEResponseDto> fetchImportantPosts() {
         return crawlingInhaEEService.importantPostParser();
     }
 

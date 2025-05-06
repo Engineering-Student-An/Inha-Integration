@@ -1,15 +1,16 @@
 package an.inhaintegration.controller.admin;
 
 import an.inhaintegration.domain.Student;
+import an.inhaintegration.domain.oauth2.CustomOauth2UserDetails;
 import an.inhaintegration.domain.oauth2.CustomUserDetails;
-import an.inhaintegration.dto.ItemRequestDto;
-import an.inhaintegration.dto.ItemSearchDto;
+import an.inhaintegration.dto.item.ItemRequestDto;
+import an.inhaintegration.dto.item.ItemSearchDto;
 import an.inhaintegration.service.ItemRequestService;
 import an.inhaintegration.service.ItemService;
 import an.inhaintegration.service.admin.AdminItemService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,6 +38,7 @@ public class AdminItemController {
     public String createItemForm(Model model) {
 
         model.addAttribute("itemRequestDto", new ItemRequestDto());
+
         return "admin/item/createItemForm";
     }
 
@@ -59,9 +61,7 @@ public class AdminItemController {
     public String updateItemForm(@PathVariable("itemId") Long itemId, Model model) {
 
         // Item -> ItemRequestDto로 변환
-        ItemRequestDto itemRequestDto = adminItemService.mapItemToRequestDto(itemId);
-
-        model.addAttribute("itemRequestDto", itemRequestDto);
+        model.addAttribute("itemRequestDto", adminItemService.mapItemToItemRequestDto(itemId));
 
         return "admin/item/updateItemForm";
     }
@@ -97,25 +97,30 @@ public class AdminItemController {
         return "redirect:/admin/item/list";
     }
 
-    @GetMapping("/item/request/{id}/check")
-    public String checkRequest(@PathVariable Long id) {
-        itemRequestService.check(id);
-
-        return "redirect:/item/request/list";
-    }
-
-    @GetMapping("/item/request/{id}/delete")
-    public String deleteRequest(@PathVariable Long id) {
-        itemRequestService.delete(id);
-
-        return "redirect:/item/request/list";
-    }
+//    @GetMapping("/item/request/{id}/check")
+//    public String checkRequest(@PathVariable Long id) {
+//        itemRequestService.check(id);
+//
+//        return "redirect:/item/request/list";
+//    }
+//
+//    @GetMapping("/item/request/{id}/delete")
+//    public String deleteRequest(@PathVariable Long id) {
+//        itemRequestService.delete(id);
+//
+//        return "redirect:/item/request/list";
+//    }
 
     @ModelAttribute("loginStudent")
-    public Student loginStudent(HttpSession session) {
-        if(session.getAttribute("loginStudent") != null) {
-            return (Student) session.getAttribute("loginStudent");
+    public Student loginStudent() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof CustomUserDetails) {
+            return ((CustomUserDetails) principal).getStudent();
+        } else if (principal instanceof CustomOauth2UserDetails) {
+            return ((CustomOauth2UserDetails) principal).getStudent();
         }
+
         return null;
     }
 }

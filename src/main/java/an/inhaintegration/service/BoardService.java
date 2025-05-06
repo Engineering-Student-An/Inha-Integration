@@ -3,6 +3,7 @@ package an.inhaintegration.service;
 import an.inhaintegration.domain.Board;
 import an.inhaintegration.domain.Student;
 import an.inhaintegration.dto.BoardForm;
+import an.inhaintegration.dto.board.BoardResponseDto;
 import an.inhaintegration.exception.BoardNotFoundException;
 import an.inhaintegration.exception.StudentNotFoundException;
 import an.inhaintegration.repository.BoardRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,9 +68,18 @@ public class BoardService {
     }
 
     // 최근 공지사항 조회 메서드
-    public List<Board> findRecentNotice() {
+    public List<BoardResponseDto> findRecentNotice() {
 
         Pageable pageable = PageRequest.of(0, 5, Sort.by("createdAt").descending());
-        return boardRepository.findBoardsByNoticeIs(pageable, true).getContent();
+        Page<Board> boards = boardRepository.findBoardsByNoticeIs(pageable, true);
+
+        return boards.stream()
+                .map(this::mapBoardToBoardResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    public BoardResponseDto mapBoardToBoardResponseDto(Board board) {
+
+        return new BoardResponseDto(board.getId(), board.getTitle(), board.getCreatedAt());
     }
 }

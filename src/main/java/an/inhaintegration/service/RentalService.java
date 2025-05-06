@@ -3,6 +3,7 @@ package an.inhaintegration.service;
 import an.inhaintegration.domain.Rental;
 import an.inhaintegration.domain.RentalStatus;
 import an.inhaintegration.dto.RentalSearch;
+import an.inhaintegration.dto.rental.RentalResponseDto;
 import an.inhaintegration.exception.RentalNotFoundException;
 import an.inhaintegration.repository.ItemRepository;
 import an.inhaintegration.repository.RentalQueryRepository;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -64,13 +66,17 @@ public class RentalService {
         return rentalRepository.findRentalsByStudent_Id(id, pageable);
     }
 
-    public List<Rental> findMyRentalINGList(Long studentId) {
+    public List<RentalResponseDto> findMyRentalINGList(Long studentId) {
 
         if(studentId == null) return null;
 
         // 연체, 대여 중 상태를 리스트화
         Collection<RentalStatus> collection = Arrays.asList(RentalStatus.OVERDUE, RentalStatus.ING);
-        return rentalRepository.findRentalsByStudentIdAndStatusIn(studentId, collection);
+        List<Rental> rentals = rentalRepository.findRentalsByStudentIdAndStatusIn(studentId, collection);
+
+        return rentals.stream()
+                .map(this::mapRentalToRentalResponseDto)
+                .collect(Collectors.toList());
     }
 
     // 특정 학생의 특정 아이템 렌탈 리스트 검색
@@ -98,5 +104,11 @@ public class RentalService {
     public Page<Rental> findRentalByStuId_Status_Item(RentalSearch rentalSearch, Pageable pageable) {
         return rentalQueryRepository.findByStuIdAndStatusAndItemName(rentalSearch, pageable);
 
+    }
+
+    // Rental -> RentalResponseDto 변환 메서드
+    private RentalResponseDto mapRentalToRentalResponseDto(Rental rental) {
+
+        return new RentalResponseDto(rental.getId(), rental.getStatus(), rental.getItem().getName(), rental.getItem().getCategory(), rental.getRentalDate());
     }
 }

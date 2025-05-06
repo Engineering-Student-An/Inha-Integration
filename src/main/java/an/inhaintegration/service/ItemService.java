@@ -1,7 +1,7 @@
 package an.inhaintegration.service;
 
 import an.inhaintegration.domain.Item;
-import an.inhaintegration.dto.ItemSearchDto;
+import an.inhaintegration.dto.item.ItemSearchDto;
 import an.inhaintegration.repository.ItemRepository;
 import an.inhaintegration.repository.RentalRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,11 +46,6 @@ public class ItemService {
     public Page<Item> findAllItems(Pageable pageable) { return itemRepository.findAll(pageable); }
 
     public Page<Item> findItemsByCategoryAndName(String category, String name, Pageable pageable) { return itemRepository.findItemsByCategoryContainingAndNameContaining(category, name, pageable); }
-
-    public List<Item> findHotItems() {
-        Pageable pageable = PageRequest.of(0, 3, Sort.by("rentalCount").descending());
-        return itemRepository.findAll(pageable).getContent();
-    }
 
 
     public Page<Item> findItemsBySearch(int page, ItemSearchDto itemSearchDto) {
