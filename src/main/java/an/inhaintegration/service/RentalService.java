@@ -2,6 +2,7 @@ package an.inhaintegration.service;
 
 import an.inhaintegration.domain.Rental;
 import an.inhaintegration.domain.RentalStatus;
+import an.inhaintegration.domain.Student;
 import an.inhaintegration.dto.RentalSearch;
 import an.inhaintegration.exception.RentalNotFoundException;
 import an.inhaintegration.repository.ItemRepository;
@@ -28,6 +29,7 @@ public class RentalService {
     private final StudentRepository studentRepository;
     private final ItemRepository itemRepository;
     private final RentalQueryRepository rentalQueryRepository;
+    private final LoginStudentUtil loginStudentUtil;
 
     // 대여 시작
 //    @Transactional
@@ -64,10 +66,14 @@ public class RentalService {
         return rentalRepository.findRentalsByStudent_Id(id, pageable);
     }
 
-    public List<Rental> findMyRentalINGList(Long id) {
-        Collection<RentalStatus> collection = Arrays.asList(RentalStatus.OVERDUE, RentalStatus.ING);
+    public List<Rental> findMyRentalINGList() {
 
-        return rentalRepository.findRentalsByStudent_IdAndStatusIn(id, collection);
+        Student loginStudent = loginStudentUtil.getLoginStudent().orElse(null);
+        if(loginStudent == null) return null;
+
+        // 연체, 대여 중 상태를 리스트화
+        Collection<RentalStatus> collection = Arrays.asList(RentalStatus.OVERDUE, RentalStatus.ING);
+        return rentalRepository.findRentalsByStudentIdAndStatusIn(loginStudent.getId(), collection);
     }
 
     // 특정 학생의 특정 아이템 렌탈 리스트 검색

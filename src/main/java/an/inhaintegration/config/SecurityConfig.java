@@ -70,7 +70,13 @@ public class SecurityConfig {
                 );
 
         // 로그아웃 설정
-        http.logout((auth) -> auth.logoutUrl("/oauth-login/logout"));
+        http.logout((auth) -> auth
+                .logoutUrl("/oauth-login/logout")
+                .logoutSuccessUrl("/login?logout") // 리다이렉트
+//                .deleteCookies("JSESSIONID", "remember-me") // 쿠키 삭제
+                .invalidateHttpSession(true) // 세션 무효화
+                .clearAuthentication(true) // 인증정보 삭제
+        );
 
         // csrf 설정
         http.csrf((auth) -> auth.disable());

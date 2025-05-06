@@ -28,6 +28,7 @@ public class HomeController {
     private final RentalService rentalService;
     private final CrawlingInhaEEService crawlingInhaEEService;
     private final EmailService emailService;
+    private final LoginStudentUtil loginStudentUtil;
 
     @GetMapping(value = {"", "/"})
     public String index() {
@@ -38,11 +39,9 @@ public class HomeController {
     @GetMapping("/home")
     public String home(Model model, HttpSession session) {
 
-        Student loginStudent = (Student) model.getAttribute("loginStudent");
-
         session.setAttribute("previousPage", "/home");
 
-        model.addAttribute("rentalList", (loginStudent == null) ? null : rentalService.findMyRentalINGList(loginStudent.getId()));
+        model.addAttribute("rentalList", rentalService.findMyRentalINGList());
         model.addAttribute("recentNotice", boardService.findRecentNotice());
         model.addAttribute("importantPosts", crawlingInhaEEService.importantPostParser());
         model.addAttribute("recentPosts", crawlingInhaEEService.recentPostParser());
@@ -67,17 +66,6 @@ public class HomeController {
         return "error/errorMessage";
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest httpServletRequest) {
-
-        HttpSession httpSession = httpServletRequest.getSession(true);
-        if (httpSession != null) {
-            httpSession.invalidate();
-        }
-
-        return "redirect:/";
-    }
-
     @GetMapping("/oauth")
     public String oauthUpdate(Model model) {
 
@@ -89,8 +77,6 @@ public class HomeController {
     public String validateStuId(@Valid @ModelAttribute OauthUserRequestDto oauthUserRequestDto,
                        BindingResult bindingResult, Model model, HttpServletRequest request) {
 
-        System.out.println("oauthUserRequestDto.getStuId() = " + oauthUserRequestDto.getStuId());
-        System.out.println("oauthUserRequestDto.getName() = " + oauthUserRequestDto.getName());
         feeStudentService.validateOauthFeeStudent(oauthUserRequestDto, bindingResult);    // oauth 로그인 후 학생회비 납부 여부 검증
 
         if (bindingResult.hasErrors()) return "home/join/addInfoAfterOauth";
@@ -104,6 +90,7 @@ public class HomeController {
 
         model.addAttribute("errorMessage", "정보 입력이 완료되었습니다! 대시보드로 이동합니다.");
         model.addAttribute("nextUrl", "/home");
+
         return "error/errorMessage";
     }
 
@@ -179,8 +166,8 @@ public class HomeController {
 
         model.addAttribute("errorMessage", "회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.");
         model.addAttribute("nextUrl", "/login");
-        return "error/errorMessage";
 
+        return "error/errorMessage";
     }
 //
 //    @GetMapping("/findPassword/info")
@@ -310,8 +297,16 @@ public class HomeController {
 //    }
 
     @ModelAttribute("loginStudent")
+    public Student loginStudent() {
+        return loginStudentUtil.getLoginStudent().orElse(null);
+    }
+
+        @ModelAttribute("loginStudent")
     public Student loginStudent(HttpSession session) {
-        return (Student) session.getAttribute("loginStudent");
+        if(session.getAttribute("loginStudent") != null) {
+            return (Student) session.getAttribute("loginStudent");
+        }
+        return null;
     }
 
     @ModelAttribute("isMobile")

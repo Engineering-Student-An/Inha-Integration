@@ -35,10 +35,10 @@ public class CustomUserDetails implements UserDetails {
         return student.getPassword();
     }
 
-    // student의 stuId 반환
+    // student의 loginId 반환
     @Override
     public String getUsername() {
-        return student.getStuId();
+        return student.getLoginId();
     }
 
     @Override

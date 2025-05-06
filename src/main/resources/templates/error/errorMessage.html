@@ -3,8 +3,11 @@
 <head th:replace="~{fragments/header :: header}"></head>
 <body class="min-h-screen flex flex-col">
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div><br>
-<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
+<main class="flex-grow">
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
+
 <script th:inline="javascript">
     window.onload = function (){
         window.location.href = [[${nextUrl}]]

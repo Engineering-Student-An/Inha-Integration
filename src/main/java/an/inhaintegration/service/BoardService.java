@@ -65,7 +65,9 @@ public class BoardService {
         return boardRepository.findBoardsByStudent(student);
     }
 
+    // 최근 공지사항 조회 메서드
     public List<Board> findRecentNotice() {
+
         Pageable pageable = PageRequest.of(0, 5, Sort.by("createdAt").descending());
         return boardRepository.findBoardsByNoticeIs(pageable, true).getContent();
     }

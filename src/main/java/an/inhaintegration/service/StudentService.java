@@ -1,6 +1,7 @@
 package an.inhaintegration.service;
 
 import an.inhaintegration.domain.Student;
+import an.inhaintegration.dto.ChangePasswordRequestDto;
 import an.inhaintegration.dto.OauthUserRequestDto;
 import an.inhaintegration.dto.UserRequestDto;
 import an.inhaintegration.exception.StudentNotFoundException;
@@ -30,6 +31,7 @@ public class StudentService {
     private final BoardRepository boardRepository;
     private final ReplyRepository replyRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final LoginStudentUtil loginStudentUtil;
 
     // 학번 중복 검증 메서드
     public boolean checkStuIdDuplicate(String stuId){
@@ -78,39 +80,77 @@ public class StudentService {
     public void updateOauthInfo(OauthUserRequestDto oauthUserRequestDto, HttpServletRequest request) {
 
         // 세션에서 로그인한 사용자 가져오기
+        Student loginStudent = loginStudentUtil.getLoginStudent().orElseThrow(StudentNotFoundException::new);
+
+        // 추가적인 정보 업데이트
+        loginStudent.addInfoAfterOauth(oauthUserRequestDto.getStuId(), oauthUserRequestDto.getName(), oauthUserRequestDto.getPhoneNumber());
+
+        // 영속성 컨텍스트에 loginStudent가 관리되고 있지 않으므로 save() 메서드를 호출해줘야함 (더티체킹이 일어나지 않기 때문)
+        studentRepository.save(loginStudent);
+
+        // 세션에 최신화 된 학생 정보로 업데이트
         HttpSession session = request.getSession();
-        Student loginStudent = (Student) session.getAttribute("loginStudent");
-
-        if (loginStudent == null) throw new StudentNotFoundException();
-
-        // DB에서 해당 학생 엔티티 조회
-        Student student = studentRepository.findById(loginStudent.getId())
-                .orElseThrow((StudentNotFoundException::new));
-
-        // stuId 업데이트
-        student.addInfoAfterOauth(oauthUserRequestDto.getStuId(), oauthUserRequestDto.getName(), oauthUserRequestDto.getPhoneNumber());
-
-        // 세션 정보도 업데이트 (선택적)
-        session.setAttribute("loginStudent", student);
+        session.setAttribute("loginStudent", loginStudent);
     }
-//
-//    public boolean passwordCheck(String stuId, String password) {
-//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//
-//        return encoder.matches(password, studentRepository.findByStuId(stuId).getPassword());
-//    }
-//
-//    // 비밀번호 변경
-//    public void changePassword(String stuId, ChangePasswordRequest request) {
-//        Student student = studentRepository.findByStuId(stuId);
-//        student.editPassword(bCryptPasswordEncoder.encode(request.getChangePassword()));
-//    }
-//
-//    public void changeEmail(String stuId, String email) {
-//        Student student = studentRepository.findByStuId(stuId);
-//        student.editEmail(email);
-//    }
-//
+
+    // 비밀번호 검증 메서드
+    public boolean passwordCheck(String password) {
+
+        Student loginStudent = loginStudentUtil.getLoginStudent().orElseThrow(StudentNotFoundException::new);
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder.matches(password, loginStudent.getPassword());
+    }
+
+    public void validateChangePassword(@Valid ChangePasswordRequestDto changePasswordRequestDto, BindingResult bindingResult) {
+
+        // 현재 비밀번호와 동일하게 변경하려는 경우
+        if(passwordCheck(changePasswordRequestDto.getChangePassword())){
+            bindingResult.addError(new FieldError("changePasswordRequestDto",
+                    "changePassword", "현재 비밀번호와 동일하게 변경 불가합니다!"));
+        }
+        // 비밀번호 체크와 동일하지 않은 경우
+        else if (!changePasswordRequestDto.getChangePassword().equals(changePasswordRequestDto.getChangePasswordCheck())) {
+            bindingResult.addError(new FieldError("request",
+                    "changePassword", "비밀번호가 동일하지 않습니다!"));
+            bindingResult.addError(new FieldError("request",
+                    "changePasswordCheck", "비밀번호가 동일하지 않습니다!"));
+        }
+    }
+
+    // 비밀번호 변경
+    @Transactional
+    public void changePassword(ChangePasswordRequestDto changePasswordRequestDto) {
+
+        Student loginStudent = loginStudentUtil.getLoginStudent().orElseThrow(StudentNotFoundException::new);
+
+        loginStudent.editPassword(bCryptPasswordEncoder.encode(changePasswordRequestDto.getChangePassword()));
+        studentRepository.save(loginStudent);
+    }
+
+    public String validateEmail(String inputEmail) {
+
+        Student loginStudent = loginStudentUtil.getLoginStudent().orElseThrow(StudentNotFoundException::new);
+        String email = loginStudent.getEmail();
+
+        if(inputEmail.equals(email)) return "현재 이메일 주소와 동일합니다!";    // 현재 이메일과 동일한 경우
+        if(inputEmail.isEmpty()) return "이메일 주소를 입력해주세요!";               // 입력이 없는 경우
+        if(!inputEmail.contains("@") || !inputEmail.contains(".")) return "이메일 주소가 올바르지 않습니다!";   // 이메일 형식이 아닌 경우
+
+        // 비밀번호 검증 완료 시 null 반환
+        return null;
+    }
+
+    @Transactional
+    public void editEmail(String email) {
+
+        Student loginStudent = loginStudentUtil.getLoginStudent().orElseThrow(StudentNotFoundException::new);
+
+        loginStudent.editEmail(email);
+
+        studentRepository.save(loginStudent);
+    }
+
 //    private final BoardService boardService;
 //    private final ReplyService replyService;
 //

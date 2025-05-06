@@ -58,5 +58,6 @@ public class Student {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.role = StudentRole.USER;
+        this.email = this.loginId;
     }
 }
