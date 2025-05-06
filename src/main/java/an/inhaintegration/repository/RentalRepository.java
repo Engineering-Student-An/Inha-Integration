@@ -18,13 +18,15 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
 
     List<Rental> findRentalsByStatus(RentalStatus rentalStatus);
 
-    // student로 여러개 조회
-    Page<Rental> findRentalsByStudent_Id(Long id, Pageable pageable);
+
 
     Boolean existsByStudent_IdAndItemIdAndStatusNotIn(Long student_id, Long item_id, Collection<RentalStatus> status);
 
+    // student로 여러개 조회
+    Page<Rental> findRentalsByStudentId(Long studentId, Pageable pageable);
+
     // rentalStatus + studentId로 여러개 조회
-    Page<Rental> findRentalsByStatusAndStudent_Id(RentalStatus rentalStatus, Long id, Pageable pageable);
+    Page<Rental> findRentalsByStatusAndStudentId(RentalStatus rentalStatus, Long studentId, Pageable pageable);
 
     void deleteRentalByItem_Id(Long itemId);
 

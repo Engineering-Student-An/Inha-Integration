@@ -25,7 +25,7 @@ public class AdminItemController {
     private final ItemRequestService itemRequestService;
     private final AdminItemService adminItemService;
 
-    @GetMapping("/item/list")
+    @GetMapping("/items")
     public String list(@ModelAttribute("itemSearchDto") ItemSearchDto itemSearchDto,
                        @RequestParam(required = false, defaultValue = "1", value = "page") int page, Model model) {
 

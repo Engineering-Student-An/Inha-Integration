@@ -5,9 +5,6 @@ import an.inhaintegration.dto.ChangePasswordRequestDto;
 import an.inhaintegration.dto.OauthUserRequestDto;
 import an.inhaintegration.dto.UserRequestDto;
 import an.inhaintegration.exception.StudentNotFoundException;
-import an.inhaintegration.repository.BoardRepository;
-import an.inhaintegration.repository.RentalRepository;
-import an.inhaintegration.repository.ReplyRepository;
 import an.inhaintegration.repository.StudentRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -26,9 +23,6 @@ import java.util.regex.Pattern;
 public class StudentService {
 
     private final StudentRepository studentRepository;
-    private final RentalRepository rentalRepository;
-    private final BoardRepository boardRepository;
-    private final ReplyRepository replyRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // 학번 중복 검증 메서드
@@ -195,37 +189,4 @@ public class StudentService {
 //
 //    }
 //
-//    // 로그인
-//    public Student login(LoginRequest loginRequest) {
-//        Student student = studentRepository.findByStuId(loginRequest.getStuId());
-//
-//        if (student == null) {
-//            return null;
-//        }
-//
-//        if(!student.getPassword().equals(loginRequest.getPassword())){
-//            return null;
-//        }
-//
-//        return student;
-//    }
-//
-//    /**
-//     * 학생 단건 조회
-//     */
-//    public Student findStudent(String stuId){
-//        return studentRepository.findByStuId(stuId);
-//
-//    }
-//
-//    public Page<Student> findStudentContainingStuIdAndName(String stuId, String name, Pageable pageable){
-//        return studentRepository.findStudentByStuIdContainingAndNameContaining(stuId, name, pageable);
-//    }
-//
-//    /**
-//     * 학생 전체 조회
-//     */
-//    public Page<Student> findAllStudent(Pageable pageable){
-//        return studentRepository.findAll(pageable);
-//    }
 }

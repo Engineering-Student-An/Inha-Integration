@@ -12,7 +12,7 @@
 <main class="flex-grow">
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div class="container mx-auto my-8 p-6 bg-gray-100 rounded-lg shadow-md">
-            <form th:object="${studentSearch}" >
+            <form th:object="${studentSearchRequestDto}" >
                 <div class="mb-4 flex items-center">
                     <input type="text" th:field="*{stuId}" class="border border-gray-300 rounded-lg px-4 py-2 mr-4"
                            placeholder="학생 학번">
@@ -26,8 +26,6 @@
                             <span class="material-symbols-outlined" style="color: #0b5ed7; vertical-align: top">search</span>
                         </button>
                     </div>
-
-
                 </div>
             </form>
             <br>
@@ -47,7 +45,7 @@
                     <td class="py-3 px-4" th:text="${student.stuId}"></td>
                     <td class="py-3 px-4" th:text="${student.name}"></td>
                     <td class="py-3 px-4" >
-                        <a href="#" th:href="@{/admin/student/{id} (id=${student.stuId})}">
+                        <a href="#" th:href="@{/admin/student/{studentId} (studentId=${student.id})}">
                             <span class="material-symbols-outlined">person_check</span>
                         </a>
                     </td>
@@ -57,19 +55,19 @@
 
             <div class="pagination">
                 <button class="pagination-button" th:disabled="${students.getNumber()}==0"
-                        th:onclick="|location.href='@{/admin/student/list(page=${1}, stuId=${studentSearch.getStuId()}, name=${studentSearch.getName()} ) }'|">
+                        th:onclick="|location.href='@{/admin/students(page=${1}, stuId=${studentSearchRequestDto.getStuId()}, name=${studentSearchRequestDto.getName()} ) }'|">
                     <<</button>
                 <button class="pagination-button" th:disabled="${!students.hasPrevious()}"
-                        th:onclick="|location.href='@{/admin/student/list(page=${students.getNumber()}, stuId=${studentSearch.getStuId()}, name=${studentSearch.getName()} ) }'|">
+                        th:onclick="|location.href='@{/admin/students(page=${students.getNumber()}, stuId=${studentSearchRequestDto.getStuId()}, name=${studentSearchRequestDto.getName()} ) }'|">
                     <</button>
                 &nbsp; &nbsp;
                 <span class="pagination-info">[[${students.getNumber()+1}]] / [[${students.getTotalElements() == 0 ? 1 : students.getTotalPages()}]]</span>
                 &nbsp; &nbsp;
                 <button class="pagination-button" th:disabled="${!students.hasNext()}"
-                        th:onclick="|location.href='@{/admin/student/list(page=${students.getNumber() + 2}, stuId=${studentSearch.getStuId()}, name=${studentSearch.getName()} ) }'|">
+                        th:onclick="|location.href='@{/admin/students(page=${students.getNumber() + 2}, stuId=${studentSearchRequestDto.getStuId()}, name=${studentSearchRequestDto.getName()} ) }'|">
                     ></button>
                 <button class="pagination-button" th:disabled="${!students.hasNext()}"
-                        th:onclick="|location.href='@{/admin/student/list(page=${students.getTotalPages()}, stuId=${studentSearch.getStuId()}, name=${studentSearch.getName()} ) }'|">
+                        th:onclick="|location.href='@{/admin/students(page=${students.getTotalPages()}, stuId=${studentSearchRequestDto.getStuId()}, name=${studentSearchRequestDto.getName()} ) }'|">
                     >></button>
             </div>
         </div>

@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class RentalSearch {
+public class RentalSearchRequestDto {
 
     private String stuId;
     private RentalStatus rentalStatus;  // ING, FINISH, OVERDUE

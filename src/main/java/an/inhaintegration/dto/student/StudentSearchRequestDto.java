@@ -1,4 +1,4 @@
-package an.inhaintegration.repository;
+package an.inhaintegration.dto.student;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
