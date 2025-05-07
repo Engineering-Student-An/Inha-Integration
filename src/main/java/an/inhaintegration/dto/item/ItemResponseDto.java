@@ -6,4 +6,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ItemResponseDto {
+
+    private Long itemId;
+    private String name;
+    private int stockQuantity;
+    private int allStockQuantity;
+
 }

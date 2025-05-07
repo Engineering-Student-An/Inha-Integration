@@ -34,9 +34,12 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // 물품 삭제 함수
-function deleteItem() {
-    if (confirm("물품 삭제 시 해당 물품의 대여 기록도 삭제 됩니다.\n정말 물품을 삭제하겠습니까?")) {
-        document.getElementById("delete-form").submit();
+function deleteItem(itemId) {
+
+    if (confirm("정말로 삭제하시겠습니까?")) {
+        console.log('아이템 아이디!!!!!!!: ' + itemId);
+        document.getElementById('delete-form-' + itemId).submit();
     }
+    console.log('아이템 아이디: ' + itemId);
     return false;
 }

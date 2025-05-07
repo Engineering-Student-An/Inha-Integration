@@ -53,7 +53,7 @@ public class AdminItemController {
         // 물품 저장
         adminItemService.save(userDetails.getId(), itemRequestDto);
 
-        return "redirect:/admin/item/list";
+        return "redirect:/admin/items";
     }
 
     @GetMapping("/item/{itemId}")
@@ -67,7 +67,7 @@ public class AdminItemController {
 
     @PatchMapping("/item/{itemId}")
     public String updateItem(@AuthenticationPrincipal CustomUserDetails userDetails,
-                             @PathVariable("itemId") String itemId,
+                             @PathVariable("itemId") Long itemId,
                              @ModelAttribute("itemRequestDto") ItemRequestDto itemRequestDto, BindingResult bindingResult) {
 
         // 물품 수정 요청 검증
@@ -78,12 +78,14 @@ public class AdminItemController {
         // 물품 수정
         adminItemService.update(userDetails.getId(), itemRequestDto);
 
-        return "redirect:/admin/item/list";
+        return "redirect:/admin/items";
     }
 
     @DeleteMapping("/item/{itemId}")
     public String deleteItem(@AuthenticationPrincipal CustomUserDetails userDetails,
                              @PathVariable(value = "itemId") Long itemId, Model model){
+
+        System.out.println("itemId = " + itemId);
 
         if(!adminItemService.validateDeleteItem(itemId)) {
             model.addAttribute("errorMessage", "현재 대여중인 물품은 삭제할 수 없습니다!");
@@ -93,7 +95,7 @@ public class AdminItemController {
 
         adminItemService.delete(userDetails.getId(), itemId);
 
-        return "redirect:/admin/item/list";
+        return "redirect:/admin/items";
     }
 
 //    @GetMapping("/item/request/{id}/check")

@@ -20,7 +20,7 @@ public class ItemController {
     private final ItemService itemService;
     private final ItemRequestService itemRequestService;
 
-    @GetMapping("/item/list")
+    @GetMapping("/items")
     public String list(@ModelAttribute("itemSearchRequestDto") ItemSearchRequestDto itemSearchRequestDto,
                        @RequestParam(required = false, defaultValue = "1", value = "page") int page, Model model) {
 

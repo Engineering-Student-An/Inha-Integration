@@ -12,9 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @Transactional(readOnly = true)
@@ -24,19 +22,14 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final RentalRepository rentalRepository;
 
-    public List<Item> findAllItems() {
+    public List<Item> findAll() {
+
         return itemRepository.findAll();
     }
 
-    public Set<String> findCategories () {
+    public List<String> findDistinctCategories () {
 
-        Set<String> categories = new HashSet<>();
-
-        for (Item item : itemRepository.findAll()) {
-            categories.add(item.getCategory());
-        }
-
-        return categories;
+        return itemRepository.findDistinctCategories();
     }
 
 //    public List<Item> findItemsByCategory(String category) {
