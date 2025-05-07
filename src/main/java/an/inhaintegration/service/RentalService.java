@@ -94,10 +94,7 @@ public class RentalService {
         return rentalRepository.findAll(pageable);
     }
 
-//    public Page<Rental> findRentalByStuId_Status_Item(RentalSearch rentalSearch, Pageable pageable) {
-//        return rentalQueryRepository.findByStuIdAndStatusAndItemName(rentalSearch, pageable);
-//
-//    }
+
 
     // Rental -> RentalResponseDto 변환 메서드
     private RentalResponseDto mapRentalToRentalResponseDto(Rental rental) {

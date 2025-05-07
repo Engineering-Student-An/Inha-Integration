@@ -38,10 +38,10 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
 
-#  # devtools 자동 재시작 끔
-#  devtools:
-#    restart:
-#      enabled: false
+  # devtools 자동 재시작 끔
+  devtools:
+    restart:
+      enabled: false
 
   security:
     oauth2:

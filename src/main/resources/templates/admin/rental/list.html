@@ -12,13 +12,13 @@
 <main class="flex-grow">
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div class="container mx-auto my-8 p-6 bg-gray-100 rounded-lg shadow-md">
-            <form th:object="${rentalSearch}" >
+            <form th:object="${rentalSearchRequestDto}" >
                 <div class="mb-4 flex items-center">
                     <input type="text" th:field="*{stuId}" class="border border-gray-300 rounded-lg px-4 py-2 mr-4"
                            placeholder="학생 학번" />
                     <select th:field="*{rentalStatus}" class="border border-gray-300 rounded-lg px-4 py-2 mr-4">
                         <option value="">대여 상태</option>
-                        <option th:each="status : ${T(an.rentalinhaee.domain.RentalStatus).values()}"
+                        <option th:each="status : ${T(an.inhaintegration.domain.RentalStatus).values()}"
                                 th:value="${status}"
                                 th:text="${status.getDisplayName()}">option
                         </option>
@@ -74,19 +74,19 @@
 
             <div class="pagination">
                 <button class="pagination-button" th:disabled="${rentals.getNumber()}==0"
-                        th:onclick="|location.href='@{/admin/rental/list(page=${1}, stuId=${rentalSearch.getStuId()}, rentalStatus=${rentalSearch.getRentalStatus()} ) }'|">
+                        th:onclick="|location.href='@{/admin/rentals(page=${1}, stuId=${rentalSearchRequestDto.getStuId()}, rentalStatus=${rentalSearchRequestDto.getRentalStatus()} ) }'|">
                     <<</button>
                 <button class="pagination-button" th:disabled="${!rentals.hasPrevious()}"
-                        th:onclick="|location.href='@{/admin/rental/list(page=${rentals.getNumber()}, stuId=${rentalSearch.getStuId()}, rentalStatus=${rentalSearch.getRentalStatus()} ) }'|">
+                        th:onclick="|location.href='@{/admin/rentals(page=${rentals.getNumber()}, stuId=${rentalSearchRequestDto.getStuId()}, rentalStatus=${rentalSearchRequestDto.getRentalStatus()} ) }'|">
                     <</button>
                 &nbsp; &nbsp;
                 <span>[[${rentals.getNumber()+1}]] / [[${rentals.getTotalElements() == 0 ? 1 : rentals.getTotalPages()}]] </span>
                 &nbsp; &nbsp;
                 <button class="pagination-button" th:disabled="${!rentals.hasNext()}"
-                        th:onclick="|location.href='@{/admin/rental/list(page=${rentals.getNumber() + 2}, stuId=${rentalSearch.getStuId()}, rentalStatus=${rentalSearch.getRentalStatus()} ) }'|">
+                        th:onclick="|location.href='@{/admin/rentals(page=${rentals.getNumber() + 2}, stuId=${rentalSearchRequestDto.getStuId()}, rentalStatus=${rentalSearchRequestDto.getRentalStatus()} ) }'|">
                     ></button>
                 <button class="pagination-button" th:disabled="${!rentals.hasNext()}"
-                        th:onclick="|location.href='@{/admin/rental/list(page=${rentals.getTotalPages()}, stuId=${rentalSearch.getStuId()}, rentalStatus=${rentalSearch.getRentalStatus()} ) }'|">
+                        th:onclick="|location.href='@{/admin/rentals(page=${rentals.getTotalPages()}, stuId=${rentalSearchRequestDto.getStuId()}, rentalStatus=${rentalSearchRequestDto.getRentalStatus()} ) }'|">
                     >></button>
             </div>
         </div>

@@ -4,6 +4,7 @@ import an.inhaintegration.domain.Rental;
 import an.inhaintegration.domain.Student;
 import an.inhaintegration.dto.rental.RentalSearchRequestDto;
 import an.inhaintegration.exception.StudentNotFoundException;
+import an.inhaintegration.repository.RentalQueryRepository;
 import an.inhaintegration.repository.RentalRepository;
 import an.inhaintegration.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class AdminRentalService {
 
     private final RentalRepository rentalRepository;
+    private final RentalQueryRepository rentalQueryRepository;
     private final StudentRepository studentRepository;
 
     public Page<Rental> findRentalsBySearch(Long studentId, RentalSearchRequestDto rentalSearchRequestDto, int page) {
@@ -33,5 +35,12 @@ public class AdminRentalService {
         } else{
             return rentalRepository.findRentalsByStatusAndStudentId(rentalSearchRequestDto.getRentalStatus(), student.getId(), pageRequest);
         }
+    }
+
+    public Page<Rental> findRentalsBySearch(RentalSearchRequestDto rentalSearchRequestDto, int page) {
+
+        PageRequest pageRequest = PageRequest.of(page-1, 10, Sort.by("rentalDate").descending().and(Sort.by("status").descending()));
+
+        return rentalQueryRepository.findByStuIdAndStatusAndItemName(rentalSearchRequestDto, pageRequest);
     }
 }

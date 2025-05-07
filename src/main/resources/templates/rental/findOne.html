@@ -12,7 +12,7 @@
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <div class="container mx-auto my-8 p-6 bg-gray-100 rounded-lg shadow-md">
 
-            <form th:object="${rentalSearch}">
+            <form th:object="${rentalSearchRequestDto}">
                 <div class="mb-4 flex items-center space-x-4">
                     <select th:field="*{rentalStatus}" class="border border-gray-300 rounded-lg px-4 py-2">
                         <option value="">대여 상태</option>

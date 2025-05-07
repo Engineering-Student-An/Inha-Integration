@@ -14,8 +14,8 @@ function confirmDelete() {
 
 function adminCancel(id, stuId) {
     var form = document.createElement("form");
-    form.setAttribute("method", "post");
-    form.setAttribute("action", "/admin/rental/" + id + "/finish");
+    form.setAttribute("method", "delete");
+    form.setAttribute("action", "/admin/rental/" + id);
 
     var hiddenField = document.createElement("input");
     hiddenField.setAttribute("type", "hidden");
