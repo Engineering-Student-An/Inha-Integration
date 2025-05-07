@@ -47,7 +47,6 @@ public class ItemService {
 
     public Page<Item> findItemsByCategoryAndName(String category, String name, Pageable pageable) { return itemRepository.findItemsByCategoryContainingAndNameContaining(category, name, pageable); }
 
-
     public Page<Item> findItemsBySearch(int page, ItemSearchRequestDto itemSearchRequestDto) {
 
         // 검색 조건 추가해서 조회

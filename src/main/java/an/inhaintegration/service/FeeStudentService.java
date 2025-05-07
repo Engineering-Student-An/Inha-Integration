@@ -17,26 +17,11 @@ import java.util.regex.Pattern;
 public class FeeStudentService {
 
     private final FeeStudentRepository feeStudentRepository;
-//
-
-//
-//
-//    @Transactional
-//    public void save(FeeStudent feeStudent) {
-//        feeStudentRepository.save(feeStudent);
-//    }
-//
-
-    // 학번으로 조회 메서드
-    public FeeStudent findByStuId(String stuId) {
-
-        return feeStudentRepository.findByStuId(stuId).orElse(null);
-    }
 
     // 학생회비 납부 명단에서 검증하는 메서드
     public void validateFeeStudent(@Valid StudentRequestDto studentRequestDto, BindingResult bindingResult) {
 
-        FeeStudent feeStudent = findByStuId(studentRequestDto.getStuId());
+        FeeStudent feeStudent = feeStudentRepository.findByStuId(studentRequestDto.getStuId()).orElse(null);
 
         if(feeStudent == null) {
             bindingResult.addError(new FieldError("studentRequestDto",
@@ -55,7 +40,7 @@ public class FeeStudentService {
                     "phoneNumber", "전화번호 형식이 올바르지 않습니다!"));
         }
 
-        FeeStudent feeStudent = findByStuId(studentOauthRequestDto.getStuId());
+        FeeStudent feeStudent = feeStudentRepository.findByStuId(studentOauthRequestDto.getStuId()).orElse(null);
 
         if(feeStudent == null) {
             bindingResult.addError(new FieldError("studentOauthRequestDto",
@@ -65,20 +50,4 @@ public class FeeStudentService {
                     "name", "학번과 일치하지 않는 이름입니다!"));
         }
     }
-//
-//    @Transactional
-//    public void saveAll(List<FeeStudent> feeStudents) {
-//        feeStudentRepository.saveAll(feeStudents);
-//    }
-//
-//    @Transactional
-//    public void delete(String stuId) {
-//        feeStudentRepository.delete(feeStudentRepository.findByStuId(stuId));
-//    }
-//
-//    @Transactional
-//    public void deleteAll() {
-//        feeStudentRepository.deleteAll();
-//    }
-
 }
