@@ -2,7 +2,7 @@ package an.inhaintegration.controller.admin;
 
 import an.inhaintegration.domain.Student;
 import an.inhaintegration.domain.oauth2.CustomUserDetails;
-import an.inhaintegration.dto.RentalSearchRequestDto;
+import an.inhaintegration.dto.rental.RentalSearchRequestDto;
 import an.inhaintegration.dto.student.StudentDeleteResponseDto;
 import an.inhaintegration.dto.student.StudentSearchRequestDto;
 import an.inhaintegration.service.admin.AdminRentalService;

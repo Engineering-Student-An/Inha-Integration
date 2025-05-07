@@ -3,7 +3,7 @@ package an.inhaintegration.dto.item;
 import lombok.Data;
 
 @Data
-public class ItemSearchDto {
+public class ItemSearchRequestDto {
 
     private String category;
     private String name;

@@ -1,7 +1,6 @@
 package an.inhaintegration.controller.admin;
 
 import an.inhaintegration.domain.Student;
-import an.inhaintegration.domain.oauth2.CustomOauth2UserDetails;
 import an.inhaintegration.domain.oauth2.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,8 +26,6 @@ public class AdminHomeController {
 
         if (principal instanceof CustomUserDetails) {
             return ((CustomUserDetails) principal).getStudent();
-        } else if (principal instanceof CustomOauth2UserDetails) {
-            return ((CustomOauth2UserDetails) principal).getStudent();
         }
 
         return null;

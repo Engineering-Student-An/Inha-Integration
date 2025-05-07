@@ -2,7 +2,7 @@ package an.inhaintegration.service.admin;
 
 import an.inhaintegration.domain.Rental;
 import an.inhaintegration.domain.Student;
-import an.inhaintegration.dto.RentalSearchRequestDto;
+import an.inhaintegration.dto.rental.RentalSearchRequestDto;
 import an.inhaintegration.exception.StudentNotFoundException;
 import an.inhaintegration.repository.RentalRepository;
 import an.inhaintegration.repository.StudentRepository;

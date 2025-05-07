@@ -54,7 +54,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
             return studentRepository.save(newStudent);
         });
 
-        return new CustomOauth2UserDetails(student, oAuth2User.getAttributes());
+        return new CustomUserDetails(student, oAuth2User.getAttributes());
     }
 
     // GitHub /user/emails API를 호출하여 이메일을 가져오는 메서드

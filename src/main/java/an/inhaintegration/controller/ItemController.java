@@ -1,9 +1,8 @@
 package an.inhaintegration.controller;
 
 import an.inhaintegration.domain.Student;
-import an.inhaintegration.domain.oauth2.CustomOauth2UserDetails;
 import an.inhaintegration.domain.oauth2.CustomUserDetails;
-import an.inhaintegration.dto.item.ItemSearchDto;
+import an.inhaintegration.dto.item.ItemSearchRequestDto;
 import an.inhaintegration.service.ItemRequestService;
 import an.inhaintegration.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +21,10 @@ public class ItemController {
     private final ItemRequestService itemRequestService;
 
     @GetMapping("/item/list")
-    public String list(@ModelAttribute("itemSearchDto") ItemSearchDto itemSearchDto,
+    public String list(@ModelAttribute("itemSearchRequestDto") ItemSearchRequestDto itemSearchRequestDto,
                        @RequestParam(required = false, defaultValue = "1", value = "page") int page, Model model) {
 
-        model.addAttribute("items", itemService.findItemsBySearch(page, itemSearchDto));
+        model.addAttribute("items", itemService.findItemsBySearch(page, itemSearchRequestDto));
         return "item/list";
     }
 
@@ -77,8 +76,6 @@ public class ItemController {
 
         if (principal instanceof CustomUserDetails) {
             return ((CustomUserDetails) principal).getStudent();
-        } else if (principal instanceof CustomOauth2UserDetails) {
-            return ((CustomOauth2UserDetails) principal).getStudent();
         }
 
         return null;

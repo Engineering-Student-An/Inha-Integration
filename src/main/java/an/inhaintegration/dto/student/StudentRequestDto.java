@@ -1,4 +1,4 @@
-package an.inhaintegration.dto;
+package an.inhaintegration.dto.student;
 
 import an.inhaintegration.domain.StudentRole;
 import jakarta.validation.constraints.NotBlank;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRequestDto {
+public class StudentRequestDto {
 
     @NotBlank(message = "ID가 비어있습니다.")
     private String loginId;

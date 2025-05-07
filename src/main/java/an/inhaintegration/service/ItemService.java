@@ -1,7 +1,7 @@
 package an.inhaintegration.service;
 
 import an.inhaintegration.domain.Item;
-import an.inhaintegration.dto.item.ItemSearchDto;
+import an.inhaintegration.dto.item.ItemSearchRequestDto;
 import an.inhaintegration.repository.ItemRepository;
 import an.inhaintegration.repository.RentalRepository;
 import lombok.RequiredArgsConstructor;
@@ -48,12 +48,12 @@ public class ItemService {
     public Page<Item> findItemsByCategoryAndName(String category, String name, Pageable pageable) { return itemRepository.findItemsByCategoryContainingAndNameContaining(category, name, pageable); }
 
 
-    public Page<Item> findItemsBySearch(int page, ItemSearchDto itemSearchDto) {
+    public Page<Item> findItemsBySearch(int page, ItemSearchRequestDto itemSearchRequestDto) {
 
         // 검색 조건 추가해서 조회
-        if (itemSearchDto.getCategory() != null && itemSearchDto.getName() != null) {
+        if (itemSearchRequestDto.getCategory() != null && itemSearchRequestDto.getName() != null) {
             PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by("category").and(Sort.by("name")));
-            return findItemsByCategoryAndName(itemSearchDto.getCategory(), itemSearchDto.getName(), pageRequest);
+            return findItemsByCategoryAndName(itemSearchRequestDto.getCategory(), itemSearchRequestDto.getName(), pageRequest);
         }
 
         // 모든 물품 조회

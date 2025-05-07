@@ -1,4 +1,4 @@
-package an.inhaintegration.dto;
+package an.inhaintegration.dto.rental;
 
 import an.inhaintegration.domain.RentalStatus;
 import lombok.Getter;

@@ -1,13 +1,11 @@
 package an.inhaintegration.controller;
 
 import an.inhaintegration.domain.Student;
-import an.inhaintegration.domain.oauth2.CustomOauth2UserDetails;
 import an.inhaintegration.domain.oauth2.CustomUserDetails;
 import an.inhaintegration.dto.LoginRequestDto;
-import an.inhaintegration.dto.OauthUserRequestDto;
-import an.inhaintegration.dto.UserRequestDto;
+import an.inhaintegration.dto.student.StudentOauthRequestDto;
+import an.inhaintegration.dto.student.StudentRequestDto;
 import an.inhaintegration.service.*;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -72,21 +70,21 @@ public class HomeController {
     @GetMapping("/oauth")
     public String oauthUpdate(Model model) {
 
-        model.addAttribute("oauthUserRequestDto", new OauthUserRequestDto());
+        model.addAttribute("studentOauthRequestDto", new StudentOauthRequestDto());
 
         return "home/join/addInfoAfterOauth";
     }
 
     @PostMapping("/oauth")
     public String validateStuId(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                @Valid @ModelAttribute OauthUserRequestDto oauthUserRequestDto,
-                                BindingResult bindingResult, Model model, HttpServletRequest request) {
+                                @Valid @ModelAttribute StudentOauthRequestDto studentOauthRequestDto,
+                                BindingResult bindingResult, Model model) {
 
-        feeStudentService.validateOauthFeeStudent(oauthUserRequestDto, bindingResult);    // oauth 로그인 후 학생회비 납부 여부 검증
+        feeStudentService.validateOauthFeeStudent(studentOauthRequestDto, bindingResult);    // oauth 로그인 후 학생회비 납부 여부 검증
 
         if (bindingResult.hasErrors()) return "home/join/addInfoAfterOauth";
 
-        studentService.updateOauthInfo(userDetails.getId(), oauthUserRequestDto, request);
+        studentService.updateOauthInfo(userDetails.getId(), studentOauthRequestDto);
 
         model.addAttribute("errorMessage", "정보 입력이 완료되었습니다! 대시보드로 이동합니다.");
         model.addAttribute("nextUrl", "/home");
@@ -97,21 +95,21 @@ public class HomeController {
     @GetMapping("/join")
     public String joinPage(Model model) {
 
-        model.addAttribute("userRequestDto", new UserRequestDto());
+        model.addAttribute("studentRequestDto", new StudentRequestDto());
 
         return "home/join/join";
     }
 
     @PostMapping("/join")
-    public String join(@Valid @ModelAttribute UserRequestDto userRequestDto,
+    public String join(@Valid @ModelAttribute StudentRequestDto studentRequestDto,
                        BindingResult bindingResult, HttpSession session, Model model) {
 
-        studentService.validateJoin(userRequestDto, bindingResult);             // 회원가입 정보 검증
-        feeStudentService.validateFeeStudent(userRequestDto, bindingResult);    // 학생회비 납부 여부 검증
+        studentService.validateJoin(studentRequestDto, bindingResult);             // 회원가입 정보 검증
+        feeStudentService.validateFeeStudent(studentRequestDto, bindingResult);    // 학생회비 납부 여부 검증
 
         if (bindingResult.hasErrors()) return "home/join/join";
 
-        session.setAttribute("userRequestDto", userRequestDto);
+        session.setAttribute("studentRequestDto", studentRequestDto);
 
         return "home/join/joinMessage";
     }
@@ -119,7 +117,7 @@ public class HomeController {
     @GetMapping("/join/verify")
     public String verifyEmail(Model model, HttpSession session) {
 
-        session.setAttribute("userRequestDto", (UserRequestDto) session.getAttribute("userRequestDto"));
+        session.setAttribute("studentRequestDto", (StudentRequestDto) session.getAttribute("studentRequestDto"));
         model.addAttribute("isSent", false);
 
         return "home/join/verifyEmail";
@@ -128,7 +126,7 @@ public class HomeController {
     @PostMapping("/join/verify")
     public String sendEmail(@RequestParam("email") String email, HttpSession session, Model model) {
 
-        session.setAttribute("userRequestDto", (UserRequestDto) session.getAttribute("userRequestDto"));
+        session.setAttribute("studentRequestDto", (StudentRequestDto) session.getAttribute("studentRequestDto"));
 
         if(emailService.validateEmail(email)) {
             model.addAttribute("emailError", "이메일 주소가 올바르지 않습니다!");
@@ -161,7 +159,7 @@ public class HomeController {
         }
 
         // 인증 문자 동일하면 회원가입
-        studentService.join((UserRequestDto) session.getAttribute("userRequestDto"), email);
+        studentService.join((StudentRequestDto) session.getAttribute("studentRequestDto"), email);
 
         model.addAttribute("errorMessage", "회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.");
         model.addAttribute("nextUrl", "/login");
@@ -301,8 +299,6 @@ public class HomeController {
 
         if (principal instanceof CustomUserDetails) {
             return ((CustomUserDetails) principal).getStudent();
-        } else if (principal instanceof CustomOauth2UserDetails) {
-            return ((CustomOauth2UserDetails) principal).getStudent();
         }
 
         return null;

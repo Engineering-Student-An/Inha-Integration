@@ -18,7 +18,7 @@
 <main class="flex-grow">
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 mb-6">
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                <form class="space-y-6" th:action="|/oauth|" th:object="${oauthUserRequestDto}" method="POST">
+                <form class="space-y-6" th:action="|/oauth|" th:object="${studentOauthRequestDto}" method="POST">
                     <div>
                         <label th:for="stuId" class="block text-sm font-medium leading-6 text-gray-900 mt-2">학번</label>
                         <div class="mt-1 mb-4">

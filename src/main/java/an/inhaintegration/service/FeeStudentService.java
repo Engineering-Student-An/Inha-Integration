@@ -1,8 +1,8 @@
 package an.inhaintegration.service;
 
 import an.inhaintegration.domain.FeeStudent;
-import an.inhaintegration.dto.OauthUserRequestDto;
-import an.inhaintegration.dto.UserRequestDto;
+import an.inhaintegration.dto.student.StudentOauthRequestDto;
+import an.inhaintegration.dto.student.StudentRequestDto;
 import an.inhaintegration.repository.FeeStudentRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -46,34 +46,34 @@ public class FeeStudentService {
     }
 
     // 학생회비 납부 명단에서 검증하는 메서드
-    public void validateFeeStudent(@Valid UserRequestDto userRequestDto, BindingResult bindingResult) {
+    public void validateFeeStudent(@Valid StudentRequestDto studentRequestDto, BindingResult bindingResult) {
 
-        FeeStudent feeStudent = findByStuId(userRequestDto.getStuId());
+        FeeStudent feeStudent = findByStuId(studentRequestDto.getStuId());
 
         if(feeStudent == null) {
-            bindingResult.addError(new FieldError("userRequestDto",
+            bindingResult.addError(new FieldError("studentRequestDto",
                     "stuId", "학생회비 납부 명단에 존재하지 않는 학번입니다!"));
-        } else if(!feeStudent.getName().equals(userRequestDto.getName())) {
-            bindingResult.addError(new FieldError("userRequestDto",
+        } else if(!feeStudent.getName().equals(studentRequestDto.getName())) {
+            bindingResult.addError(new FieldError("studentRequestDto",
                     "name", "학번과 일치하지 않는 이름입니다!"));
         }
     }
 
     // oauth 로그인 시 학생회비 납부 명단에서 검증하는 메서드
-    public void validateOauthFeeStudent(@Valid OauthUserRequestDto oauthUserRequestDto, BindingResult bindingResult) {
+    public void validateOauthFeeStudent(@Valid StudentOauthRequestDto studentOauthRequestDto, BindingResult bindingResult) {
 
-        if (!Pattern.compile("^\\d{3}-\\d{3,4}-\\d{4}$").matcher(oauthUserRequestDto.getPhoneNumber()).matches()) {
-            bindingResult.addError(new FieldError("oauthUserRequestDto",
+        if (!Pattern.compile("^\\d{3}-\\d{3,4}-\\d{4}$").matcher(studentOauthRequestDto.getPhoneNumber()).matches()) {
+            bindingResult.addError(new FieldError("studentOauthRequestDto",
                     "phoneNumber", "전화번호 형식이 올바르지 않습니다!"));
         }
 
-        FeeStudent feeStudent = findByStuId(oauthUserRequestDto.getStuId());
+        FeeStudent feeStudent = findByStuId(studentOauthRequestDto.getStuId());
 
         if(feeStudent == null) {
-            bindingResult.addError(new FieldError("oauthUserRequestDto",
+            bindingResult.addError(new FieldError("studentOauthRequestDto",
                     "stuId", "학생회비 납부 명단에 존재하지 않는 학번입니다!"));
-        } else if(!feeStudent.getName().equals(oauthUserRequestDto.getName())) {
-            bindingResult.addError(new FieldError("oauthUserRequestDto",
+        } else if(!feeStudent.getName().equals(studentOauthRequestDto.getName())) {
+            bindingResult.addError(new FieldError("studentOauthRequestDto",
                     "name", "학번과 일치하지 않는 이름입니다!"));
         }
     }

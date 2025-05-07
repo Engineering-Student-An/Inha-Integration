@@ -1,15 +1,17 @@
 package an.inhaintegration.service;
 
 import an.inhaintegration.domain.Student;
+import an.inhaintegration.domain.oauth2.CustomUserDetails;
 import an.inhaintegration.dto.ChangePasswordRequestDto;
-import an.inhaintegration.dto.OauthUserRequestDto;
-import an.inhaintegration.dto.UserRequestDto;
+import an.inhaintegration.dto.student.StudentOauthRequestDto;
+import an.inhaintegration.dto.student.StudentRequestDto;
 import an.inhaintegration.exception.StudentNotFoundException;
 import an.inhaintegration.repository.StudentRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -32,37 +34,37 @@ public class StudentService {
     }
 
     // 회원가입 검증 메서드
-    public void validateJoin(@Valid UserRequestDto userRequestDto, BindingResult bindingResult) {
+    public void validateJoin(@Valid StudentRequestDto studentRequestDto, BindingResult bindingResult) {
 
-        if (checkStuIdDuplicate(userRequestDto.getStuId())) {
-            bindingResult.addError(new FieldError("userRequestDto",
+        if (checkStuIdDuplicate(studentRequestDto.getStuId())) {
+            bindingResult.addError(new FieldError("studentRequestDto",
                     "stuId", "이미 가입되어 있습니다!"));
         }
 
-        if (!userRequestDto.getPassword().equals(userRequestDto.getPasswordCheck())) {
-            bindingResult.addError(new FieldError("userRequestDto",
+        if (!studentRequestDto.getPassword().equals(studentRequestDto.getPasswordCheck())) {
+            bindingResult.addError(new FieldError("studentRequestDto",
                     "passwordCheck", "비밀번호가 동일하지 않습니다!"));
         }
 
-        if (!Pattern.compile("^\\d{3}-\\d{3,4}-\\d{4}$").matcher(userRequestDto.getPhoneNumber()).matches()) {
-            bindingResult.addError(new FieldError("userRequestDto",
+        if (!Pattern.compile("^\\d{3}-\\d{3,4}-\\d{4}$").matcher(studentRequestDto.getPhoneNumber()).matches()) {
+            bindingResult.addError(new FieldError("studentRequestDto",
                     "phoneNumber", "전화번호 형식이 올바르지 않습니다!"));
         }
     }
 
     // 회원가입
     @Transactional
-    public void join(UserRequestDto userRequestDto, String email){
+    public void join(StudentRequestDto studentRequestDto, String email){
 
-        String encodedPassword = bCryptPasswordEncoder.encode(userRequestDto.getPassword());
+        String encodedPassword = bCryptPasswordEncoder.encode(studentRequestDto.getPassword());
 
         Student newStudent = Student.builder()
-                .loginId(userRequestDto.getLoginId())
-                .stuId(userRequestDto.getStuId())
-                .name(userRequestDto.getName())
+                .loginId(studentRequestDto.getLoginId())
+                .stuId(studentRequestDto.getStuId())
+                .name(studentRequestDto.getName())
                 .password(encodedPassword)
-                .phoneNumber(userRequestDto.getPhoneNumber())
-                .role(userRequestDto.getRole())
+                .phoneNumber(studentRequestDto.getPhoneNumber())
+                .role(studentRequestDto.getRole())
                 .email(email)
                 .build();
 
@@ -70,16 +72,16 @@ public class StudentService {
     }
 
     @Transactional
-    public void updateOauthInfo(Long studentId, OauthUserRequestDto oauthUserRequestDto, HttpServletRequest request) {
+    public void updateOauthInfo(Long studentId, StudentOauthRequestDto studentOauthRequestDto) {
 
         // 로그인한 회원 조회
         Student loginStudent = studentRepository.findById(studentId).orElseThrow(StudentNotFoundException::new);
 
         // 추가적인 정보 업데이트
-        loginStudent.addInfoAfterOauth(oauthUserRequestDto.getStuId(), oauthUserRequestDto.getName(), oauthUserRequestDto.getPhoneNumber());
+        loginStudent.addInfoAfterOauth(studentOauthRequestDto.getStuId(), studentOauthRequestDto.getName(), studentOauthRequestDto.getPhoneNumber());
 
-        // 영속성 컨텍스트에 loginStudent가 관리되고 있지 않으므로 save() 메서드를 호출해줘야함 (더티체킹이 일어나지 않기 때문)
-        studentRepository.save(loginStudent);
+        // SecurityContextHolder에 반영
+        SecurityContextHolder.getContext().setAuthentication(getAuthenticationToken(loginStudent));
     }
 
     // 비밀번호 검증 메서드
@@ -189,4 +191,23 @@ public class StudentService {
 //
 //    }
 //
+
+    // 기존의 인증 정보를 변경하는 메서드
+    private static OAuth2AuthenticationToken getAuthenticationToken(Student loginStudent) {
+
+        // 기존 인증 정보 가져오기
+        OAuth2AuthenticationToken currentAuth = (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+
+        // 통합된 Principal 클래스 사용
+        CustomUserDetails updatedPrincipal = new CustomUserDetails(loginStudent, currentAuth.getPrincipal().getAttributes());
+
+        // 새 Authentication 생성
+        OAuth2AuthenticationToken newAuth = new OAuth2AuthenticationToken(
+                updatedPrincipal,
+                updatedPrincipal.getAuthorities(),
+                currentAuth.getAuthorizedClientRegistrationId()
+        );
+
+        return newAuth;
+    }
 }

@@ -1,7 +1,7 @@
 package an.inhaintegration.config;
 
 import an.inhaintegration.domain.Student;
-import an.inhaintegration.domain.oauth2.CustomOauth2UserDetails;
+import an.inhaintegration.domain.oauth2.CustomUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -19,8 +19,8 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
 
         Object principal = authentication.getPrincipal();
 
-        if (principal instanceof CustomOauth2UserDetails) {
-            CustomOauth2UserDetails userDetails = (CustomOauth2UserDetails) principal;
+        if (principal instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) principal;
             Student loginStudent = userDetails.getStudent();
 
             // 학번이 비어있으면 stuId 입력 페이지로 리다이렉트
