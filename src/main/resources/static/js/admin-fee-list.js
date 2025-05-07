@@ -71,7 +71,28 @@ function addTable() {
 function addStudent() {
     var stuId = document.getElementsByName('newStuId')[0].value;
     var name = document.getElementsByName('newName')[0].value;
-    location.href = `/admin/student/feeList/add?newStuId=${stuId}&newName=${name}`;
+
+    // 동적으로 form 생성
+    var form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/admin/fee-student";
+
+    // stuId input
+    var inputStuId = document.createElement("input");
+    inputStuId.type = "hidden";
+    inputStuId.name = "newStuId";
+    inputStuId.value = stuId;
+    form.appendChild(inputStuId);
+
+    // name input
+    var inputName = document.createElement("input");
+    inputName.type = "hidden";
+    inputName.name = "newName";
+    inputName.value = name;
+    form.appendChild(inputName);
+
+    document.body.appendChild(form);
+    form.submit();
 }
 
 
@@ -83,7 +104,7 @@ function addWindow() {
         windowAdded = false;
     } else {
         var newWindow = '<br><h4>학생회비 납부 명단 업로드 (엑셀 파일만 업로드!)</h4>' +
-        '<form action="/admin/student/feeList/upload" method="POST" enctype="multipart/form-data">' +
+        '<form action="/admin/fee-students" method="POST" enctype="multipart/form-data">' +
         '<input type="file" class="btn btn-outline-secondary btn-sm" name="excelFile">' +
         '<button type="submit" style="border: none; background: none; cursor: pointer">' +
         '<span class="material-symbols-outlined" style="color: #20c997; vertical-align: top; font-size: 30px">upload_file</span>' +
@@ -100,15 +121,19 @@ function addWindow() {
 document.addEventListener("DOMContentLoaded", function() {
     const deleteButton = document.querySelector("button[type='submit'][form='deleteForm']");
     const checkboxes = document.querySelectorAll("input[type='checkbox'][name='stuIdList']");
+
     function updateButtonState() {
-        const isAnyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+        const isAnyChecked = Array.from(checkboxes).some(cb => cb.checked);
         deleteButton.disabled = !isAnyChecked;
     }
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener("change", updateButtonState);
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener("change", updateButtonState);
     });
+
     updateButtonState();
 });
+
 
 function confirmDelete() {
     var result = confirm("정말로 삭제하시겠습니까?");

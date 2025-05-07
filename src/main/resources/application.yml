@@ -12,9 +12,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        default_batch_fetch_size: 1000
+        default_batch_fetch_size: 100
         jdbc:
-          batch_size: 1000
+          batch_size: 100
+        order_inserts: true # INSERT 쿼리 묶어서 보내기
+        order_updates: true # UPDATE 쿼리 묶어서 보내기
 
   servlet:
     multipart:

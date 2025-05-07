@@ -18,19 +18,7 @@ public class FeeStudentService {
 
     private final FeeStudentRepository feeStudentRepository;
 //
-//    // 학생회비 납부 명단 학번, 이름 포함 조회
-//    public Page<FeeStudent> findFeeStudentContainingStuIdAndName(String stuId, String name, Pageable pageable) {
-//        return feeStudentRepository.findFeeStudentByStuIdContainingAndNameContaining(stuId, name, pageable);
-//    }
-//
-//    // 학생회비 납부 명단 전체 조회
-//    public Page<FeeStudent> findAllFeeStudent(Pageable pageable) {
-//        return feeStudentRepository.findAll(pageable);
-//    }
-//
-//    public boolean checkFeeStudentDuplicate(String stuID) {
-//        return feeStudentRepository.existsByStuId(stuID);
-//    }
+
 //
 //
 //    @Transactional
