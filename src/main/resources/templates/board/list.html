@@ -31,10 +31,10 @@
                 <div th:each="notice : ${recentNotices}" class="flex items-start">
                     <div class="flex w-2 h-2 bg-gray-400 rounded-full mr-4 mt-3"></div>
                     <div class="flex-1">
-                        <p class="text-gray-600" th:text="${notice.name}"></p>
-                        <a th:href="@{/board/{id}(id=${notice.id})}" class="text-blue-700 text-md text-lg font-bold" th:text="${notice.title}"></a>
+                        <p class="text-gray-600" th:text="${notice.student.name}"></p>
+                        <a th:href="@{/board/{id}(id=${notice.boardId})}" class="text-blue-700 text-md text-lg font-bold" th:text="${notice.title}"></a>
                         <p class="mt-3 text-gray-700 italic" th:text="${#strings.length(notice.content) > 20 ? #strings.substring(notice.content, 0, 30) + '...' : notice.content}"></p>
-                        <span class="text-gray-500 text-sm mb-5" th:text="${#temporals.format(notice.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
+                        <span class="text-gray-500 text-sm mb-5" th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
                     </div>
                 </div>
             </div>
@@ -79,9 +79,9 @@
                 </td>
 
                 <td class="py-3 px-4"
-                    th:utext="${board.stuId=='ADMIN'} ? '<strong>관리자</strong>' : ${board.stuId + ' ' + board.name}"></td>
+                    th:utext="${board.student.stuId=='ADMIN'} ? '<strong>관리자</strong>' : ${board.student.stuId + ' ' + board.student.name}"></td>
 
-                <td class="py-3 px-4" th:text="${board.editTime == null} ? ${#temporals.format(board.writeTime, 'yyyy-MM-dd HH:mm')} : ${#temporals.format(board.editTime, 'yyyy-MM-dd HH:mm') + ' (수정)'}"></td>
+                <td class="py-3 px-4" th:text="${board.updatedAt == board.createdAt} ? ${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')} : ${#temporals.format(board.updatedAt, 'yyyy-MM-dd HH:mm') + ' (수정)'}"></td>
             </tr>
             </tbody>
         </table>
@@ -89,19 +89,19 @@
 
         <div class="pagination">
             <button class="pagination-button" th:disabled="${boards.getNumber()}==0"
-                    th:onclick="|location.href='@{/board/list(boardPage=${1}) }'|">
+                    th:onclick="|location.href='@{/boards(page=${1}, notice=false) }'|">
                 <<</button>
             <button class="pagination-button" th:disabled="${!boards.hasPrevious()}"
-                    th:onclick="|location.href='@{/board/list(boardPage=${boards.getNumber()}) }'|">
+                    th:onclick="|location.href='@{/boards(page=${boards.getNumber()}, notice=false) }'|">
                 <</button>
             &nbsp; &nbsp;
             <span class="pagination-info">[[${boards.getNumber()+1}]] / [[${boards.getTotalElements() == 0 ? 1 : boards.getTotalPages()}]]</span>
             &nbsp; &nbsp;
             <button class="pagination-button" th:disabled="${!boards.hasNext()}"
-                    th:onclick="|location.href='@{/board/list(boardPage=${boards.getNumber() + 2}) }'|">
+                    th:onclick="|location.href='@{/boards(page=${boards.getNumber() + 2}, notice=false) }'|">
                 ></button>
             <button class="pagination-button" th:disabled="${!boards.hasNext()}"
-                    th:onclick="|location.href='@{/board/list(boardPage=${boards.getTotalPages()} ) }'|">
+                    th:onclick="|location.href='@{/boards(page=${boards.getTotalPages()}, notice=false ) }'|">
                 >></button>
         </div>
 

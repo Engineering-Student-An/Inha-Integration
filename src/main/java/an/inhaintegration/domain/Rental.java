@@ -34,12 +34,12 @@ public class Rental {
 
     public void setStudent(Student student) {
         this.student = student;
-        student.getRentals().add(this);
+        student.getRentalList().add(this);
     }
 
     public void setItem(Item item) {
         this.item = item;
-        item.getRentals().add(this);
+        item.getRentalList().add(this);
     }
 
     // 대여 시작 메서드 (주문서 개념)

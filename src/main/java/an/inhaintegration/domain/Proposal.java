@@ -35,7 +35,7 @@ public class Proposal {
     private LocalDateTime createdAt;
 
     // 비밀글 여부
-    private boolean isSecret;
+    private boolean secret;
 
     public ProposalResponseDto toProposalResponseDto() {
 

@@ -1,11 +1,11 @@
-package an.inhaintegration.dto;
+package an.inhaintegration.dto.reply;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ReplyForm {
+public class ReplyRequestDto {
 
     private String content;
 }

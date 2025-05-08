@@ -44,7 +44,7 @@ public class ProposalController {
 
         if (bindingResult.hasErrors()) return "proposal/createProposalForm";
 
-        proposalService.create(userDetails.getId(), proposalRequestDto);
+        proposalService.save(userDetails.getId(), proposalRequestDto);
 
         return "redirect:/proposals";
     }

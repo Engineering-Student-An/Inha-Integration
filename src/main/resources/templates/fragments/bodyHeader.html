@@ -35,14 +35,14 @@
                                         <div class="column">
                                             <h3>게시판</h3>
                                             <div class="divider"></div>
-                                            <a href="/board/list/notice">공지사항</a>
-                                            <a href="/board/list">자유 게시판</a>
+                                            <a href="/boards?notice=true">공지사항</a>
+                                            <a href="/boards?notice=false">자유 게시판</a>
                                             <a href="/proposals">건의 게시판</a>
                                         </div>
                                         <div class="column">
                                             <h3>내 정보</h3>
                                             <div class="divider"></div>
-                                            <a href="/board/myList">내가 쓴 게시글</a>
+                                            <a href="/my-page/boards">내가 쓴 게시글</a>
                                             <a href="/rentals">내 대여 목록</a>
                                         </div>
                                     </div>
@@ -139,12 +139,12 @@
                     <a href="/rental" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">대여 신청</a>
                 </div>
                 <div class="border-t border-gray-700 pb-3 pt-4">
-                    <a href="/board/list/notice" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">공지 사항</a>
-                    <a href="/board/list" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">자유 게시판</a>
+                    <a href="/boards?notice=true" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">공지 사항</a>
+                    <a href="/boards?notice=false" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">자유 게시판</a>
                     <a href="/proposals" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">건의 게시판</a>
                 </div>
                 <div class="border-t border-gray-700 pb-3 pt-4">
-                    <a href="/board/myList" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">내가 쓴 게시글</a>
+                    <a href="/my-page/boards" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">내가 쓴 게시글</a>
                     <a href="/rental/findOne" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">내 대여 목록</a>
                 </div>
                 <div th:if="${loginStudent == null}" class="border-t border-gray-700 pb-3 pt-4">

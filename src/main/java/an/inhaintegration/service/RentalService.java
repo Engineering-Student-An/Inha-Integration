@@ -16,7 +16,6 @@ import an.inhaintegration.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +36,6 @@ public class RentalService {
     private final RentalRepository rentalRepository;
     private final StudentRepository studentRepository;
     private final ItemRepository itemRepository;
-//    private final RentalQueryRepository rentalQueryRepository;
 
     // 대여 시작
     @Transactional
@@ -91,18 +89,6 @@ public class RentalService {
         return rentalRepository.existsByStudent_IdAndItemIdAndStatusNotIn(studentId, itemId, collection);
     }
 
-    // 대여 리스트 검색
-//    public Page<Rental> findRentals(RentalSearch rentalSearch, Pageable pageable) {
-//        Student student = studentRepository.findByStuId(rentalSearch.getStuId());
-//        Long id = null;
-//        if(student != null) id = student.getId();
-//
-//        return rentalRepository.findRentalsByStatusAndStudent_Id(rentalSearch.getRentalStatus(), id, pageable);
-//    }
-
-    public Page<Rental> findAll(Pageable pageable){
-        return rentalRepository.findAll(pageable);
-    }
     public Page<Rental> findRentalsBySearch(Long studentId, RentalSearchRequestDto rentalSearchRequestDto, int page) {
 
         PageRequest pageRequest = PageRequest.of(page-1, 10, Sort.by("status").and(Sort.by("rentalDate")));

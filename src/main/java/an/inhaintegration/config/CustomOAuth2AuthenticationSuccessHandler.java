@@ -6,12 +6,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 @Component
 public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+
+    private RequestCache requestCache = new HttpSessionRequestCache();
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -30,8 +35,23 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
             }
         }
 
-        // 리다이렉트 경로 지정
-        response.sendRedirect("/home");
+        SavedRequest savedRequest = requestCache.getRequest(request, response);
+
+        if(savedRequest != null){
+            String targetUrl = savedRequest.getRedirectUrl();
+
+            if(targetUrl.contains("like")) {
+
+                String[] parts = targetUrl.split("/");
+                String boardId = parts[4];
+                response.sendRedirect("/board/" + boardId);
+            }
+            else {
+                response.sendRedirect(targetUrl);
+            }
+        } else {
+            response.sendRedirect("/home");
+        }
     }
 }
 

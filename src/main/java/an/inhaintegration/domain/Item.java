@@ -36,7 +36,7 @@ public class Item {
     private String category;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Rental> rentals = new ArrayList<>();
+    private List<Rental> rentalList = new ArrayList<>();
 
     // 대여 가능 재고 증가 메서드
     public void addStock(){

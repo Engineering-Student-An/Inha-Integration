@@ -47,14 +47,14 @@ public class ProposalService {
     }
 
     @Transactional
-    public void create(Long studentId, ProposalRequestDto proposalRequestDto) {
+    public void save(Long studentId, ProposalRequestDto proposalRequestDto) {
 
         Student loginStudent = studentRepository.findById(studentId).orElseThrow(StudentNotFoundException::new);
 
         Proposal proposal = Proposal.builder()
                 .title(proposalRequestDto.getTitle())
                 .content(proposalRequestDto.getContent())
-                .isSecret(proposalRequestDto.isSecret())
+                .secret(proposalRequestDto.isSecret())
                 .build();
 
         proposal.setStudent(loginStudent);

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" >
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/header :: header}"></head>
 <body class="min-h-screen flex flex-col">
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div><br>
@@ -7,17 +7,22 @@
 
 <header class="bg-white shadow">
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900" th:text="${board.isNotice()} ? '공지 사항' : '자유 게시판'"></h1>
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900" th:text="${board.notice} ? '공지 사항' : '자유 게시판'"></h1>
     </div>
 </header>
 <main class="flex flex-col md:flex-row"> <!-- 모바일에서는 flex-col, 데스크탑에서는 flex-row -->
     <div class="md:w-2/5 m-10 bg-gray-50 p-6 shadow-xl rounded-lg flex-shrink-0" style="align-self: flex-start;">
         <div class="flex items-center justify-between">
             <div class="inline-flex items-center">
-                <img src="data:image/jpeg;base64,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" alt="프로필 사진" class="w-12 h-12 rounded-full border-2 border-gray-500">
+                <img th:if="${board.student.picture == null}" src="/images/person.jpeg"
+                     class="w-12 h-12 rounded-full border-2 border-gray-500">
+                <img th:unless="${board.student.picture == null}" th:src="${board.student.picture}"
+                     class="w-12 h-12 rounded-full border-2 border-gray-500">
                 <div class="ml-4">
-                    <h2 class="text-xl font-bold text-gray-900" th:text="${board.name + '(' + board.stuId + ')'}"></h2>
-                    <p class="text-gray-600" th:text="${board.editTime==null} ? ${#temporals.format(board.writeTime, 'yyyy-MM-dd HH:mm')} : '(수정) ' + ${#temporals.format(board.editTime, 'yyyy-MM-dd HH:mm')}"></p>
+                    <h2 class="text-xl font-bold text-gray-900"
+                        th:text="${board.student.name + '(' + board.student.stuId + ')'}"></h2>
+                    <p class="text-gray-600"
+                       th:text="${board.updatedAt==board.createdAt} ? ${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')} : '(수정) ' + ${#temporals.format(board.updatedAt, 'yyyy-MM-dd HH:mm')}"></p>
                 </div>
             </div>
             <div>
@@ -27,71 +32,83 @@
         </div>
         <div class="bg-gray-200 mt-4 mb-4 p-6 rounded-lg">
             <h2 class="text-xl font-bold  mb-4" th:text="${board.title}"></h2>
-            <p class="text-gray-700" style="white-space: pre-line; word-break: break-all" th:text="${board.content}"></p>
+            <p class="text-gray-700" style="white-space: pre-line; word-break: break-all"
+               th:text="${board.content}"></p>
         </div>
 
         <div class="flex justify-end">
-            <div th:if="${loginStudent != null and loginStudent.getStuId() == board.stuId}">
-                <a th:href="@{/board/{id}/edit(id=${board.id})}" >
-                    <span class="material-symbols-outlined" >edit_note</span>
+            <div th:if="${loginStudent != null and loginStudent.getId() == board.student.studentId}">
+                <a th:href="@{/board/{boardId}/edit(boardId=${board.boardId})}">
+                    <span class="material-symbols-outlined">edit_note</span>
                 </a>
             </div>
             &nbsp;&nbsp;
-            <div th:if="${loginStudent != null and (loginStudent.getStuId() == board.stuId || loginStudent.getRole().toString() == 'ADMIN')}">
-                <a href="#" onclick="return confirm('게시글을 삭제하시겠습니까?');"
-                   th:href="@{/board/{id}/delete(id=${board.id})}">
+            <div th:if="${loginStudent != null and (loginStudent.getId() == board.student.studentId || loginStudent.getRole().toString() == 'ADMIN')}">
+                <form id="delete-form" th:action="@{/board/{id}(id=${board.boardId})}" method="post"
+                      style="display: none;">
+                    <input type="hidden" name="_method" value="delete"/>
+                </form>
+                <a href="#"
+                   onclick="if(confirm('게시글을 삭제하시겠습니까?')) { document.getElementById('delete-form').submit(); } return false;">
                     <span class="material-symbols-outlined" style="color: red">delete</span>
                 </a>
             </div>
         </div>
-
     </div>
-
-    <div class="w-full md:w-1/2 m-0 mb-10 md:m-10 bg-gray-50 p-6 shadow-xl rounded-lg flex-shrink-0" style="align-self: flex-start;">
+    <div class="w-full md:w-1/2 m-0 mb-10 md:m-10 bg-gray-50 p-6 shadow-xl rounded-lg flex-shrink-0"
+         style="align-self: flex-start;">
         <div class="hover:transform hover:-translate-y-1 transition-transform duration-200">
-            <a th:if="${loginStudent != null}" th:href="@{/board/{id}/like(id=${id})}"
-               th:onclick="${board.isLike(loginStudent.getStuId()) == true} ? @{return confirm('해당 게시글의 좋아요를 취소 하시겠습니까?');} : ''"
+            <form th:id="'like-form-' + ${board.boardId}"
+                  th:action="@{/board/{boardId}/like(boardId=${board.boardId})}"
+                  method="post" style="display: none;"></form>
+            <a th:if="${loginStudent != null}" href="#"
+               th:onclick="'return handleLike(' + ${board.boardId} + ', ' + ${board.isLike(loginStudent.getId())} + ');'"
                class="flex items-center w-28 py-2 border border-gray-300 rounded-lg transition duration-300"
-               th:classappend="${board.isLike(loginStudent.getStuId())} ? 'bg-blue-500 text-white' : 'bg-white text-black'">
+               th:classappend="${board.isLike(loginStudent.getId())} ? 'bg-blue-500 text-white' : 'bg-white text-black'">
 
-                <span class="px-2" th:classappend="${board.isLike(loginStudent.getStuId())} ? 'material-icons' : 'material-symbols-outlined'">thumb_up</span>
+                <span class="px-2"
+                      th:classappend="${board.isLike(loginStudent.getId())} ? 'material-icons' : 'material-symbols-outlined'">thumb_up</span>
                 <span class="ml-2">좋아요</span>
             </a>
-
-            <a th:if="${loginStudent == null}" th:href="@{/board/{id}/like(id=${id})}"
+            <a th:if="${loginStudent == null}" th:href="@{/board/{boardId}/like(boardId=${board.boardId})}"
                class="flex items-center w-28 py-2 border border-gray-300 rounded-lg bg-white text-black hover:bg-gray-100 transition duration-300">
                 <span class="px-2 material-symbols-outlined">thumb_up</span>
                 <span class="ml-2">좋아요</span>
             </a>
         </div>
 
-        <form class="mt-5 mb-5" th:action="@{/board/{id}/reply/new(id=${id})}" th:object="${form}" method="post">
+        <form class="mt-5 mb-5" th:action="@{/board/{boardId}/reply(boardId=${board.boardId})}" th:object="${replyRequestDto}" method="post">
             <label th:for="content" class="block text-lg font-semibold mb-2"><strong>댓글 작성</strong></label>
-
             <div class="flex items-start">
-                <textarea th:if="${loginStudent!=null}" th:field="*{content}" th:errorclass="error-input" class="flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="작성 내용을 입력하세요 (등록 시 수정은 불가합니다)"></textarea>
-                <textarea th:if="${loginStudent==null}" th:field="*{content}" th:errorclass="error-input" class="flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="로그인 후 댓글 작성이 가능합니다"></textarea>
-
-                <button class="material-symbols-outlined ml-2 bg-blue-500 text-white rounded-lg px-2 py-2 hover:bg-blue-600 transition duration-300" type="submit" role="button">edit</button>
+                <textarea th:if="${loginStudent!=null}" th:field="*{content}" th:errorclass="error-input"
+                          class="flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="작성 내용을 입력하세요 (등록 시 수정은 불가합니다)"></textarea>
+                <textarea th:if="${loginStudent==null}" th:field="*{content}" th:errorclass="error-input"
+                          class="flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="로그인 후 댓글 작성이 가능합니다"></textarea>
+                <button class="material-symbols-outlined ml-2 bg-blue-500 text-white rounded-lg px-2 py-2 hover:bg-blue-600 transition duration-300"
+                        type="submit" role="button">edit
+                </button>
             </div>
-
             <div class="error-class mt-2 text-red-600" th:errors="*{content}"></div>
         </form>
 
-        <div th:each="reply : ${board.getReplyList()}" class="flex items-start mb-4">
+        <div th:each="reply : ${replyList}" class="flex items-start mb-4">
             <div class="flex w-2 h-2 bg-gray-400 rounded-full mr-4 mt-3"></div>
             <div class="flex-1">
                 <div class="flex justify-between items-center">
                     <div class="flex justify-start">
-                        <p class="text-gray-600 font-bold ml-1 mb-1 mr-2" th:text="${reply.name + ' (' + reply.stuId + ')'}"></p>
-                        <span th:if="${loginStudent.getStuId() == reply.stuId || loginStudent.getRole().toString() == 'ADMIN'}" >
-                            <a href="#" onclick="return confirm('댓글을 삭제하시겠습니까?');"
-                               th:href="@{/board/{id}/reply/{replyId}/delete(id=${id}, replyId=${reply.id})}">
+                        <p class="text-gray-600 font-bold ml-1 mb-1 mr-2" th:text="${reply.student.name + ' (' + reply.student.stuId + ')'}"></p>
+                        <div th:if="${loginStudent != null and (loginStudent.getId() == reply.student.studentId || loginStudent.getRole().toString() == 'ADMIN')}">
+                            <form th:id="'delete-reply-form-' + ${reply.replyId}" th:action="@{/board/{boardId}/reply/{replyId}(boardId=${board.boardId}, replyId=${reply.replyId})}" method="post"
+                                  style="display: none;">
+                                <input type="hidden" name="_method" value="delete"/>
+                            </form>
+                            <a href="#" th:onclick="'return handleDeleteReply(' + ${reply.replyId} + ')'">
                                 <span class="material-symbols-outlined" style="color: red">delete</span>
                             </a>
-                        </span>
+                        </div>
                     </div>
-
                     <div class="mr-3">
                         <span class="text-gray-900 material-icons mr-2">thumb_up</span>
                         <span th:text="${reply.likeNumber.size()}"></span>
@@ -103,26 +120,25 @@
                     </div>
                 </div>
                 <div class="flex justify-between mb-2">
-                    <span class="text-gray-500 text-sm ml-1" th:text="${#temporals.format(reply.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
+                    <span class="text-gray-500 text-sm ml-1"
+                          th:text="${#temporals.format(reply.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
                     <div class="flex items-center">
                         <div class="flex items-center hover:transform hover:-translate-y-1 transition-transform duration-200">
-
-                            <a th:if="${loginStudent != null}" th:href="@{/reply/{id}/like(id=${reply.id}, boardId=${board.id})}"
-                               th:onclick="${reply.isLike(loginStudent.getStuId()) == true} ? @{return confirm('해당 댓글의 좋아요를 취소 하시겠습니까?');} : ''"
+                            <form th:id="'reply-like-form-' + ${reply.replyId}"
+                                  th:action="@{/board/{boardId}/reply/{replyId}/like(boardId=${board.boardId}, replyId=${reply.replyId})}"
+                                  method="post" style="display: none;"></form>
+                            <a th:if="${loginStudent != null}" href="#"
+                               th:onclick="'return handleReplyLike(' + ${reply.replyId} + ', ' + ${reply.isLike(loginStudent.getId())} + ');'"
                                class="flex items-center w-24 sm:w-28 py-1 sm:py-2 border border-gray-300 rounded-lg transition duration-300"
-                               th:classappend="${reply.isLike(loginStudent.getStuId())} ? 'bg-blue-500 text-white' : 'bg-white text-black'">
-
-                                <span class="px-1 sm:px-2" th:classappend="${reply.isLike(loginStudent.getStuId())} ? 'material-icons' : 'material-symbols-outlined'">thumb_up</span>
+                               th:classappend="${reply.isLike(loginStudent.getId())} ? 'bg-blue-500 text-white' : 'bg-white text-black'">
+                                <span class="px-1 sm:px-2" th:classappend="${reply.isLike(loginStudent.getId())} ? 'material-icons' : 'material-symbols-outlined'">thumb_up</span>
                                 <span class="text-sm sm:text-base ml-1 sm:ml-2">좋아요</span>
                             </a>
-
-                            <a th:if="${loginStudent == null}" th:href="@{/board/{id}/like(id=${id})}"
-                               class="flex items-center w-24 sm:w-28 py-1 sm:py-2 border border-gray-300 rounded-lg bg-white text-black hover:bg-gray-100 transition duration-300">
-                                <span class="px-1 sm:px-2 material-symbols-outlined">thumb_up</span>
-                                <span class="text-sm sm:text-base ml-1 sm:ml-2">좋아요</span>
+                            <a th:if="${loginStudent == null}" th:href="@{/board/{boardId}/like(boardId=${board.boardId})}"
+                               class="flex items-center w-28 py-2 border border-gray-300 rounded-lg bg-white text-black hover:bg-gray-100 transition duration-300">
+                                <span class="px-2 material-symbols-outlined">thumb_up</span>
+                                <span class="ml-2">좋아요</span>
                             </a>
-
-
                         </div>
                     </div>
                 </div>
@@ -132,4 +148,5 @@
 </main>
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
+<script src="/js/board-like.js"></script>
 </html>

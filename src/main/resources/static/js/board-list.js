@@ -10,6 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     mainSwitchButton.addEventListener('click', function (event) {
-        window.location.href='/board/new';
+        window.location.href='/board';
     });
 });

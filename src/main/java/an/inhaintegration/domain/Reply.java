@@ -1,5 +1,6 @@
 package an.inhaintegration.domain;
 
+import an.inhaintegration.dto.reply.ReplyResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -22,6 +23,7 @@ public class Reply {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
+    @Setter
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,7 +32,7 @@ public class Reply {
     private Student student;
 
     @ElementCollection
-    private List<String> likeNumber = new ArrayList<>();
+    private List<Long> likeNumber = new ArrayList<>();
 
     @Column(length = 5000, nullable = false)
     private String content;
@@ -39,22 +41,22 @@ public class Reply {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    public void setBoard(Board board){
-        this.board = board;
-        board.getReplyList().add(this);
-    }
-
     // 좋아요 메서드
-    public void like(String stuId){
-        if(this.likeNumber.contains(stuId)){
-            this.likeNumber.remove(stuId);
+    public void like(Long studentId){
+        if(this.likeNumber.contains(studentId)){
+            this.likeNumber.remove(studentId);
         } else {
-            this.likeNumber.add(stuId);
+            this.likeNumber.add(studentId);
         }
     }
 
     // 좋아요 검증 메서드
-    public boolean isLike(String stuId) {
-        return this.likeNumber.contains(stuId);
+    public boolean isLike(Long studentId) {
+        return this.likeNumber.contains(studentId);
+    }
+
+    public ReplyResponseDto toReplyResponseDto() {
+
+        return new ReplyResponseDto(this.id, this.content, this.student.toStudentResponseDto(), this.createdAt, this.likeNumber);
     }
 }

@@ -3,6 +3,7 @@
 <head th:replace="~{fragments/header :: header}"></head>
 <body class="min-h-screen flex flex-col">
 <div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div><br>
+<link rel="stylesheet" href="/css/board_list.css"/>
 <header class="bg-white shadow">
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold tracking-tight text-gray-900">내 대여 목록</h1>
@@ -66,6 +67,23 @@
                     </tr>
                     </tbody>
                 </table>
+                <div class="pagination">
+                    <button class="pagination-button" th:disabled="${myRentalList.getNumber()}==0"
+                            th:onclick="|location.href='@{/rentals(page=${1}, rentalStatus=${rentalSearchRequestDto.getRentalStatus()}) }'|">
+                        <<</button>
+                    <button class="pagination-button" th:disabled="${!myRentalList.hasPrevious()}"
+                            th:onclick="|location.href='@{/rentals(page=${myRentalList.getNumber()}, rentalStatus=${rentalSearchRequestDto.getRentalStatus()}) }'|">
+                        <</button>
+                    &nbsp; &nbsp;
+                    <span class="pagination-info">[[${myRentalList.getNumber()+1}]] / [[${myRentalList.getTotalElements() == 0 ? 1 : myRentalList.getTotalPages()}]]</span>
+                    &nbsp; &nbsp;
+                    <button class="pagination-button" th:disabled="${!myRentalList.hasNext()}"
+                            th:onclick="|location.href='@{/rentals(page=${myRentalList.getNumber() + 2}, rentalStatus=${rentalSearchRequestDto.getRentalStatus()}) }'|">
+                        ></button>
+                    <button class="pagination-button" th:disabled="${!myRentalList.hasNext()}"
+                            th:onclick="|location.href='@{/rentals(page=${myRentalList.getTotalPages()}, rentalStatus=${rentalSearchRequestDto.getRentalStatus()} ) }'|">
+                        >></button>
+                </div>
             </div>
         </div>
     </div>

@@ -36,10 +36,10 @@ public class Student {
     private StudentRole role;   // [USER, ADMIN]
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Rental> rentals = new ArrayList<>();
+    private List<Rental> rentalList = new ArrayList<>();
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Board> boards = new ArrayList<>();
+    private List<Board> boardList = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "univ_info_id")

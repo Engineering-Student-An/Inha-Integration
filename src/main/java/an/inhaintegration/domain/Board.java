@@ -1,6 +1,6 @@
 package an.inhaintegration.domain;
 
-import an.inhaintegration.dto.BoardForm;
+import an.inhaintegration.dto.board.BoardRequestDto;
 import an.inhaintegration.dto.board.BoardResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -36,9 +36,6 @@ public class Board {
     @Column(nullable = false, length = 5000)
     private String content;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    private List<Reply> replyList = new ArrayList<>();
-
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -48,32 +45,43 @@ public class Board {
     private LocalDateTime updatedAt;
 
     @ElementCollection
-    private List<String> likeNumber = new ArrayList<>();
+    private List<Long> likeNumber = new ArrayList<>();
 
     // 공지사항 여부
     private boolean notice;
 
     // 좋아요 메서드
-    public void like(String stuId){
-        if(this.likeNumber.contains(stuId)){
-            this.likeNumber.remove(stuId);
+    public void like(Long studentId){
+        if(this.likeNumber.contains(studentId)){
+            this.likeNumber.remove(studentId);
         } else {
-            this.likeNumber.add(stuId);
+            this.likeNumber.add(studentId);
         }
     }
 
     // 좋아요 검증 메서드
-    public boolean isLike(String stuId) {
-        return this.likeNumber.contains(stuId);
+    public boolean isLike(Long studentId) {
+        return this.likeNumber.contains(studentId);
     }
 
-    public void edit(BoardForm boardForm){
-        this.title = boardForm.getTitle();
-        this.content = boardForm.getContent();
+    public void setStudent(Student student) {
+        this.student = student;
+        student.getBoardList().add(this);
+    }
+
+    public void edit(String title, String content){
+        this.title = title;
+        this.content = content;
     }
 
     public BoardResponseDto toBoardResponseDto() {
 
-        return new BoardResponseDto(this.getId(), this.getTitle(), this.getCreatedAt());
+        return new BoardResponseDto(this.id, this.notice, this.title, this.content,
+                this.createdAt, this.updatedAt, this.student.toStudentResponseDto(), this.likeNumber);
+    }
+
+    public BoardRequestDto toBoardRequestDto() {
+
+        return new BoardRequestDto(this.title, this.content, this.notice);
     }
 }
