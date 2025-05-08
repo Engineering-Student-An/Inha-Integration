@@ -1,11 +1,15 @@
 package an.inhaintegration.service;
 
 import an.inhaintegration.domain.ItemRequest;
-import an.inhaintegration.exception.ItemRequestNotFoundException;
+import an.inhaintegration.dto.item.ItemRequestResponseDto;
 import an.inhaintegration.repository.ItemRequestRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,21 +22,27 @@ public class ItemRequestService {
         itemRequestRepository.save(itemRequest);
     }
 
-//    public List<ItemRequest> findAll() {
-//        return itemRequestRepository.findAllByOrderByIdDesc();
+    public List<ItemRequestResponseDto> findAll() {
+
+        Sort sort = Sort.by("id").descending();
+        List<ItemRequest> itemRequests = itemRequestRepository.findAll(sort);
+
+        return itemRequests.stream()
+                .map(ItemRequest::toItemRequestResponseDto)
+                .collect(Collectors.toList());
+    }
+
+//    public ItemRequest findById(Long id) {
+//        return itemRequestRepository.findItemRequestById(id).orElseThrow(ItemRequestNotFoundException::new);
 //    }
-
-    public ItemRequest findById(Long id) {
-        return itemRequestRepository.findItemRequestById(id).orElseThrow(ItemRequestNotFoundException::new);
-    }
-
-    @Transactional
-    public void check(Long id) {
-        findById(id).check();
-    }
-
-    @Transactional
-    public void delete(Long id) {
-        itemRequestRepository.delete(findById(id));
-    }
+//
+//    @Transactional
+//    public void check(Long id) {
+//        findById(id).check();
+//    }
+//
+//    @Transactional
+//    public void delete(Long id) {
+//        itemRequestRepository.delete(findById(id));
+//    }
 }

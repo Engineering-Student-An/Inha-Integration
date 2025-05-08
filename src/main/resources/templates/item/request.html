@@ -24,15 +24,14 @@
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <h1 class="text-2xl font-bold tracking-tight text-gray-900 mb-6">요청 작성</h1>
         <div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-6">
-            <form th:method="post" th:action="|/item/request|" th:object="${itemRequestForm}">
+            <form th:method="post" th:action="|/item/request|" th:object="${itemRequestRequestDto}">
                 <div class="mb-4">
                     <label for="item" class="block text-sm font-medium text-gray-700">물품 선택</label>
-                    <select class="form-control mt-1 block p-2 w-full border border-gray-300 rounded-md font-medium text-gray-700 shadow-sm focus:ring-blue-500" id="item" th:field="*{itemName}" th:errorclass="error-input">
-                        <option th:each="item : ${itemList}" th:value="${item.name}" th:text="${item.name}"></option>
+                    <select class="form-control mt-1 block p-2 w-full border border-gray-300 rounded-md font-medium text-gray-700 shadow-sm focus:ring-blue-500" id="item"
+                            th:field="*{itemId}" th:errorclass="error-input">
+                        <option th:each="item : ${itemList}" th:value="${item.itemId}" th:text="${item.name}"></option>
                     </select>
-                    <div class="error-class text-red-500 mt-1" th:errors="*{itemName}"></div>
                 </div>
-
                 <div class="mb-4">
                     <label th:for="content" class="block text-sm font-medium text-gray-700">요청 사항</label>
                     <textarea th:field="*{content}" th:errorclass="error-input" class="form-control font-medium text-gray-700 mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500"
@@ -42,7 +41,7 @@
 
                 <button type="submit" class="w-full flex items-center justify-center px-4 py-2 bg-blue-400 text-white rounded-md hover:bg-blue-700 transition duration-200">
                     <span class="material-symbols-outlined">edit</span>
-                    <span class="ml-2">요청 제출</span>
+                    <span class="ml-2">작성</span>
                 </button>
             </form>
         </div>

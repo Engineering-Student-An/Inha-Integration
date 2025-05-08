@@ -24,7 +24,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/rentals/**", "/rental/**", "/board/*/like", "/board/*/reply",
-                                "/board/*/reply/*/like", "/proposals/**", "/proposal/**", "/my-page/**", "/item/request/**").authenticated()
+                                "/board/*/reply/*/like", "/proposals/**", "/proposal/**", "/my-page/**", "/item/requests/**", "/item/request").authenticated()
                         .requestMatchers("/admin/**").hasRole(StudentRole.ADMIN.name())
                         .anyRequest().permitAll()
                 );

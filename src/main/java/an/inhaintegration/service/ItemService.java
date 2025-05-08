@@ -1,10 +1,16 @@
 package an.inhaintegration.service;
 
 import an.inhaintegration.domain.Item;
+import an.inhaintegration.domain.ItemRequest;
+import an.inhaintegration.domain.Student;
+import an.inhaintegration.dto.item.ItemRequestRequestDto;
 import an.inhaintegration.dto.item.ItemResponseDto;
 import an.inhaintegration.dto.item.ItemSearchRequestDto;
+import an.inhaintegration.exception.ItemNotFoundException;
+import an.inhaintegration.exception.StudentNotFoundException;
 import an.inhaintegration.repository.ItemRepository;
-import an.inhaintegration.repository.RentalRepository;
+import an.inhaintegration.repository.ItemRequestRepository;
+import an.inhaintegration.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,11 +30,15 @@ import java.util.stream.Collectors;
 public class ItemService {
 
     private final ItemRepository itemRepository;
-    private final RentalRepository rentalRepository;
+    private final StudentRepository studentRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
-    public List<Item> findAll() {
+    public List<ItemResponseDto> findAll() {
 
-        return itemRepository.findAll();
+        List<Item> items = itemRepository.findAll();
+        return items.stream()
+                .map(Item::toItemResponseDto)
+                .collect(Collectors.toList());
     }
 
     // 전체 카테고리 조회 메서드
@@ -44,8 +56,6 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
-    public Page<Item> findAllItems(Pageable pageable) { return itemRepository.findAll(pageable); }
-
     public Page<Item> findItemsByCategoryAndName(String category, String name, Pageable pageable) { return itemRepository.findItemsByCategoryContainingAndNameContaining(category, name, pageable); }
 
     public Page<Item> findItemsBySearch(int page, ItemSearchRequestDto itemSearchRequestDto) {
@@ -58,6 +68,31 @@ public class ItemService {
 
         // 모든 물품 조회
         PageRequest pageRequest = PageRequest.of(page - 1, 10, Sort.by("category").and(Sort.by("name")));
-        return findAllItems(pageRequest);
+        return itemRepository.findAll(pageRequest);
+    }
+
+    public void validateItemRequest(ItemRequestRequestDto itemRequestRequestDto, BindingResult bindingResult) {
+
+        if(itemRequestRequestDto.getItemId() == null) {
+            bindingResult.addError(new FieldError("itemRequestRequestDto", "itemId", "물품을 선택하세요!"));
+        }
+        if(itemRequestRequestDto.getContent().isEmpty()) {
+            bindingResult.addError(new FieldError("itemRequestRequestDto", "content", "요청 사항을 입력하세요!"));
+        }
+    }
+
+    @Transactional
+    public void saveItemRequest(Long studentId, ItemRequestRequestDto itemRequestRequestDto) {
+
+        Student loginStudent = studentRepository.findById(studentId).orElseThrow(StudentNotFoundException::new);
+        Item item = itemRepository.findById(itemRequestRequestDto.getItemId()).orElseThrow(ItemNotFoundException::new);
+
+        ItemRequest itemRequest = ItemRequest.builder()
+                .content(itemRequestRequestDto.getContent())
+                .checked(false).build();
+        itemRequest.setItem(item);
+        itemRequest.setStudent(loginStudent);
+
+        itemRequestRepository.save(itemRequest);
     }
 }

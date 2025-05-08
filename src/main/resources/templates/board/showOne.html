@@ -98,8 +98,14 @@
             <div class="flex-1">
                 <div class="flex justify-between items-center">
                     <div class="flex justify-start">
-                        <p class="text-gray-600 font-bold ml-1 mb-1 mr-2" th:text="${reply.student.name + ' (' + reply.student.stuId + ')'}"></p>
-                        <div th:if="${loginStudent != null and (loginStudent.getId() == reply.student.studentId || loginStudent.getRole().toString() == 'ADMIN')}">
+                        <div class="inline-flex items-center mb-2 text-gray-500">
+                            <img th:if="${reply.student.picture == null}" src="/images/person.jpeg" class="w-12 h-12 rounded-full border-2 border-gray-500">
+                            <img th:unless="${reply.student.picture == null}" th:src="${reply.student.picture}" class="w-12 h-12 rounded-full border-2 border-gray-500">
+                            <div class="ml-4">
+                                <span class="font-semibold" th:utext="${reply.student.stuId} + '<br>' + ${reply.student.name}"></span>
+                            </div>
+                        </div>
+                        <div class="ml-2" th:if="${loginStudent != null and (loginStudent.getId() == reply.student.studentId || loginStudent.getRole().toString() == 'ADMIN')}">
                             <form th:id="'delete-reply-form-' + ${reply.replyId}" th:action="@{/board/{boardId}/reply/{replyId}(boardId=${board.boardId}, replyId=${reply.replyId})}" method="post"
                                   style="display: none;">
                                 <input type="hidden" name="_method" value="delete"/>

@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => {
                 if (response.ok) {
                     alert("요청이 확인되었습니다.");
-                    window.location.href='/item/request/list';
+                    window.location.href='/item/requests';
                 } else {
                     alert("요청 확인에 실패했습니다.");
                 }

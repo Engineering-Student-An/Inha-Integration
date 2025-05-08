@@ -39,12 +39,13 @@ public class BoardController {
     public String createBoardForm(Model model) {
 
         model.addAttribute("boardRequestDto", new BoardRequestDto());
+
         return "board/createBoardForm";
     }
 
     @PostMapping("/board")
     public String createBoard(@AuthenticationPrincipal CustomUserDetails userDetails,
-                              @ModelAttribute BoardRequestDto boardRequestDto,
+                              @ModelAttribute("boardRequestDto") BoardRequestDto boardRequestDto,
                               BindingResult bindingResult) {
 
         // 게시글 유효성 검사

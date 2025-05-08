@@ -1,6 +1,9 @@
 package an.inhaintegration.service;
 
-import an.inhaintegration.domain.*;
+import an.inhaintegration.domain.Board;
+import an.inhaintegration.domain.Reply;
+import an.inhaintegration.domain.Student;
+import an.inhaintegration.domain.StudentRole;
 import an.inhaintegration.dto.reply.ReplyRequestDto;
 import an.inhaintegration.dto.reply.ReplyResponseDto;
 import an.inhaintegration.exception.BoardNotFoundException;
@@ -11,6 +14,7 @@ import an.inhaintegration.repository.BoardRepository;
 import an.inhaintegration.repository.ReplyRepository;
 import an.inhaintegration.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -70,7 +74,8 @@ public class ReplyService {
 
     public List<ReplyResponseDto> findRepliesByBoardId(Long boardId) {
 
-        List<Reply> replyList = replyRepository.findRepliesByBoardId(boardId);
+        Sort sort = Sort.by("createdAt").descending();
+        List<Reply> replyList = replyRepository.findRepliesByBoardId(boardId, sort);
         return replyList.stream()
                 .map(Reply::toReplyResponseDto)
                 .collect(Collectors.toList());

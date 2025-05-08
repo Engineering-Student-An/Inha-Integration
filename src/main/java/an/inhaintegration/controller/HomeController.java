@@ -77,7 +77,7 @@ public class HomeController {
 
     @PostMapping("/oauth")
     public String validateStuId(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                @Valid @ModelAttribute StudentOauthRequestDto studentOauthRequestDto,
+                                @Valid @ModelAttribute("studentOauthRequestDto") StudentOauthRequestDto studentOauthRequestDto,
                                 BindingResult bindingResult, Model model) {
 
         feeStudentService.validateOauthFeeStudent(studentOauthRequestDto, bindingResult);    // oauth 로그인 후 학생회비 납부 여부 검증
@@ -101,7 +101,7 @@ public class HomeController {
     }
 
     @PostMapping("/join")
-    public String join(@Valid @ModelAttribute StudentRequestDto studentRequestDto,
+    public String join(@Valid @ModelAttribute("studentRequestDto") StudentRequestDto studentRequestDto,
                        BindingResult bindingResult, HttpSession session, Model model) {
 
         studentService.validateJoin(studentRequestDto, bindingResult);             // 회원가입 정보 검증

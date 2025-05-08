@@ -1,5 +1,6 @@
 package an.inhaintegration.domain;
 
+import an.inhaintegration.dto.item.ItemRequestResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,9 +28,13 @@ public class ItemRequest {
     private String content;
 
     @Column(nullable = false)
-    private boolean isChecked;
+    private boolean checked;
 
     public void check() {
-        this.isChecked = !this.isChecked;
+        this.checked = !this.checked;
+    }
+
+    public ItemRequestResponseDto toItemRequestResponseDto() {
+        return new ItemRequestResponseDto(this.id, this.student.toStudentResponseDto(), this.item.getCategory(), this.item.getName(), this.content, this.checked);
     }
 }

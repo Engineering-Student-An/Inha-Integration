@@ -37,7 +37,7 @@ public class ProposalController {
 
     @PostMapping("/proposal")
     public String createProposal(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                 @ModelAttribute ProposalRequestDto proposalRequestDto, BindingResult bindingResult) {
+                                 @ModelAttribute("proposalRequestDto") ProposalRequestDto proposalRequestDto, BindingResult bindingResult) {
 
         // 건의 사항 유효성 검증
         proposalService.validateProposal(proposalRequestDto, bindingResult);
