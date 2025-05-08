@@ -28,10 +28,6 @@ public class Item {
     @Column(nullable = false)
     private int allStockQuantity;
 
-    // 대여 수량
-    @Column(nullable = false)
-    private int rentalCount;
-
     private String category;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -1,12 +1,3 @@
-function cancel(id) {
-    var previousPage = document.referrer; // 이전 페이지 URL 얻기
-    var form = document.createElement("form");
-    form.setAttribute("method", "post");
-    form.setAttribute("action", "rental/findOne/" + id + "/finish");
-    document.body.appendChild(form);
-    form.submit();
-}
-
 let currentIndex = 0;
 
 function moveSlide(direction) {

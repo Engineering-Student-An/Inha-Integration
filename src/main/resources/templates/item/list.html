@@ -56,19 +56,19 @@
 
             <div class="pagination">
                 <button class="pagination-button" th:disabled="${items.getNumber()}==0"
-                        th:onclick="|location.href='@{/item/list(page=${1}, category=${itemSearchRequestDto.getCategory()}, name=${itemSearchRequestDto.getName()} ) }'|">
+                        th:onclick="|location.href='@{/items(page=${1}, category=${itemSearchRequestDto.getCategory()}, name=${itemSearchRequestDto.getName()} ) }'|">
                     <<</button>
                 <button class="pagination-button" th:disabled="${!items.hasPrevious()}"
-                        th:onclick="|location.href='@{/item/list(page=${items.getNumber()}, category=${itemSearchRequestDto.getCategory()}, name=${itemSearchRequestDto.getName()} ) }'|">
+                        th:onclick="|location.href='@{/items(page=${items.getNumber()}, category=${itemSearchRequestDto.getCategory()}, name=${itemSearchRequestDto.getName()} ) }'|">
                     <</button>
                 &nbsp; &nbsp;
                 <span class="pagination-info">[[${items.getNumber()+1}]] / [[${items.getTotalElements() == 0 ? 1 : items.getTotalPages()}]]</span>
                 &nbsp; &nbsp;
                 <button class="pagination-button" th:disabled="${!items.hasNext()}"
-                        th:onclick="|location.href='@{/item/list(page=${items.getNumber() + 2}, category=${itemSearchRequestDto.getCategory()}, name=${itemSearchRequestDto.getName()} ) }'|">
+                        th:onclick="|location.href='@{/items(page=${items.getNumber() + 2}, category=${itemSearchRequestDto.getCategory()}, name=${itemSearchRequestDto.getName()} ) }'|">
                     ></button>
                 <button class="pagination-button" th:disabled="${!items.hasNext()}"
-                        th:onclick="|location.href='@{/item/list(page=${items.getTotalPages()}, category=${itemSearchRequestDto.getCategory()}, name=${itemSearchRequestDto.getName()} ) }'|">
+                        th:onclick="|location.href='@{/items(page=${items.getTotalPages()}, category=${itemSearchRequestDto.getCategory()}, name=${itemSearchRequestDto.getName()} ) }'|">
                     >></button>
             </div>
         </div>

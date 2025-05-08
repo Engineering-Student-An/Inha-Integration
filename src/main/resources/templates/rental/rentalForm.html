@@ -15,18 +15,18 @@
         <div class="flex">
             <div class="w-full md:w-1/4 pr-4 mr-9">
                 <label class="block mb-2 text-gray-700 select-h">카테고리 선택</label>
-                <form id="categoryForm" role="form" action="/rental" method="post">
-                    <div class="relative">
-                        <select id="category" name="category" class="block appearance-none w-full bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-2 px-3 text-gray-700">
-                            <option value="" disabled selected>카테고리를 선택해주세요.</option>
-                            <option th:each="category : ${categories}"
-                                    th:value="${category}"
-                                    th:text="${category}"
-                                    th:selected="${category == selectedCategory}">
-                            </option>
-                        </select>
-                    </div>
-                </form>
+                <div class="relative">
+                    <select id="category" name="category"
+                            class="block appearance-none w-full bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 py-2 px-3 text-gray-700"
+                            onchange="submitCategory()">
+                        <option value="" disabled selected>카테고리를 선택해주세요.</option>
+                        <option th:each="category : ${categories}"
+                                th:value="${category}"
+                                th:text="${category}"
+                                th:selected="${category == selectedCategory}">
+                        </option>
+                    </select>
+                </div>
             </div>
             <div class="w-2/3">
                 <div th:if="${itemsByCategory != null}" id="rentalForm">
@@ -34,7 +34,7 @@
                         <div th:each="item : ${itemsByCategory}">
                             <div class="flex flex-col items-center">
                                 <button class="element-button w-full bg-white border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 py-4 px-6 transition duration-200"
-                                        th:data-item-id="${item.id}"
+                                        th:data-item-id="${item.itemId}"
                                         th:data-item-name="${item.name}"
                                         th:data-item-stock-quantity="${item.stockQuantity}"
                                         th:data-item-all-stock-quantity="${item.allStockQuantity}"
@@ -87,5 +87,5 @@
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
-<script src="/js/rental_checkbox.js"></script>
+<script src="/js/rental-checkbox.js"></script>
 </html>

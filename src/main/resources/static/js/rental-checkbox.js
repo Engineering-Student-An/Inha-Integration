@@ -1,3 +1,10 @@
+function submitCategory() {
+    const selectedCategory = document.getElementById("category").value;
+    if (selectedCategory) {
+        window.location.href = `/rental/${encodeURIComponent(selectedCategory)}`;
+    }
+}
+
 document.getElementById('category').addEventListener('change', function() {
     document.getElementById('categoryForm').submit();
 });
@@ -58,31 +65,23 @@ let failNotificationVisible = false;
 function confirmRental() {
     const itemId = selectedItemId; // 선택된 아이템 ID를 가져옵니다.
 
-    const params = new URLSearchParams();
-    params.append('itemId', itemId);
-
-    fetch('/rental/complete', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: params.toString() // URL 인코딩된 형태로 전송
+    fetch(`/rental/${itemId}`, {
+        method: 'POST'
     })
         .then(response => {
-            return response.json(); // JSON 응답으로 변환
+            return response.text(); // JSON 응답으로 변환
         })
         .then(data => {
             closeModal(); // 모달 닫기
 
             // 다음 URL로 리디렉션
-            if (!data.nextUrl) {
+            if (!data) {
                 showFailNotification();
             } else {
-                showNotification(data.nextUrl); // 알림창과 함께 nextUrl 전달
+                showNotification(data); // 알림창과 함께 nextUrl 전달
             }
         })
         .catch((error) => {
-            console.error('실패:', error);
             alert(error.message); // 에러 메시지 표시
         });
 }

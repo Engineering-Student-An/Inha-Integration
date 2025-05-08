@@ -42,16 +42,13 @@ public class Rental {
     }
 
     // 대여 시작 메서드 (주문서 개념)
-    public Rental createRental(Student student, Item item) {
-        Rental rental = new Rental();
+    public void createRental(Student student, Item item) {
 
-        rental.setStudent(student);
-        rental.setItem(item);
+        this.setStudent(student);
+        this.setItem(item);
         this.status = RentalStatus.ING;
         this.rentalDate = LocalDate.now();
         item.removeStock();
-
-        return rental;
     }
 
     // 대여 완료 메서드

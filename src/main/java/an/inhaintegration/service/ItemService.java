@@ -1,6 +1,7 @@
 package an.inhaintegration.service;
 
 import an.inhaintegration.domain.Item;
+import an.inhaintegration.dto.item.ItemResponseDto;
 import an.inhaintegration.dto.item.ItemSearchRequestDto;
 import an.inhaintegration.repository.ItemRepository;
 import an.inhaintegration.repository.RentalRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,14 +29,25 @@ public class ItemService {
         return itemRepository.findAll();
     }
 
+    // 전체 카테고리 조회 메서드
     public List<String> findDistinctCategories () {
 
         return itemRepository.findDistinctCategories();
     }
 
-//    public List<Item> findItemsByCategory(String category) {
-//        return itemRepository.findItemByCategory(category);
-//    }
+    public List<ItemResponseDto> findItemsByCategory(String category) {
+
+        List<Item> items = itemRepository.findItemsByCategory(category);
+
+        return items.stream()
+                .map(this::mapItemToItemResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    public ItemResponseDto mapItemToItemResponseDto(Item item) {
+
+        return new ItemResponseDto(item.getId(), item.getName(), item.getStockQuantity(), item.getAllStockQuantity());
+    }
 
     public Page<Item> findAllItems(Pageable pageable) { return itemRepository.findAll(pageable); }
 

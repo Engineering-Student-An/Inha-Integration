@@ -31,8 +31,7 @@ public class AdminItemService {
                 .name(itemRequestDto.getName())
                 .category(itemRequestDto.getCategory())
                 .allStockQuantity(itemRequestDto.getAllStockQuantity())
-                .stockQuantity(itemRequestDto.getAllStockQuantity())
-                .rentalCount(0).build();
+                .stockQuantity(itemRequestDto.getAllStockQuantity()).build();
 
         itemRepository.save(item);
     }
@@ -69,7 +68,7 @@ public class AdminItemService {
             bindingResult.addError(new FieldError("itemRequestDto", "name", "이름을 입력해주세요!"));
         }
         // 이름이 중복인 경우
-        if(itemRepository.existsByName(itemRequestDto.getName())) {
+        if(!isUpdate && itemRepository.existsByName(itemRequestDto.getName())) {
             bindingResult.addError(new FieldError("itemRequestDto", "name", "해당 이름은 이미 존재합니다!"));
         }
         if (itemRequestDto.getAllStockQuantity() < 0) { // 재고가 0 미만인 경우
