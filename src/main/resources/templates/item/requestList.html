@@ -58,8 +58,9 @@
                     <div class="ml-4">
                         <span class="font-semibold" th:utext="${request.student.stuId} + '<br>' + ${request.student.name}"></span>
                     </div>
-                    <button th:if="${loginStudent.role.toString() == 'ADMIN'}" id="checkRequestBtn" th:data-id="${request.id}"
-                        class="bg-green-500 mt-3 text-white text-sm font-semibold p-3 rounded-lg shadow hover:bg-green-600 transition duration-200 transform hover:scale-105">요청 확인
+                    <button th:if="${loginStudent.role.toString() == 'ADMIN'}" class="checkRequestBtn ml-5 bg-green-500 mt-3 text-white text-sm font-semibold p-3 rounded-lg shadow hover:bg-green-600 transition duration-200 transform hover:scale-105"
+                            th:data-id="${request.itemRequestId}">
+                        요청 확인
                     </button>
                 </div>
             </div>

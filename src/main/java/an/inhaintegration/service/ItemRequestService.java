@@ -31,18 +31,4 @@ public class ItemRequestService {
                 .map(ItemRequest::toItemRequestResponseDto)
                 .collect(Collectors.toList());
     }
-
-//    public ItemRequest findById(Long id) {
-//        return itemRequestRepository.findItemRequestById(id).orElseThrow(ItemRequestNotFoundException::new);
-//    }
-//
-//    @Transactional
-//    public void check(Long id) {
-//        findById(id).check();
-//    }
-//
-//    @Transactional
-//    public void delete(Long id) {
-//        itemRequestRepository.delete(findById(id));
-//    }
 }
