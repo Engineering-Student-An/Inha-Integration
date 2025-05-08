@@ -1,5 +1,6 @@
 package an.inhaintegration.domain;
 
+import an.inhaintegration.dto.rental.RentalResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -73,5 +74,11 @@ public class Rental {
     // 대여 상태 업데이트 메서드
     public void updateStatus(RentalStatus status){
          this.status = status;
+    }
+
+    // Rental -> RentalResponseDto 변환 메서드
+    public RentalResponseDto toRentalResponseDto() {
+
+        return new RentalResponseDto(this.getId(), this.getStatus(), this.getItem().getName(), this.getItem().getCategory(), this.getRentalDate());
     }
 }

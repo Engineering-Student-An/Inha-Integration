@@ -2,7 +2,7 @@ package an.inhaintegration.controller;
 
 import an.inhaintegration.domain.Student;
 import an.inhaintegration.domain.oauth2.CustomUserDetails;
-import an.inhaintegration.dto.ChangePasswordRequestDto;
+import an.inhaintegration.dto.student.ChangePasswordRequestDto;
 import an.inhaintegration.service.EmailService;
 import an.inhaintegration.service.StudentService;
 import jakarta.servlet.http.HttpServletRequest;

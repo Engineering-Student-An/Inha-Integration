@@ -1,4 +1,4 @@
-package an.inhaintegration.dto;
+package an.inhaintegration.dto.student;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

@@ -2,7 +2,7 @@ package an.inhaintegration.controller;
 
 import an.inhaintegration.domain.Student;
 import an.inhaintegration.domain.oauth2.CustomUserDetails;
-import an.inhaintegration.dto.LoginRequestDto;
+import an.inhaintegration.dto.student.LoginRequestDto;
 import an.inhaintegration.dto.student.StudentOauthRequestDto;
 import an.inhaintegration.dto.student.StudentRequestDto;
 import an.inhaintegration.service.*;

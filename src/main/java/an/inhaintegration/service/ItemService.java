@@ -40,13 +40,8 @@ public class ItemService {
         List<Item> items = itemRepository.findItemsByCategory(category);
 
         return items.stream()
-                .map(this::mapItemToItemResponseDto)
+                .map(Item::toItemResponseDto)
                 .collect(Collectors.toList());
-    }
-
-    public ItemResponseDto mapItemToItemResponseDto(Item item) {
-
-        return new ItemResponseDto(item.getId(), item.getName(), item.getStockQuantity(), item.getAllStockQuantity());
     }
 
     public Page<Item> findAllItems(Pageable pageable) { return itemRepository.findAll(pageable); }

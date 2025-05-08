@@ -1,5 +1,6 @@
 package an.inhaintegration.domain;
 
+import an.inhaintegration.dto.proposal.ProposalResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -35,4 +36,9 @@ public class Proposal {
 
     // 비밀글 여부
     private boolean isSecret;
+
+    public ProposalResponseDto toProposalResponseDto() {
+
+        return new ProposalResponseDto(this.id, this.title, this.content, this.createdAt, this.student.toStudentResponseDto());
+    }
 }

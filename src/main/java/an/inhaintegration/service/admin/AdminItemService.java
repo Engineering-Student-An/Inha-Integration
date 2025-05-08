@@ -102,8 +102,6 @@ public class AdminItemService {
 
         Item item = itemRepository.findById(itemId).orElseThrow(ItemNotFoundException::new);
 
-        return new ItemRequestDto(item.getId(), item.getName(),
-                item.getAllStockQuantity(), item.getAllStockQuantity() - item.getStockQuantity(),
-                item.getCategory());
+        return item.toItemRequestDto();
     }
 }

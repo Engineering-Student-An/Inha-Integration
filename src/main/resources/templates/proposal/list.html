@@ -50,14 +50,14 @@
                 <tr th:each="proposal : ${proposals}" class="hover:bg-gray-100">
                     <td class="py-3 px-4" th:text="${proposals.getTotalElements() - (proposals.getNumber() * proposals.getSize()) - proposalStat.index}"></td>
 
-                    <td th:if="${!proposal.isSecret or (proposal.isSecret and #strings.equals(loginStudent.role, 'ADMIN')) or (#strings.equals(loginStudent.stuId, proposal.stuId))}" class="py-3 px-4">
+                    <td th:if="${!proposal.isSecret or (proposal.isSecret and #strings.equals(loginStudent.role, 'ADMIN')) or (#strings.equals(loginStudent.id, proposal.student.id))}" class="py-3 px-4">
                         <a style="color: blue" th:href="@{/proposal/{id}(id=${proposal.id})}" th:text="${proposal.title}"></a>
                     </td>
-                    <td th:if="${proposal.isSecret and !#strings.equals(loginStudent.role, 'ADMIN') and (!#strings.equals(loginStudent.stuId, proposal.stuId))}" class="py-3 px-4">
+                    <td th:if="${proposal.isSecret and !#strings.equals(loginStudent.role, 'ADMIN') and (!#strings.equals(loginStudent.id, proposal.student.id))}" class="py-3 px-4">
                         <p><span class="material-symbols-outlined">lock</span> 비밀글입니다.</p>
                     </td>
                     <td class="py-3 px-4"
-                        th:utext="${proposal.stuId=='ADMIN'} ? '<strong>관리자</strong>' : ${proposal.stuId + ' ' + proposal.name}"></td>
+                        th:utext="${proposal.student.role.name()=='ADMIN'} ? '<strong>관리자</strong>' : ${proposal.student.stuId + ' ' + proposal.student.name}"></td>
 
                     <td class="py-3 px-4" th:text="${#temporals.format(proposal.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
                 </tr>
@@ -66,19 +66,19 @@
 
         <div class="pagination">
             <button class="pagination-button" th:disabled="${proposals.getNumber()}==0"
-                    th:onclick="|location.href='@{/proposal/list(proposalPage=${1})}'|">
+                    th:onclick="|location.href='@{/proposals(page=${1})}'|">
                 <<</button>
             <button class="pagination-button" th:disabled="${!proposals.hasPrevious()}"
-                    th:onclick="|location.href='@{/proposal/list(proposalPage=${proposals.getNumber()}) }'|">
+                    th:onclick="|location.href='@{/proposals(page=${proposals.getNumber()}) }'|">
                 <</button>
             &nbsp; &nbsp;
             <span class="pagination-info">[[${proposals.getNumber()+1}]] / [[${proposals.getTotalElements() == 0 ? 1 : proposals.getTotalPages()}]]</span>
             &nbsp; &nbsp;
             <button class="pagination-button" th:disabled="${!proposals.hasNext()}"
-                    th:onclick="|location.href='@{/proposal/list(proposalPage=${proposals.getNumber() + 2}) }'|">
+                    th:onclick="|location.href='@{/proposals(page=${proposals.getNumber() + 2}) }'|">
                 ></button>
             <button class="pagination-button" th:disabled="${!proposals.hasNext()}"
-                    th:onclick="|location.href='@{/proposal/list(proposalPage=${proposals.getTotalPages()}) }'|">
+                    th:onclick="|location.href='@{/proposals(page=${proposals.getTotalPages()}) }'|">
                 >></button>
         </div>
 
@@ -87,5 +87,5 @@
 </main>
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
-<script src="/js/proposal_list.js"></script>
+<script src="/js/proposal-list.js"></script>
 </html>

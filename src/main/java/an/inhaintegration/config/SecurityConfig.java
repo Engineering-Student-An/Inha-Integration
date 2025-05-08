@@ -23,8 +23,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/rental/**", "/board/new", "/board/*/like", "/board/*/reply/new",
-                                "/reply/*/like", "/proposal/**", "/changeInfo", "/board/myList", "/item/request/**").authenticated()
+                        .requestMatchers("/rentals/**", "/rental/**", "/board/new", "/board/*/like", "/board/*/reply/new",
+                                "/reply/*/like", "/proposals/**", "/proposal/**", "/changeInfo", "/board/myList", "/item/request/**").authenticated()
                         .requestMatchers("/admin/**").hasRole(StudentRole.ADMIN.name())
                         .anyRequest().permitAll()
                 );

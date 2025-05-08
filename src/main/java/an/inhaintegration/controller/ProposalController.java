@@ -1,99 +1,74 @@
-//package an.inhaintegration.controller;
-//
-//import an.rentalinhaee.domain.Proposal;
-//import an.rentalinhaee.domain.Student;
-//import an.rentalinhaee.domain.dto.ProposalForm;
-//import an.rentalinhaee.service.ProposalService;
-//import jakarta.servlet.http.HttpSession;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.domain.PageRequest;
-//import org.springframework.data.domain.Sort;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.ui.Model;
-//import org.springframework.validation.BindingResult;
-//import org.springframework.validation.FieldError;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.time.LocalDateTime;
-//
-//@Controller
-//@RequiredArgsConstructor
-//public class ProposalController {
-//
-//    private final ProposalService proposalService;
-//
-//    @GetMapping("/proposal/list")
-//    public String proposalList(Model model,
-//                               @RequestParam(required = false, value = "proposalPage", defaultValue = "1") int proposalPage) {
-//
-//        PageRequest noticePageRequest = PageRequest.of(proposalPage - 1, 10, Sort.by("writeTime").descending());
-//        Page<Proposal> proposals = proposalService.findAll(noticePageRequest);
-//        model.addAttribute("proposals", proposals);
-//
-//        model.addAttribute("proposalPage", proposalPage);
-//
-//        return "proposal/list";
-//    }
-//
-//    @GetMapping("/proposal/new")
-//    public String createProposalForm(Model model) {
-//
-//        model.addAttribute("proposalForm", new ProposalForm());
-//
-//        return "proposal/createProposalForm";
-//    }
-//
-//    @PostMapping("/proposal/new")
-//    public String createProposal(@ModelAttribute ProposalForm proposalForm, BindingResult bindingResult, Model model) {
-//
-//        if (proposalForm.getTitle().isEmpty()) {
-//            bindingResult.addError(new FieldError("proposalForm", "title", "제목을 입력하세요"));
-//        }
-//        if (proposalForm.getTitle().length() > 20) {
-//            bindingResult.addError(new FieldError("proposalForm", "title", "20자 이내로 입력해주세요"));
-//        }
-//        if (proposalForm.getContent().isEmpty()) {
-//            bindingResult.addError(new FieldError("proposalForm", "content", "내용을 입력하세요"));
-//        }
-//
-//        if (bindingResult.hasErrors()) {
-//            model.addAttribute("proposalForm", proposalForm);
-//            return "proposal/createProposalForm";
-//        }
-//
-//
-//        Student student = (Student) model.getAttribute("loginStudent");
-//        Proposal proposal = new Proposal(student.getStuId(), student.getName(),
-//                proposalForm.getTitle(), proposalForm.getContent(), LocalDateTime.now(), proposalForm.isSecret());
-//
-//
-//        proposalService.saveProposal(proposal);
-//        return "redirect:/proposal/list";
-//    }
-//
-//    @GetMapping("/proposal/{id}")
-//    public String showOneProposal(@PathVariable("id") Long id, Model model) {
-//
-//        Proposal proposal = proposalService.findOne(id);
-//
-//        if(proposal.isSecret()){
-//            model.addAttribute("isSecret", true);
-//        } else {
-//            model.addAttribute("isSecret", false);
-//        }
-//
-//        model.addAttribute("proposal", proposal);
-//
-//        return "proposal/showOne";
-//
-//    }
-//
-//    @ModelAttribute("loginStudent")
-//    public Student loginStudent(HttpSession session) {
-//        if(session.getAttribute("loginStudent") != null) {
-//            return (Student) session.getAttribute("loginStudent");
-//        }
-//        return null;
-//    }
-//}
+package an.inhaintegration.controller;
+
+import an.inhaintegration.domain.Student;
+import an.inhaintegration.domain.oauth2.CustomUserDetails;
+import an.inhaintegration.dto.proposal.ProposalRequestDto;
+import an.inhaintegration.service.ProposalService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+@RequiredArgsConstructor
+public class ProposalController {
+
+    private final ProposalService proposalService;
+
+    @GetMapping("/proposals")
+    public String proposalList(@RequestParam(required = false, value = "page", defaultValue = "1") int page,
+                               Model model) {
+
+        model.addAttribute("proposals", proposalService.findAll(page));
+
+        return "proposal/list";
+    }
+
+    @GetMapping("/proposal")
+    public String createProposalForm(Model model) {
+
+        model.addAttribute("proposalRequestDto", new ProposalRequestDto());
+
+        return "proposal/createProposalForm";
+    }
+
+    @PostMapping("/proposal")
+    public String createProposal(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                 @ModelAttribute ProposalRequestDto proposalRequestDto, BindingResult bindingResult) {
+
+        // 건의 사항 유효성 검증
+        proposalService.validateProposal(proposalRequestDto, bindingResult);
+
+        if (bindingResult.hasErrors()) return "proposal/createProposalForm";
+
+        proposalService.create(userDetails.getId(), proposalRequestDto);
+
+        return "redirect:/proposals";
+    }
+
+    @GetMapping("/proposal/{proposalId}")
+    public String showOneProposal(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                  @PathVariable("proposalId") Long proposalId, Model model) {
+
+        // 접근 권한 체크
+        proposalService.checkAccess(userDetails.getId(), proposalId);
+
+        model.addAttribute("proposal", proposalService.findById(proposalId));
+
+        return "proposal/showOne";
+    }
+
+    @ModelAttribute("loginStudent")
+    public Student loginStudent() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof CustomUserDetails) {
+            return ((CustomUserDetails) principal).getStudent();
+        }
+
+        return null;
+    }
+}

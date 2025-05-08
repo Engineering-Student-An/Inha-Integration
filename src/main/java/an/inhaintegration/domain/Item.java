@@ -1,8 +1,13 @@
 package an.inhaintegration.domain;
 
+import an.inhaintegration.dto.item.ItemRequestDto;
+import an.inhaintegration.dto.item.ItemResponseDto;
 import an.inhaintegration.exception.NotEnoughStockException;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,5 +61,17 @@ public class Item {
         this.stockQuantity += (allStockQuantity - this.allStockQuantity);
         this.allStockQuantity = allStockQuantity;
         this.category = category;
+    }
+
+    public ItemResponseDto toItemResponseDto() {
+
+        return new ItemResponseDto(this.getId(), this.getName(), this.getStockQuantity(), this.getAllStockQuantity());
+    }
+
+    public ItemRequestDto toItemRequestDto() {
+
+        return new ItemRequestDto(this.getId(), this.getName(),
+                this.getAllStockQuantity(), this.getAllStockQuantity() - this.getStockQuantity(),
+                this.getCategory());
     }
 }

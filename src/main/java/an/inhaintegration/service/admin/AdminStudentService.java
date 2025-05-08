@@ -43,13 +43,10 @@ public class AdminStudentService {
 
         Student student = studentRepository.findById(studentId).orElseThrow(StudentNotFoundException::new);
 
-        return mapStudentToStudentResponseDto(student);
+        return student.toStudentResponseDto();
     }
 
-    public StudentResponseDto mapStudentToStudentResponseDto(Student student) {
 
-        return new StudentResponseDto(student.getId(), student.getPicture(), student.getStuId(), student.getName(), student.getPhoneNumber(), student.getEmail());
-    }
 
     @Transactional
     public StudentDeleteResponseDto delete(Long studentId, Long loginStudentId, String password) {

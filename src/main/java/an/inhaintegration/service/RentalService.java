@@ -78,7 +78,7 @@ public class RentalService {
         List<Rental> rentals = rentalRepository.findRentalsByStudentIdAndStatusIn(studentId, collection);
 
         return rentals.stream()
-                .map(this::mapRentalToRentalResponseDto)
+                .map(Rental::toRentalResponseDto)
                 .collect(Collectors.toList());
     }
 
@@ -103,15 +103,6 @@ public class RentalService {
     public Page<Rental> findAll(Pageable pageable){
         return rentalRepository.findAll(pageable);
     }
-
-
-
-    // Rental -> RentalResponseDto 변환 메서드
-    private RentalResponseDto mapRentalToRentalResponseDto(Rental rental) {
-
-        return new RentalResponseDto(rental.getId(), rental.getStatus(), rental.getItem().getName(), rental.getItem().getCategory(), rental.getRentalDate());
-    }
-
     public Page<Rental> findRentalsBySearch(Long studentId, RentalSearchRequestDto rentalSearchRequestDto, int page) {
 
         PageRequest pageRequest = PageRequest.of(page-1, 10, Sort.by("status").and(Sort.by("rentalDate")));

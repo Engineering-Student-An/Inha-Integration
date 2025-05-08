@@ -1,5 +1,6 @@
 package an.inhaintegration.domain;
 
+import an.inhaintegration.dto.student.StudentResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -59,5 +60,10 @@ public class Student {
         this.phoneNumber = phoneNumber;
         this.role = StudentRole.USER;
         this.email = this.loginId;
+    }
+
+    public StudentResponseDto toStudentResponseDto() {
+
+        return new StudentResponseDto(this.getId(), this.getPicture(), this.getStuId(), this.getName(), this.getPhoneNumber(), this.getEmail());
     }
 }

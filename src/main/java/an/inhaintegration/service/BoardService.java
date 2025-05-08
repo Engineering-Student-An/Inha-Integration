@@ -74,12 +74,7 @@ public class BoardService {
         Page<Board> boards = boardRepository.findBoardsByNoticeIs(pageable, true);
 
         return boards.stream()
-                .map(this::mapBoardToBoardResponseDto)
+                .map(Board::toBoardResponseDto)
                 .collect(Collectors.toList());
-    }
-
-    public BoardResponseDto mapBoardToBoardResponseDto(Board board) {
-
-        return new BoardResponseDto(board.getId(), board.getTitle(), board.getCreatedAt());
     }
 }

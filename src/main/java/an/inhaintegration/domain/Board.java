@@ -1,6 +1,7 @@
 package an.inhaintegration.domain;
 
 import an.inhaintegration.dto.BoardForm;
+import an.inhaintegration.dto.board.BoardResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -69,5 +70,10 @@ public class Board {
     public void edit(BoardForm boardForm){
         this.title = boardForm.getTitle();
         this.content = boardForm.getContent();
+    }
+
+    public BoardResponseDto toBoardResponseDto() {
+
+        return new BoardResponseDto(this.getId(), this.getTitle(), this.getCreatedAt());
     }
 }
