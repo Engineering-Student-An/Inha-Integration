@@ -38,13 +38,13 @@
 
         <div class="flex justify-end">
             <div th:if="${loginStudent != null and loginStudent.getId() == board.student.studentId}">
-                <a th:href="@{/templates/rentalee/board/{boardId}/edit(boardId=${board.boardId})}">
+                <a th:href="@{/board/{boardId}/edit(boardId=${board.boardId})}">
                     <span class="material-symbols-outlined">edit_note</span>
                 </a>
             </div>
             &nbsp;&nbsp;
             <div th:if="${loginStudent != null and (loginStudent.getId() == board.student.studentId || loginStudent.getRole().toString() == 'ADMIN')}">
-                <form id="delete-form" th:action="@{/templates/rentalee/board/{id}(id=${board.boardId})}" method="post"
+                <form id="delete-form" th:action="@{/board/{id}(id=${board.boardId})}" method="post"
                       style="display: none;">
                     <input type="hidden" name="_method" value="delete"/>
                 </form>
@@ -59,7 +59,7 @@
          style="align-self: flex-start;">
         <div class="hover:transform hover:-translate-y-1 transition-transform duration-200">
             <form th:id="'like-form-' + ${board.boardId}"
-                  th:action="@{/templates/rentalee/board/{boardId}/like(boardId=${board.boardId})}"
+                  th:action="@{/board/{boardId}/like(boardId=${board.boardId})}"
                   method="post" style="display: none;"></form>
             <a th:if="${loginStudent != null}" href="#"
                th:onclick="'return handleLike(' + ${board.boardId} + ', ' + ${board.isLike(loginStudent.getId())} + ');'"
@@ -70,14 +70,14 @@
                       th:classappend="${board.isLike(loginStudent.getId())} ? 'material-icons' : 'material-symbols-outlined'">thumb_up</span>
                 <span class="ml-2">좋아요</span>
             </a>
-            <a th:if="${loginStudent == null}" th:href="@{/templates/rentalee/board/{boardId}/like(boardId=${board.boardId})}"
+            <a th:if="${loginStudent == null}" th:href="@{/board/{boardId}/like(boardId=${board.boardId})}"
                class="flex items-center w-28 py-2 border border-gray-300 rounded-lg bg-white text-black hover:bg-gray-100 transition duration-300">
                 <span class="px-2 material-symbols-outlined">thumb_up</span>
                 <span class="ml-2">좋아요</span>
             </a>
         </div>
 
-        <form class="mt-5 mb-5" th:action="@{/templates/rentalee/board/{boardId}/reply(boardId=${board.boardId})}" th:object="${replyRequestDto}" method="post">
+        <form class="mt-5 mb-5" th:action="@{/board/{boardId}/reply(boardId=${board.boardId})}" th:object="${replyRequestDto}" method="post">
             <label th:for="content" class="block text-lg font-semibold mb-2"><strong>댓글 작성</strong></label>
             <div class="flex items-start">
                 <textarea th:if="${loginStudent!=null}" th:field="*{content}" th:errorclass="error-input"
@@ -106,7 +106,7 @@
                             </div>
                         </div>
                         <div class="ml-2" th:if="${loginStudent != null and (loginStudent.getId() == reply.student.studentId || loginStudent.getRole().toString() == 'ADMIN')}">
-                            <form th:id="'delete-reply-form-' + ${reply.replyId}" th:action="@{/templates/rentalee/board/{boardId}/reply/{replyId}(boardId=${board.boardId}, replyId=${reply.replyId})}" method="post"
+                            <form th:id="'delete-reply-form-' + ${reply.replyId}" th:action="@{/board/{boardId}/reply/{replyId}(boardId=${board.boardId}, replyId=${reply.replyId})}" method="post"
                                   style="display: none;">
                                 <input type="hidden" name="_method" value="delete"/>
                             </form>
@@ -131,7 +131,7 @@
                     <div class="flex items-center">
                         <div class="flex items-center hover:transform hover:-translate-y-1 transition-transform duration-200">
                             <form th:id="'reply-like-form-' + ${reply.replyId}"
-                                  th:action="@{/templates/rentalee/board/{boardId}/reply/{replyId}/like(boardId=${board.boardId}, replyId=${reply.replyId})}"
+                                  th:action="@{/board/{boardId}/reply/{replyId}/like(boardId=${board.boardId}, replyId=${reply.replyId})}"
                                   method="post" style="display: none;"></form>
                             <a th:if="${loginStudent != null}" href="#"
                                th:onclick="'return handleReplyLike(' + ${reply.replyId} + ', ' + ${reply.isLike(loginStudent.getId())} + ');'"
@@ -140,7 +140,7 @@
                                 <span class="px-1 sm:px-2" th:classappend="${reply.isLike(loginStudent.getId())} ? 'material-icons' : 'material-symbols-outlined'">thumb_up</span>
                                 <span class="text-sm sm:text-base ml-1 sm:ml-2">좋아요</span>
                             </a>
-                            <a th:if="${loginStudent == null}" th:href="@{/templates/rentalee/board/{boardId}/like(boardId=${board.boardId})}"
+                            <a th:if="${loginStudent == null}" th:href="@{/board/{boardId}/like(boardId=${board.boardId})}"
                                class="flex items-center w-28 py-2 border border-gray-300 rounded-lg bg-white text-black hover:bg-gray-100 transition duration-300">
                                 <span class="px-2 material-symbols-outlined">thumb_up</span>
                                 <span class="ml-2">좋아요</span>

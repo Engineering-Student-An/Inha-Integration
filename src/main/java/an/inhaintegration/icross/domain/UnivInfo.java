@@ -21,7 +21,7 @@ public class UnivInfo {
     @Column(name = "univ_info_id")
     private Long id;
 
-    private String iClassPassword;
+    private String password;
 
     @OneToOne
     @JoinColumn(name = "student_id")
@@ -32,4 +32,9 @@ public class UnivInfo {
 
     @OneToMany(mappedBy = "univInfo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UnivInfoTask> univInfoTaskList = new ArrayList<>();
+
+    public void setStudent(Student student) {
+        this.student = student;
+        student.setUnivInfo(this);
+    }
 }

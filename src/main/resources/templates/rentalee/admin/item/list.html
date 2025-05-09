@@ -54,10 +54,10 @@
                     <td class="py-3 px-4" th:text="${item.allStockQuantity}"></td>
                     <td>
                         <div class="text-end">
-                            <a href="#" th:href="@{/templates/rentalee/admin/item/{itemId} (itemId=${item.id})}" style="text-decoration: none">
+                            <a href="#" th:href="@{/admin/item/{itemId} (itemId=${item.id})}" style="text-decoration: none">
                                 <span class="material-symbols-outlined" style="color: blue">edit_note</span>
                             </a>
-                            <form th:id="'delete-form-' + ${item.id}" th:action="@{/templates/rentalee/admin/item/{itemId}(itemId=${item.id})}" method="post" style="display:none;">
+                            <form th:id="'delete-form-' + ${item.id}" th:action="@{/admin/item/{itemId}(itemId=${item.id})}" method="post" style="display:none;">
                                 <input type="hidden" name="_method" value="delete" />
                             </form>
 

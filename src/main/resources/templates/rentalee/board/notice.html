@@ -28,7 +28,7 @@
                 <td class="py-3 px-4"
                     th:text="${boards.getTotalElements() - (boards.getNumber() * boards.getSize()) - boardStat.index}"></td>
                 <td class="py-3 px-4">
-                    <a class="text-blue-600" th:href="@{/templates/rentalee/board/{id}(id=${board.id})}" th:text="${board.title}"></a>
+                    <a class="text-blue-600" th:href="@{/board/{id}(id=${board.id})}" th:text="${board.title}"></a>
                 </td>
 
                 <td class="py-3 px-4"

@@ -26,7 +26,7 @@ public class SecurityConfig {
                         .requestMatchers("/i-cross/index").permitAll()
                         .requestMatchers("/rentals/**", "/rental/**", "/board/*/like", "/board/*/reply",
                                 "/board/*/reply/*/like", "/proposals/**", "/proposal/**", "/my-page/**",
-                                "/item/requests/**", "/item/request", "i-cross/**").authenticated()
+                                "/item/requests/**", "/item/request", "/i-cross/**").authenticated()
                         .requestMatchers("/admin/**", "/api/admin/**").hasRole(StudentRole.ADMIN.name())
                         .anyRequest().permitAll()
                 );

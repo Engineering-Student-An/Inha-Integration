@@ -51,7 +51,7 @@
                     <td class="py-3 px-4" th:text="${proposals.getTotalElements() - (proposals.getNumber() * proposals.getSize()) - proposalStat.index}"></td>
 
                     <td th:if="${!proposal.secret or (proposal.secret and #strings.equals(loginStudent.role, 'ADMIN')) or (#strings.equals(loginStudent.id, proposal.student.id))}" class="py-3 px-4">
-                        <a style="color: blue" th:href="@{/templates/rentalee/proposal/{id}(id=${proposal.id})}" th:text="${proposal.title}"></a>
+                        <a style="color: blue" th:href="@{/proposal/{id}(id=${proposal.id})}" th:text="${proposal.title}"></a>
                     </td>
                     <td th:if="${proposal.secret and !#strings.equals(loginStudent.role, 'ADMIN') and (!#strings.equals(loginStudent.id, proposal.student.id))}" class="py-3 px-4">
                         <p><span class="material-symbols-outlined">lock</span> 비밀글입니다.</p>

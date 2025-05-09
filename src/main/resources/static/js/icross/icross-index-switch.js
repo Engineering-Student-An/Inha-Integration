@@ -9,5 +9,5 @@ indexSwitchButton.addEventListener('mouseout', () => {
 });
 
 indexSwitchButton.addEventListener('click', function() {
-    window.location.href = '/i-cross';
+    window.location.href = '/i-cross/home';
 });

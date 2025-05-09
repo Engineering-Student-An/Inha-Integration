@@ -28,4 +28,12 @@ public class UnivInfoTask { // Task, UnivInfo 사이의 중간 테이블
     public void setCompleted() {
         this.completed = true;
     }
+
+    public void setUnivInfoAndTask(UnivInfo univInfo, Task task) {
+        this.univInfo = univInfo;
+        univInfo.getUnivInfoTaskList().add(this);
+
+        this.task = task;
+        task.getUnivInfoTaskList().add(this);
+    }
 }

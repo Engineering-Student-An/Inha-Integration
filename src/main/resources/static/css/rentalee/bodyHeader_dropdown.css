@@ -70,11 +70,10 @@
     display: none;
     position: absolute;
     top: 100%; /* 상위 요소 바로 아래 위치 */
-    left: -20px;
     background-color: white;
     color: #555;
     font-size: 14px;
-    padding: 20px;
+    padding: 15px 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* 그림자 효과 강화 */
     min-width: 200px;
     width: 300px;
@@ -89,5 +88,4 @@
 .dropdown:hover .dropdown-content-question {
     display: block;
     opacity: 1; /* 드롭다운 보이기 */
-    transform: translateY(0); /* 드롭다운 위치 조정 */
 }

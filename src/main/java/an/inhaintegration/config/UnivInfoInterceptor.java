@@ -28,7 +28,7 @@ public class UnivInfoInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
 
         // /i-cross/index 는 무시
-        if (requestURI.equals("/i-cross/index")) {
+        if (requestURI.equals("/i-cross/index") || requestURI.equals("/i-cross/univ-info")) {
             return true;
         }
 

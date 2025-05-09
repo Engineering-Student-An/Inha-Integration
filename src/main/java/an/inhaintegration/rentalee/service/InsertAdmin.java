@@ -1,7 +1,8 @@
-//package an.inhaintegration.service;
+//package an.inhaintegration.rentalee.service;
 //
-//import an.inhaintegration.domain.StudentRole;
-//import an.inhaintegration.dto.student.UserRequestDto;
+//
+//import an.inhaintegration.rentalee.domain.StudentRole;
+//import an.inhaintegration.rentalee.dto.student.StudentRequestDto;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.boot.CommandLineRunner;
 //import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@
 //    // 스프링 띄워지면서 자동으로 실행됨 => 일단은 관리자랑 몇개 데이터 추가
 //    @Override
 //    public void run(String... args) {
-//        UserRequestDto joinRequest = new UserRequestDto();
+//        StudentRequestDto joinRequest = new StudentRequestDto();
 //        joinRequest.setName("관리자");
 //        joinRequest.setRole(StudentRole.ADMIN);
 //        joinRequest.setLoginId("ADMIN");

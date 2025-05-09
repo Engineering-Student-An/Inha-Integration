@@ -1,9 +1,6 @@
 package an.inhaintegration.icross.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +23,16 @@ public class Subject {
 
     // 과목명
     private String name;
+
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> taskList = new ArrayList<>();
+
+    public List<Task> getTaskList() {
+        if (taskList == null) {
+            taskList = new ArrayList<>();  // null이 아니라 기본값을 리턴
+        }
+        return taskList;
+    }
 
     // 수업 시간
     @ElementCollection

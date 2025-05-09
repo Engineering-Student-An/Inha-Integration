@@ -32,7 +32,7 @@
                     <div class="flex w-2 h-2 bg-gray-400 rounded-full mr-4 mt-3"></div>
                     <div class="flex-1">
                         <p class="text-gray-600" th:text="${notice.student.name}"></p>
-                        <a th:href="@{/templates/rentalee/board/{id}(id=${notice.boardId})}" class="text-blue-700 text-md text-lg font-bold" th:text="${notice.title}"></a>
+                        <a th:href="@{/board/{id}(id=${notice.boardId})}" class="text-blue-700 text-md text-lg font-bold" th:text="${notice.title}"></a>
                         <p class="mt-3 text-gray-700 italic" th:text="${#strings.length(notice.content) > 20 ? #strings.substring(notice.content, 0, 30) + '...' : notice.content}"></p>
                         <span class="text-gray-500 text-sm mb-5" th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
                     </div>
@@ -69,7 +69,7 @@
                 <td class="py-3 px-4"
                     th:text="${boards.getTotalElements() - (boards.getNumber() * boards.getSize()) - boardStat.index}"></td>
                 <td class="py-3 px-4">
-                    <a style="color: blue" th:href="@{/templates/rentalee/board/{id}(id=${board.id})}" th:text="${#strings.length(board.title) > 10 ? #strings.substring(board.title, 0, 10) + '...' : board.title}"></a>
+                    <a style="color: blue" th:href="@{/board/{id}(id=${board.id})}" th:text="${#strings.length(board.title) > 10 ? #strings.substring(board.title, 0, 10) + '...' : board.title}"></a>
                 </td>
 
                 <td class="py-3 px-4">

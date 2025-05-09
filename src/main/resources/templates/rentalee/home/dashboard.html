@@ -73,7 +73,7 @@
             </h1>
             <ul class="space-y-4" th:each="notice : ${recentNotice}">
                 <a class="p-4 border mb-3 bg-white border-white rounded-lg hover:shadow-lg transition-shadow duration-200 block transform transition-transform duration-200 hover:-translate-y-1"
-                   th:href="@{/templates/rentalee/board/{id}(id=${notice.boardId})}">
+                   th:href="@{/board/{id}(id=${notice.boardId})}">
                     <p class="text-lg font-semibold" th:text="${notice.title}"></p>
                     <span class="text-gray-500 text-sm" th:text="${#temporals.format(notice.createdAt, 'yyyy.MM.dd')}"></span>
                 </a>

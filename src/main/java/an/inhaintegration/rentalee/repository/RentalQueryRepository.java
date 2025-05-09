@@ -1,8 +1,6 @@
 package an.inhaintegration.rentalee.repository;
 
-import an.inhaintegration.domain.*;
-import an.inhaintegration.rentalee.domain.Rental;
-import an.inhaintegration.rentalee.domain.RentalStatus;
+import an.inhaintegration.rentalee.domain.*;
 import an.inhaintegration.rentalee.dto.rental.RentalSearchRequestDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;

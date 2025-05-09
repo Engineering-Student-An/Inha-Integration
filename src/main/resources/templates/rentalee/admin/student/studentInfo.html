@@ -21,7 +21,7 @@
                     <h2 class="text-xl font-bold text-gray-900" th:text="${student.name}"></h2>
                     <p class="text-gray-600" th:text="${student.stuId}"></p>
                 </div>
-                <form class="ml-auto" th:action="@{/templates/rentalee/admin/student/{studentId}(studentId=${student.studentId})}" method="post" onsubmit="return confirmDelete();">
+                <form class="ml-auto" th:action="@{/admin/student/{studentId}(studentId=${student.studentId})}" method="post" onsubmit="return confirmDelete();">
                     <input type="hidden" name="_method" value="delete" />
                     <input type="hidden" id="passwordInput" name="password" />
                     <input type="submit" value="계정 탈퇴" class="bg-red-600 text-white font-bold py-2 px-4 rounded hover:bg-red-700 transition duration-200" role="button">

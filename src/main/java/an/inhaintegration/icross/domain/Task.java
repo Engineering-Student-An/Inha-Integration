@@ -1,10 +1,7 @@
 package an.inhaintegration.icross.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,11 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 public class Task {
 
-    @Id
-    private Long webId;
-
-    // 과목 이름
-    private String subjectName;
+    @Id @Column(name = "task_id")
+    private Long id;
 
     // 할 일 이름
     private String name;
@@ -31,6 +25,15 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private TaskType type;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subject_id")
+    private Subject subject;
+
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UnivInfoTask> univInfoTaskList = new ArrayList<>();
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+        subject.getTaskList().add(this);
+    }
 }

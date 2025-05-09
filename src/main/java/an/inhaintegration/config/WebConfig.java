@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(univInfoInterceptor)
                 .addPathPatterns("/i-cross/**") // 검사할 URL 패턴
-                .excludePathPatterns("/i-cross/index", "/i-cross/univ-info/register"); // 예외 처리
+                .excludePathPatterns("/i-cross/index", "/i-cross/univ-info"); // 예외 처리
     }
 
     @Bean
