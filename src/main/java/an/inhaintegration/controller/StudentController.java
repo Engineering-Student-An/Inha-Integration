@@ -3,6 +3,7 @@ package an.inhaintegration.controller;
 import an.inhaintegration.domain.Student;
 import an.inhaintegration.domain.oauth2.CustomUserDetails;
 import an.inhaintegration.dto.student.ChangePasswordRequestDto;
+import an.inhaintegration.dto.student.StudentInfoRequestDto;
 import an.inhaintegration.service.EmailService;
 import an.inhaintegration.service.StudentService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -177,6 +178,96 @@ public class StudentController {
         model.addAttribute("nextUrl", "/my-page");
         return "error/errorMessage";
 
+    }
+
+    @GetMapping("/password")
+    public String findPasswordForm(Model model) {
+
+        model.addAttribute("studentInfoRequestDto", new StudentInfoRequestDto());
+
+        return "home/findPassword";
+    }
+
+    @PostMapping("/password")
+    public String findPasswordInfo(@ModelAttribute("studentInfoRequestDto") StudentInfoRequestDto studentInfoRequestDto,
+                                   BindingResult bindingResult, HttpSession session) {
+
+        // 회원 정보 검증
+        studentService.checkStudentInfo(studentInfoRequestDto, bindingResult);
+
+        if(bindingResult.hasErrors()) return "home/findPassword";
+
+        // 비밀번호 초기화하려는 회원 id 세션에 저장
+        studentService.setStudentIdToSession(studentInfoRequestDto.getStuId(), session);
+
+        return "redirect:/password/email";
+    }
+
+    @GetMapping("/password/email")
+    public String findPasswordEmailForm(Model model) {
+
+        model.addAttribute("isEmailChecked", false);
+        model.addAttribute("isEmailSent", false);
+
+        return "home/findPassword_email";
+    }
+
+    @PostMapping("/password/email")
+    public String findPasswordEmail(@RequestParam("email") String email, Model model, HttpSession session) {
+
+        Long studentId = (Long) session.getAttribute("studentId");
+
+        String errorMessage = studentService.checkEmail(studentId, email);
+        if(errorMessage != null) {
+            model.addAttribute("errorMessage", errorMessage);
+            model.addAttribute("nextUrl", "/password/email");
+            return "error/errorMessage";
+        }
+
+        model.addAttribute("isEmailSent", true);
+        model.addAttribute("isEmailChecked", false);
+
+        String authCode = emailService.createVerifyCode();
+        emailService.sendEmail(email, authCode, "email/passwordEmail");
+
+        session.setAttribute("verifyCode", authCode);
+
+        return "home/findPassword_email";
+    }
+
+    @PostMapping("/password/email/code")
+    public String verifyEmailCodeResetPassword(@RequestParam("code") String code, HttpSession session, Model model) {
+
+        String verifyCode = (String) session.getAttribute("verifyCode");
+
+        model.addAttribute("errorMessage", (!code.equals(verifyCode)) ? "인증 문자가 일치하지 않습니다!" : "인증 문자가 확인되었습니다.\n 비밀번호 재설정 페이지로 이동합니다!");
+        model.addAttribute("nextUrl", (!code.equals(verifyCode)) ? "/password/email" : "/password/reset");
+        return "error/errorMessage";
+    }
+
+    @GetMapping("/password/reset")
+    public String resetPasswordForm(Model model) {
+
+        model.addAttribute("changePasswordRequestDto", new ChangePasswordRequestDto());
+
+        return "home/resetPassword";
+    }
+
+    @PostMapping("/password/reset")
+    public String resetPassword(@ModelAttribute("changePasswordRequestDto") ChangePasswordRequestDto changePasswordRequestDto,
+                                BindingResult bindingResult, HttpSession session, Model model) {
+
+        Long studentId = (Long) session.getAttribute("studentId");
+
+        studentService.validateChangePassword(studentId, changePasswordRequestDto, bindingResult);
+
+        if(bindingResult.hasErrors()) return "home/resetPassword";
+
+        studentService.changePassword(studentId, changePasswordRequestDto);
+
+        model.addAttribute("errorMessage", "비밀번호가 변경되었습니다. 로그인을 진행해 주세요!");
+        model.addAttribute("nextUrl", "/login");
+        return "error/errorMessage";
     }
 
     @ModelAttribute("loginStudent")
