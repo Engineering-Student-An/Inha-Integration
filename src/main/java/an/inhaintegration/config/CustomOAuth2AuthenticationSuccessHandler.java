@@ -1,7 +1,7 @@
 package an.inhaintegration.config;
 
-import an.inhaintegration.domain.Student;
-import an.inhaintegration.domain.oauth2.CustomUserDetails;
+import an.inhaintegration.rentalee.domain.Student;
+import an.inhaintegration.oauth2.CustomUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;

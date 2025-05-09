@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="~{fragments/header :: header}"></head>
+<body class="min-h-screen flex flex-col">
+<div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div><br>
+<link rel="stylesheet" href="/css/rentalee/board_list.css"/>
+<link rel="stylesheet" href="/css/rentalee/question_mark2.css"/>
+<link rel="stylesheet" href="/css/rentalee/item_request_list.css"/>
+
+<header class="bg-white shadow">
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 flex items-center">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">건의 게시판</h1>
+        <div class="relative inline-block  hidden md:block">
+            <button class="bg-gray-400 ml-2 text-white rounded-full w-5 h-5 mb-3 flex items-center justify-center hover:bg-gray-600">
+                ?
+            </button>
+            <div class="absolute left-1/2 transform -translate-x-1/2 mt-2 bg-gray-700 text-white text-sm rounded-lg p-9 opacity-0 transition-opacity duration-300 pointer-events-none tooltip"
+                 style="min-width: 500px; z-index: 1000;"> <!-- z-index 추가 -->
+                사이트의 발전과 사용의 편의성을 증진시키기 위한 건의 게시판 입니다.<br>
+                장난 글이나 사실과 다른 글은 지양해 주시기 바랍니다. 🙏<br>
+                비밀글로도 작성가능하며 참고를 위해 작성 시 삭제 및 수정이 불가함을 알립니다.<br>
+                소중한 건의 감사합니다. 😊<br>
+                - 공대생 안씨 -<br>
+            </div>
+        </div>
+    </div>
+</header>
+<main class="flex-grow">
+
+    <div class="flex justify-between items-center mt-7 mr-20">
+        <div class="flex-grow"></div> <!-- 이 요소가 공간을 차지하도록 해줌 -->
+        <div class="flex justify-end items-center mr-10 write-btn" id="write-btn">
+            <div class="label">건의 작성</div>
+            <div class="toggle"></div>
+        </div>
+    </div>
+
+
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <table id="boardTable" class="min-w-full bg-white rounded-lg shadow-md">
+            <thead>
+            <tr class="bg-gray-200 text-gray-600">
+                <th class="py-3 px-4 text-left">#</th>
+                <th class="py-3 px-4 text-left" style="width: 60%;">제목</th>
+                <th class="py-3 px-4 text-left">작성자</th>
+                <th class="py-3 px-4 text-left">작성 일자</th>
+            </tr>
+            </thead>
+            <tbody class="text-gray-700">
+                <tr th:each="proposal : ${proposals}" class="hover:bg-gray-100">
+                    <td class="py-3 px-4" th:text="${proposals.getTotalElements() - (proposals.getNumber() * proposals.getSize()) - proposalStat.index}"></td>
+
+                    <td th:if="${!proposal.secret or (proposal.secret and #strings.equals(loginStudent.role, 'ADMIN')) or (#strings.equals(loginStudent.id, proposal.student.id))}" class="py-3 px-4">
+                        <a style="color: blue" th:href="@{/templates/rentalee/proposal/{id}(id=${proposal.id})}" th:text="${proposal.title}"></a>
+                    </td>
+                    <td th:if="${proposal.secret and !#strings.equals(loginStudent.role, 'ADMIN') and (!#strings.equals(loginStudent.id, proposal.student.id))}" class="py-3 px-4">
+                        <p><span class="material-symbols-outlined">lock</span> 비밀글입니다.</p>
+                    </td>
+                    <td class="py-3 px-4"
+                        th:utext="${proposal.student.role.name()=='ADMIN'} ? '<strong>관리자</strong>' : ${proposal.student.stuId + ' ' + proposal.student.name}"></td>
+
+                    <td class="py-3 px-4" th:text="${#temporals.format(proposal.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <button class="pagination-button" th:disabled="${proposals.getNumber()}==0"
+                    th:onclick="|location.href='@{/proposals(page=${1})}'|">
+                <<</button>
+            <button class="pagination-button" th:disabled="${!proposals.hasPrevious()}"
+                    th:onclick="|location.href='@{/proposals(page=${proposals.getNumber()}) }'|">
+                <</button>
+            &nbsp; &nbsp;
+            <span class="pagination-info">[[${proposals.getNumber()+1}]] / [[${proposals.getTotalElements() == 0 ? 1 : proposals.getTotalPages()}]]</span>
+            &nbsp; &nbsp;
+            <button class="pagination-button" th:disabled="${!proposals.hasNext()}"
+                    th:onclick="|location.href='@{/proposals(page=${proposals.getNumber() + 2}) }'|">
+                ></button>
+            <button class="pagination-button" th:disabled="${!proposals.hasNext()}"
+                    th:onclick="|location.href='@{/proposals(page=${proposals.getTotalPages()}) }'|">
+                >></button>
+        </div>
+
+    </div>
+
+</main>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+<script src="/js/rentalee/proposal-list.js"></script>
+</html>

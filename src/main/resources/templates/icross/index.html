@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="~{fragments/header :: header}">
+</head>
+<body>
+<link rel="stylesheet" href="/css/i-cross/icross_index_switch.css"/>
+<link rel="stylesheet" href="/css/rentalee/footer.css"/>
+<div class="bg-white py-16 sm:py-24">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl lg:text-center">
+            <h2 class="text-base font-semibold leading-7 text-indigo-600"></h2>
+            <p class="mt-1 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">I-CROSS</p>
+            <p class="mt-6 text-lg leading-8 text-gray-600">I-Class 계정 정보와 Chat-GPT를 활용한 학업 도우미 서비스입니다.</p>
+            <p class="mt-1 text-lg leading-8 text-gray-600">I-Class 계정 정보만 등록하면 사용 가능합니다!</p>
+        </div>
+        <div class="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
+            <dl class="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
+                <div class="relative pl-16">
+                    <dt class="text-base font-semibold leading-7 text-gray-900">
+                        <div class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg" style="background-color:  rgba(255, 0, 0, 0.8)">
+                            <span class="material-symbols-outlined text-white">calendar_today</span>
+                        </div>
+                        "오늘은 뭘 공부해야 될까...?"
+                    </dt>
+                    <dd class="mt-2 text-base leading-7 text-gray-600">I-Class를 통해 수강중인 강의를 자동으로 불러옵니다.</dd>
+                    <dd class="mt-2 text-base leading-7 text-gray-600">불러온 정보를 기반으로 Chat-GPT가 오늘 하루의 스케줄을 추천해줍니다.</dd>
+                    <dd class="mt-2 text-base leading-7 text-gray-600"><strong>AI가 추천하는 스케줄을 기반으로 오늘 공부 완료!</strong></dd>
+                </div>
+                <div class="relative pl-16">
+                    <dt class="text-base font-semibold leading-7 text-gray-900">
+                        <div class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg" style="background-color:  rgba(255, 0, 0, 0.8)">
+                            <span class="material-symbols-outlined text-white">notifications</span>
+                        </div>
+                        "아 과제 제출 안했다...!"
+                    </dt>
+                    <dd class="mt-2 text-base leading-7 text-gray-600">아직 미제출된 과제나 퀴즈, 미시청한 웹강에 대해서</dd>
+                    <dd class="mt-2 text-base leading-7 text-gray-600">이메일을 통한 알림 서비스를 제공합니다.</dd>
+                    <dd class="mt-2 text-base leading-7 text-gray-600"><strong>이제 마감기한은 I-CROSS에게 맡기세요!</strong></dd>
+                </div>
+                <div class="relative pl-16">
+                    <dt class="text-base font-semibold leading-7 text-gray-900">
+                        <div class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg" style="background-color:  rgba(255, 0, 0, 0.8)">
+                            <span class="material-symbols-outlined text-white">quiz</span>
+                        </div>
+                        "이 과목에서는 뭐가 시험에 나오려나..."
+                    </dt>
+                    <dd class="mt-2 text-base leading-7 text-gray-600">강의 노트를 업로드해보세요.</dd>
+                    <dd class="mt-2 text-base leading-7 text-gray-600"><strong>Chat-GPT가 예상 시험 문제를 출제해줍니다!</strong></dd>
+                </div>
+                <div class="relative pl-16">
+                    <dt class="text-base font-semibold leading-7 text-gray-900">
+                        <div class="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg" style="background-color:  rgba(255, 0, 0, 0.8)">
+                            <span class="material-symbols-outlined text-white">cloud</span>
+                        </div>
+                        "아 비오는 줄 모르고 다 젖었네..."
+                    </dt>
+                    <dd class="mt-2 text-base leading-7 text-gray-600">실시간으로 학교 근방의 날씨를 확인가능합니다.</dd>
+                    <dd class="mt-2 text-base leading-7 text-gray-600">비오는 날엔 우산 챙기자구요~!</dd>
+                    <dd class="mt-2 text-base leading-7 text-gray-600"><strong>오늘은 날씨 좋으니까 카페가서 공부하기?</strong></dd>
+                </div>
+            </dl>
+        </div>
+    </div>
+    <div class="flex justify-center mt-20">
+        <div class="index-switch" id="index-switch-button">
+            <div class="toggle"></div>
+            <div class="label">시작하기</div>
+        </div>
+    </div>
+
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+<script src="/js/icross/icross-index-switch.js"></script>
+</html>
+

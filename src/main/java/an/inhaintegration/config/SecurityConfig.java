@@ -1,7 +1,7 @@
 package an.inhaintegration.config;
 
-import an.inhaintegration.domain.StudentRole;
-import an.inhaintegration.service.CustomOauth2UserService;
+import an.inhaintegration.rentalee.domain.StudentRole;
+import an.inhaintegration.rentalee.service.CustomOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,8 +23,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/i-cross/index").permitAll()
                         .requestMatchers("/rentals/**", "/rental/**", "/board/*/like", "/board/*/reply",
-                                "/board/*/reply/*/like", "/proposals/**", "/proposal/**", "/my-page/**", "/item/requests/**", "/item/request").authenticated()
+                                "/board/*/reply/*/like", "/proposals/**", "/proposal/**", "/my-page/**",
+                                "/item/requests/**", "/item/request", "i-cross/**").authenticated()
                         .requestMatchers("/admin/**", "/api/admin/**").hasRole(StudentRole.ADMIN.name())
                         .anyRequest().permitAll()
                 );
