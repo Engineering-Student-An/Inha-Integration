@@ -1,6 +1,6 @@
 .footer {
     background-color: white;
-    padding: 20px 0;
+    padding: 10px 0;
     border-top: 1px solid #eaeaea;
     display: flex;
     /*justify-content: space-between; !* 좌우 정렬 *!*/
@@ -20,11 +20,9 @@
 }
 
 .footer-text {
-    font-size: 16px;
-    /*display: flex;*/
+    font-size: 14px;
     color: rgb(128, 128, 128);
     margin-left: 20px;
-    /*align-items: center;*/
 }
 
 .footer-icons {

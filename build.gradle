@@ -76,6 +76,16 @@ dependencies {
     // Gson
     implementation 'com.google.code.gson:gson:2.8.9'
 
+    // Apache HttpClient
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'org.apache.httpcomponents.client5:httpclient5'
+
+    // open ai
+    implementation "org.springframework.boot:spring-boot-starter-webflux"
+
+    // pdf 처리
+    implementation 'org.apache.pdfbox:pdfbox:2.0.24'
+    
     //JUnit4 추가
     testImplementation("org.junit.vintage:junit-vintage-engine") {
         exclude group: "org.hamcrest", module: "hamcrest-core"
