@@ -1,0 +1,19 @@
+<h1 class="text-3xl font-bold text-center text-gray-800 mb-6">스케줄 추가</h1>
+
+<form method="post" action="/i-cross/schedule" th:object="${scheduleRequestDto}" class="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div class="mb-6">
+        <label for="scheduleName" class="block text-gray-700 text-lg mb-2">스케줄 내용</label>
+        <input type="text" id="scheduleName" name="scheduleName" placeholder="스케줄 내용을 입력하세요" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+    </div>
+    <div class="mb-6">
+        <label for="startTime" class="block text-gray-700 text-lg mb-2">시작 시간</label>
+        <input type="time" id="startTime" name="startTime" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+    </div>
+    <div class="mb-6">
+        <label for="endTime" class="block text-gray-700 text-lg mb-2">마감 시간</label>
+        <input type="time" id="endTime" name="endTime" required class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+    </div>
+    <button type="submit" class="w-full py-3 bg-green-500 text-white font-bold text-lg rounded-md hover:bg-green-600 active:bg-green-700 transition-colors">
+        완료
+    </button>
+</form>

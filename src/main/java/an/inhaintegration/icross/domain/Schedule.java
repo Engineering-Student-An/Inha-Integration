@@ -32,4 +32,8 @@ public class Schedule {
         this.univInfo = univInfo;
         univInfo.getScheduleList().add(this);
     }
+
+    public void complete() {
+        this.completed = !this.completed;
+    }
 }

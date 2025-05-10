@@ -54,8 +54,6 @@ public class KakaoMessageService extends HttpCallService {
 
         header.set("Content-Type", APP_TYPE_URL_ENCODED);
 
-        System.out.println("KAKAO_CLIENT_ID = " + KAKAO_CLIENT_ID);
-        System.out.println("KAKAO_CLIENT_SECRET = " + KAKAO_CLIENT_SECRET);
         parameters.add("code", code);
         parameters.add("grant_type", "authorization_code");
         parameters.add("client_id", KAKAO_CLIENT_ID);
@@ -63,20 +61,14 @@ public class KakaoMessageService extends HttpCallService {
         parameters.add("redirect_uri", "http://localhost:8080/i-cross");
         parameters.add("scope", "talk_message"); // 필요한 권한을 요청하는 부분 추가
 
-
         HttpEntity<?> requestEntity = httpClientEntity(header, parameters);
 
         ResponseEntity<String> response = httpRequest(AUTH_URL, HttpMethod.POST, requestEntity);
-        System.out.println("응답 코드: " + response.getStatusCodeValue());
-        System.out.println("응답 내용: " + response.getBody());
 
         JSONObject jsonData = new JSONObject(response.getBody());
-        System.out.println("jsonData = " + jsonData);
         accessToken = jsonData.get("access_token").toString();
         refreshToken = jsonData.get("refresh_token").toString();
 
-        System.out.println("accessToken = " + accessToken);
-        System.out.println("refreshToken = " + refreshToken);
         if (accessToken.isEmpty() || refreshToken.isEmpty()) {
             logger.debug("토큰발급에 실패했습니다.");
             return false;

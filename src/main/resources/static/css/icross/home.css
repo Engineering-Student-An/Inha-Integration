@@ -87,12 +87,12 @@ h4 {
 }
 
 /* 모달 스타일 */
-.modal {
+.schedule-modal {
     display: none;
     /* 초기에는 모달을 숨김 */
     position: fixed;
     /* 모달을 화면에 고정 */
-    z-index: 9999;
+    z-index: 999999;
     /* 다른 요소보다 위에 표시 */
     left: 0;
     top: 0;
@@ -103,14 +103,13 @@ h4 {
     /* 배경을 어둡게 함 */
 }
 
-.modal-content {
+.schedule-modal-content {
     background-color: #fefefe;
     margin: 10% auto 10px auto;
     /* 모달을 화면 중앙에 표시 */
     padding: 20px;
     border: 1px solid #888;
     width: 65%;
-    max-height: 400px;
     overflow: auto;
 }
 
@@ -146,7 +145,7 @@ h4 {
     top: 50%;
     left: 10px;
     transform: translateY(-50%);
-    background-color: #000;
+    background-color: #555;
     color: #fff;
     border: none;
     border-radius: 50%;
@@ -172,7 +171,7 @@ h4 {
     top: 50%;
     right: 10px;
     transform: translateY(-50%);
-    background-color: #000;
+    background-color: #555;
     color: #fff;
     border: none;
     border-radius: 50%;

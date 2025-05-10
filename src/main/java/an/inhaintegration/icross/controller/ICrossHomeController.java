@@ -3,10 +3,10 @@ package an.inhaintegration.icross.controller;
 import an.inhaintegration.icross.domain.Schedule;
 import an.inhaintegration.icross.service.KakaoMessageService;
 import an.inhaintegration.icross.service.ScheduleService;
+import an.inhaintegration.icross.service.ScheduledTask;
 import an.inhaintegration.icross.service.WeatherService;
 import an.inhaintegration.oauth2.CustomUserDetails;
 import an.inhaintegration.rentalee.domain.Student;
-import an.inhaintegration.rentalee.service.StudentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,10 +25,10 @@ import java.util.Optional;
 @RequestMapping("/i-cross")
 public class ICrossHomeController {
 
-    private final StudentService studentService;
     private final WeatherService weatherService;
     private final ScheduleService scheduleService;
     private final KakaoMessageService kakaoMessageService;
+    private final ScheduledTask scheduledTask;
 
     @GetMapping("/index")
     public String ICrossIndex() {
@@ -59,7 +59,6 @@ public class ICrossHomeController {
 
         // 스케줄 -> 카톡 보내기
         String code = request.getParameter("code");
-        System.out.println("code = " + code);
         if(code != null && kakaoMessageService.getKakaoAuthToken(code)) {
             kakaoMessageService.sendMyMessage(userDetails.getId());
             return "redirect:/i-cross";

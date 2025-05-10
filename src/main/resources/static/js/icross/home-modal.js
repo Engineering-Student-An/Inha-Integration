@@ -1,9 +1,9 @@
 // 모달 열기 - AJAX를 이용하여 페이지 내용을 로드
 function openModal(modalId, url) {
     var modal = document.getElementById(modalId);
-    var contentDiv = modal.querySelector('.modal-content'); // iframe 대신 modal-content를 사용
+    var contentDiv = modal.querySelector('.schedule-modal-content'); // iframe 대신 modal-content를 사용
 
-    fetch("http://ec2-13-209-198-107.ap-northeast-2.compute.amazonaws.com:8082" + url) // 서버에 요청
+    fetch("http://localhost:8080" + url) // 서버에 요청
         .then(response => response.text()) // 응답을 텍스트로 변환
         .then(html => {
             contentDiv.innerHTML = html; // 모달 내용에 HTML 삽입
@@ -21,17 +21,58 @@ window.onclick = function(event) {
 
 // 일정 체크박스 상태 변경
 function checkboxSchedule(checkboxElem) {
-    var scheduleId = checkboxElem.getAttribute('data-id');
-    var targetUrl = '/schedule/' + scheduleId + '/completed';
-    window.location.href = targetUrl; // 현재 페이지를 새 URL로 리디렉션
+    const scheduleId = checkboxElem.getAttribute('data-id');
+    const targetUrl = `/api/i-cross/schedule/${scheduleId}`;
+
+    fetch(targetUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include' // 인증 쿠키 포함 필요 시 사용
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 201) {
+                console.log("스케줄 완료 처리 성공");
+            } else {
+                alert("스케줄 완료 처리 실패: " + data.message);
+                checkboxElem.checked = false; // 실패 시 체크 해제
+            }
+        })
+        .catch(error => {
+            alert("네트워크 오류");
+            checkboxElem.checked = false; // 실패 시 체크 해제
+        });
 }
+
 
 // 일정 삭제
 function deleteSchedule(scheduleId) {
     const confirmation = confirm("해당 스케줄을 삭제하시겠습니까?");
-    if (confirmation) {
-        window.location.href = `/schedule/${scheduleId}/delete`;
-    }
+    if (!confirmation) return;
+
+    console.log(scheduleId);
+
+    fetch(`/api/i-cross/schedule/${scheduleId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include' // 인증 세션 유지 필요 시
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 204) {
+                location.reload();
+            } else {
+                alert("스케줄 삭제 처리 실패: " + data.message);
+
+            }
+        })
+        .catch(error => {
+            alert("네트워크 오류");
+        });
 }
 
 // 스케줄 재생성 버튼

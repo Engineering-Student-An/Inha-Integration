@@ -3,6 +3,8 @@ package an.inhaintegration.icross.service;
 import an.inhaintegration.icross.domain.Schedule;
 import an.inhaintegration.icross.domain.Subject;
 import an.inhaintegration.icross.domain.UnivInfo;
+import an.inhaintegration.icross.dto.ScheduleRequestDto;
+import an.inhaintegration.icross.exception.ScheduleNotFoundException;
 import an.inhaintegration.icross.exception.SubjectNotFoundException;
 import an.inhaintegration.icross.exception.UnivInfoNotFoundException;
 import an.inhaintegration.icross.repository.ScheduleRepository;
@@ -29,33 +31,6 @@ public class ScheduleService {
     private final SubjectRepository subjectRepository;
     private final UnivInfoTaskRepository univInfoTaskRepository;
     private final OpenAIService openAIService;
-
-    public List<Schedule> findAll() {
-        return scheduleRepository.findAll();
-    }
-
-    @Transactional
-    public void save(Schedule schedule) {
-        scheduleRepository.save(schedule);
-    }
-
-//    @Transactional
-//    public void saveByForm(Long studentId, ScheduleForm scheduleForm) {
-//
-//        String time = scheduleForm.getStartTime() + "~" + scheduleForm.getEndTime();
-//        Schedule schedule = Schedule.builder()
-//                        .studentId(studentId)
-//                        .name(scheduleForm.getScheduleName())
-//                        .time(time)
-//                        .completed(false).build();
-//
-//        scheduleRepository.save(schedule);
-//    }
-
-    @Transactional
-    public void delete(Schedule schedule) {
-        scheduleRepository.delete(schedule);
-    }
 
     public List<Schedule> findByStudentId(Long studentId) {
 
@@ -137,14 +112,47 @@ public class ScheduleService {
         }
     }
 
-//    public Schedule findById(Long scheduleId) {
-//        return scheduleRepository.findScheduleById(scheduleId);
-//    }
-//
-//    @Transactional
-//    public void setCompleted(Long scheduleId) {
-//        scheduleRepository.findScheduleById(scheduleId).setCompleted();
-//    }
+    @Transactional
+    public void clearSchedule(Long studentId) {
 
+        UnivInfo univInfo = univInfoRepository.findByStudentId(studentId).orElseThrow(UnivInfoNotFoundException::new);
 
+        List<Schedule> schedules = scheduleRepository.findSchedulesByUnivInfoIdOrderByTime(univInfo.getId());
+
+        scheduleRepository.deleteAll(schedules);
+    }
+
+    @Transactional
+    public void save(Long studentId, ScheduleRequestDto scheduleRequestDto) {
+
+        UnivInfo univInfo = univInfoRepository.findByStudentId(studentId).orElseThrow(UnivInfoNotFoundException::new);
+
+        Schedule schedule = Schedule.builder()
+                .content(scheduleRequestDto.getScheduleName())
+                .time(scheduleRequestDto.getStartTime() + "~" + scheduleRequestDto.getEndTime())
+                .completed(false).build();
+        schedule.setUnivInfo(univInfo);
+
+        scheduleRepository.save(schedule);
+    }
+
+    @Transactional
+    public void complete(Long studentId, Long scheduleId) {
+
+        UnivInfo univInfo = univInfoRepository.findByStudentId(studentId).orElseThrow(UnivInfoNotFoundException::new);
+
+        Schedule schedule = scheduleRepository.findScheduleByUnivInfoIdAndId(univInfo.getId(), scheduleId).orElseThrow(ScheduleNotFoundException::new);
+
+        schedule.complete();
+    }
+
+    @Transactional
+    public void delete(Long studentId, Long scheduleId) {
+
+        UnivInfo univInfo = univInfoRepository.findByStudentId(studentId).orElseThrow(UnivInfoNotFoundException::new);
+
+        Schedule schedule = scheduleRepository.findScheduleByUnivInfoIdAndId(univInfo.getId(), scheduleId).orElseThrow(ScheduleNotFoundException::new);
+
+        scheduleRepository.delete(schedule);
+    }
 }

@@ -12,7 +12,7 @@
 </header>
 <main class="flex-grow">
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <div class="container">
+        <div class="container" style="width: 80%">
             <h1 class="text-2xl font-bold tracking-tight text-gray-900 mb-2">인하대학교 현재 날씨</h1>
             <div style="display: flex; justify-content: space-evenly; margin-bottom: 100px">
                 <div th:each="weather : ${weather}">
@@ -25,8 +25,9 @@
             <h4>(09시 ~ 00시)</h4>
             <div style="display: flex; justify-content: space-between; margin-bottom: 40px">
                 <div style="display: flex; flex-direction: row; justify-content: start; gap: 10px">
-                    <button class="add-btn" style="margin-right: 20px" onclick="openModal('scheduleModal', '/schedule/add')"></button>
-                    <form id="retry-form" action="/schedule" method="get">
+                    <button class="add-btn" style="margin-right: 20px" onclick="openModal('scheduleModal', '/i-cross/schedule')"></button>
+                    <form id="retry-form" action="/i-cross/schedules" method="post">
+                        <input type="hidden" name="_method" value="delete">
                         <button type="submit" class="retry-btn"></button>
                     </form>
                 </div>
@@ -47,15 +48,17 @@
                     <img src="/images/trash.png" th:onclick="'deleteSchedule(' + ${schedule.getId()} + ')'" />
                 </div>
             </div>
-
-            <div id="scheduleModal" class="modal">
-                <div class="modal-content">
-                    <span class="close" onclick="closeModal('scheduleModal')">&times;</span>
+            <div id="scheduleModal" class="schedule-modal">
+                <div class="schedule-modal-content">
                 </div>
             </div>
         </div>
     </div>
 </main>
+
+<a href="/quiz" class="left-btn" style="text-decoration: none"><</a>
+<a href="/remain" class="right-btn" style="text-decoration: none">></a>
+
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
