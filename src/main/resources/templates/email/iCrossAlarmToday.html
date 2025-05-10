@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div style="margin:100px;">
+    <div style="text-align: center">
+        <h1><a>인하대학교 전자공학과 학생회 SWITCH (I-CROSS)</a></h1>
+        <a th:href="|https://pf.kakao.com/_CxjxlxiM|" target="_blank"><img src="https://tistory1.daumcdn.net/tistory/5128218/skin/images/inhaeelogo.png" alt="학생회 로고"></a>    </div>
+    <br>
+    <h1>마감 기한일 알림</h1>
+    <br>
+
+    <div align="center" style="border:1px solid black; font-size: 130%">
+        <div>
+            <span style="font-size: 200%" th:text="${name}"></span>
+            <span>님 안녕하세요!</span>
+        </div>
+        <br>
+        <div>
+            <span style="font-size: 200%" th:text="${itemName}"></span>
+            <span> 마감 기한이</span>
+        </div>
+        <br>
+        <div>
+            <span style="font-size: 200%">오늘 입니다!</span>
+        </div>
+        <br>
+        <p>기한에 맞춰 완료 잊지마세요! 감사합니다.</p>
+
+    </div>
+    <br/>
+</div>
+
+</body>
+</html>

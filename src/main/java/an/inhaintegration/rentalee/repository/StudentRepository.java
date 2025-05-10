@@ -19,4 +19,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     Optional<Student> findByLoginIdAndProvider(String email, String provider);
 
     Page<Student> findStudentsByStuIdContainingAndNameContaining(String stuId, String name, Pageable pageable);
+
+    Optional<Student> findByUnivInfoId(Long univInfoId);
 }

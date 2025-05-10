@@ -27,4 +27,9 @@ public class Schedule {
     @Setter
     @Column(nullable = false)
     private boolean completed;
+
+    public void setUnivInfo(UnivInfo univInfo) {
+        this.univInfo = univInfo;
+        univInfo.getScheduleList().add(this);
+    }
 }

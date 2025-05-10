@@ -2,20 +2,62 @@
 <html xmlns:th="http://www.thymeleaf.org" >
 <head th:replace="~{fragments/header :: header}"></head>
 <body class="min-h-screen flex flex-col">
-<link rel="stylesheet" href="/css/icross/error_page.css"/>
-<div th:replace="~{fragments/bodyHeader :: bodyHeader}"></div><br>
+<link rel="stylesheet" href="/css/rentalee/dashboard.css"/>
+<link rel="stylesheet" href="/css/icross/home.css"/>
+<div th:replace="~{fragments/bodyHeaderICross :: bodyHeader}"></div><br>
 <header class="bg-white shadow">
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold tracking-tight text-gray-900">I-CROSS</h1>
-            ㅎㅇㅎㅇ
     </div>
 </header>
 <main class="flex-grow">
-    <div class="mx-auto max-w-screen-lg px-4 py-6 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <div class="container">
+            <h1 class="text-2xl font-bold tracking-tight text-gray-900 mb-2">인하대학교 현재 날씨</h1>
+            <div style="display: flex; justify-content: space-evenly; margin-bottom: 100px">
+                <div th:each="weather : ${weather}">
+                    <p th:text="${weather.key}"></p>
+                    <p th:text="${weather.value}"></p>
+                </div>
+            </div>
+
+            <h1 class="text-2xl font-bold tracking-tight text-gray-900 mb-2">AI가 추천하는 오늘의 스케줄</h1>
+            <h4>(09시 ~ 00시)</h4>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 40px">
+                <div style="display: flex; flex-direction: row; justify-content: start; gap: 10px">
+                    <button class="add-btn" style="margin-right: 20px" onclick="openModal('scheduleModal', '/schedule/add')"></button>
+                    <form id="retry-form" action="/schedule" method="get">
+                        <button type="submit" class="retry-btn"></button>
+                    </form>
+                </div>
+                <div>
+                    <a href="https://kauth.kakao.com/oauth/authorize?client_id=0544cc244ebb1b1f6c09a42ba671df22&redirect_uri=http://localhost:8080/i-cross&response_type=code&scope=talk_message" class="kakao-btn">
+                        <img src="/images/kakaotalk.png">
+                        나에게 보내기
+                    </a>
+                </div>
+            </div>
+
+            <div th:each="schedule, iterStat : ${scheduleList}">
+                <div class="item slide-in" th:style="|animation-delay: ${iterStat.index * 0.05}s|">
+                    <div style="display: flex; align-items: center; width: calc(100% - 42px)">
+                        <input type="checkbox" onchange="checkboxSchedule(this)" th:attr="data-id=${schedule.getId()}" th:checked="${schedule.isCompleted()} ? 'checked' : null">
+                        <p th:text="'[' + ${schedule.getTime()} + '] ' + ${schedule.getContent()}"></p>
+                    </div>
+                    <img src="/images/trash.png" th:onclick="'deleteSchedule(' + ${schedule.getId()} + ')'" />
+                </div>
+            </div>
+
+            <div id="scheduleModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('scheduleModal')">&times;</span>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="/js/icross/fetch_icross_info.js"></script>
+<script src="/js/icross/home-modal.js"></script>
 </html>

@@ -33,6 +33,9 @@ public class UnivInfo {
     @OneToMany(mappedBy = "univInfo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UnivInfoTask> univInfoTaskList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "univInfo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Schedule> scheduleList = new ArrayList<>();
+
     public void setStudent(Student student) {
         this.student = student;
         student.setUnivInfo(this);

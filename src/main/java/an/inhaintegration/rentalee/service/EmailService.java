@@ -70,6 +70,30 @@ public class EmailService {
         }
     }
 
+    @Async
+    public void sendICrossDDays(String receiver, String name, String itemName, String type, int dDays) {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+
+        try{
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
+
+            // 메일을 받을 수신자 설정
+            mimeMessageHelper.setTo(receiver);
+            // 메일의 제목 설정
+            mimeMessageHelper.setSubject("SWITCH (I-CROSS) 마감 기한 알림 서비스");
+
+            mimeMessageHelper.setFrom("chm20060@gmail.com", "인하대 전자공학과 학생회");
+
+            // 메일의 내용 설정
+            mimeMessageHelper.setText(setContext(name, itemName, type, dDays), true);
+
+            javaMailSender.send(mimeMessage);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public String createVerifyCode() {
         Random random = new Random();
         StringBuilder key = new StringBuilder();
@@ -97,6 +121,14 @@ public class EmailService {
         Context context = new Context();
         context.setVariable("name", name);
         context.setVariable("itemName", itemName);
+        return templateEngine.process(type, context);
+    }
+
+    public String setContext(String name, String itemName, String type, int dDays) {
+        Context context = new Context();
+        context.setVariable("name", name);
+        context.setVariable("itemName", itemName);
+        context.setVariable("dDays", dDays);
         return templateEngine.process(type, context);
     }
 
