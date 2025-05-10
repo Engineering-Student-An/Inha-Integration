@@ -3,8 +3,10 @@ package an.inhaintegration.icross.controller;
 import an.inhaintegration.icross.dto.ScheduleRequestDto;
 import an.inhaintegration.icross.service.ScheduleService;
 import an.inhaintegration.oauth2.CustomUserDetails;
+import an.inhaintegration.rentalee.domain.Student;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -39,5 +41,16 @@ public class ICrossScheduleController {
         scheduleService.save(userDetails.getId(), scheduleRequestDto);
 
         return "redirect:/i-cross";
+    }
+
+    @ModelAttribute("loginStudent")
+    public Student loginStudent() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof CustomUserDetails) {
+            return ((CustomUserDetails) principal).getStudent();
+        }
+
+        return null;
     }
 }

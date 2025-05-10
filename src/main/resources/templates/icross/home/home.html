@@ -31,7 +31,7 @@
                         <button type="submit" class="retry-btn"></button>
                     </form>
                 </div>
-                <div>
+                <div th:if="${loginStudent.provider == 'kakao'}">
                     <a href="https://kauth.kakao.com/oauth/authorize?client_id=0544cc244ebb1b1f6c09a42ba671df22&redirect_uri=http://localhost:8080/i-cross&response_type=code&scope=talk_message" class="kakao-btn">
                         <img src="/images/kakaotalk.png">
                         나에게 보내기
@@ -57,7 +57,7 @@
 </main>
 
 <a href="/quiz" class="left-btn" style="text-decoration: none"><</a>
-<a href="/remain" class="right-btn" style="text-decoration: none">></a>
+<a href="/i-cross/tasks" class="right-btn" style="text-decoration: none">></a>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>

@@ -1,14 +1,22 @@
 package an.inhaintegration.icross.service;
 
 import an.inhaintegration.icross.domain.Subject;
+import an.inhaintegration.icross.domain.UnivInfo;
+import an.inhaintegration.icross.dto.SubjectResponseDto;
+import an.inhaintegration.icross.exception.SubjectNotFoundException;
+import an.inhaintegration.icross.exception.UnivInfoNotFoundException;
 import an.inhaintegration.icross.repository.SubjectRepository;
+import an.inhaintegration.icross.repository.UnivInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +24,7 @@ import java.util.List;
 public class SubjectService {
 
     private final SubjectRepository subjectRepository;
+    private final UnivInfoRepository univInfoRepository;
 
     @Transactional
     public void save(Long subjectId, String code, String name, String day, String hour) {
@@ -48,24 +57,63 @@ public class SubjectService {
         subjectRepository.save(subject);
     }
 
-    public boolean existsById(Long id) {
-        return subjectRepository.existsById(id);
-    }
-
-
-
-
-
-    @Transactional
-    public void saveByCourseIds(List<Long> courseIds) {
-
-    }
-
     public LocalTime transformTime(int time) {
 
         // 9시 시작
         LocalTime baseTime = LocalTime.of(9, 0);
 
         return baseTime.plusMinutes((time - 1) * 30L);
+    }
+
+    public List<SubjectResponseDto> findTodaySubjects(Long studentId) {
+
+        UnivInfo univInfo = univInfoRepository.findByStudentId(studentId).orElseThrow(UnivInfoNotFoundException::new);
+
+        String koreanDay = getKoreanDayOfWeek(LocalDate.now().getDayOfWeek());
+
+        return univInfo.getSubjectList().stream()
+                .map(subjectId -> subjectRepository.findById(subjectId).orElseThrow(SubjectNotFoundException::new))
+                .flatMap(subject -> subject.getTimeList().stream()
+                        .filter(time -> time.contains(koreanDay))
+                        .map(time -> {
+                            String timePart = time.replaceAll("^[가-힣]+", "");
+                            return new SubjectResponseDto(subject.getName(), timePart);
+                        }))
+                .collect(Collectors.toList());
+    }
+
+    public List<SubjectResponseDto> findAllSubjects(Long studentId) {
+
+        UnivInfo univInfo = univInfoRepository.findByStudentId(studentId).orElseThrow(UnivInfoNotFoundException::new);
+
+        return univInfo.getSubjectList().stream()
+                .map(subjectId -> subjectRepository.findById(subjectId)
+                        .orElseThrow(SubjectNotFoundException::new))
+                .map(subject -> {
+                    String time = String.join(", ", subject.getTimeList());
+                    return new SubjectResponseDto(subject.getName(), subject.getCode(), time);
+                })
+                .collect(Collectors.toList());
+    }
+
+    private static String getKoreanDayOfWeek(DayOfWeek dayOfWeek) {
+        switch (dayOfWeek) {
+            case MONDAY:
+                return "월";
+            case TUESDAY:
+                return "화";
+            case WEDNESDAY:
+                return "수";
+            case THURSDAY:
+                return "목";
+            case FRIDAY:
+                return "금";
+            case SATURDAY:
+                return "토";
+            case SUNDAY:
+                return "일";
+            default:
+                return "";
+        }
     }
 }

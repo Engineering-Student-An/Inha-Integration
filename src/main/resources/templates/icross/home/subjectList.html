@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="~{fragments/header :: header}"></head>
+<body class="min-h-screen flex flex-col">
+<link rel="stylesheet" href="/css/rentalee/dashboard.css"/>
+<link rel="stylesheet" href="/css/icross/home.css"/>
+<div th:replace="~{fragments/bodyHeaderICross :: bodyHeader}"></div><br>
+<header class="bg-white shadow">
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">I-CROSS</h1>
+    </div>
+</header>
+<main class="flex-grow">
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <div class="container" style="width: 80%; margin-top: 50px">
+            <h1 class="text-2xl font-bold tracking-tight text-gray-900 mb-2">오늘의 강의</h1>
+            <div th:if="${todaySubject.size() == 0}">
+                <h4 style="margin-top: 20px">오늘은 공강입니다! 🎉🎉🎉</h4>
+            </div>
+            <div th:each="subject, iterStat : ${todaySubject}" class="item slide-in" th:style="|animation-delay: ${iterStat.index * 0.1}s|" style="margin-bottom: 4px">        <p th:text="${subject.getTime()}"></p>
+                <p th:text="${subject.getName()}"></p>
+            </div>
+        </div>
+
+        <div class="container" style="width: 80%; margin-top: 50px">
+            <h1 class="text-2xl font-bold tracking-tight text-gray-900 mb-2">전체 수강 강의</h1>
+            <div th:if="${allSubject.size() == 0}">
+                <h4>수강중인 강의가 없습니다!</h4>
+            </div>
+            <div th:if="${allSubject.size() != 0}">
+                <div th:each="subject, iterStat : ${allSubject}"
+                     class="item fade-in"
+                     th:style="|animation-delay: ${iterStat.index * 0.1}s|"
+                     style="margin-bottom: 40px; display: flex; justify-content: space-between;">
+
+                    <span th:text="'[' + ${subject.getCode()} + '] ' + ${subject.getName()}"></span>
+                    <span th:text="${subject.getTime()}"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<a href="/i-cross/tasks" class="left-btn" style="text-decoration: none"><</a>
+<a href="/i-cross/quizs" class="right-btn" style="text-decoration: none">></a>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+<script src="/js/icross/task-checkbox.js"></script>
+</html>

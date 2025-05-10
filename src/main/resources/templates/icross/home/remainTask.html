@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="~{fragments/header :: header}"></head>
+<body class="min-h-screen flex flex-col">
+<link rel="stylesheet" href="/css/rentalee/dashboard.css"/>
+<link rel="stylesheet" href="/css/icross/home.css"/>
+<div th:replace="~{fragments/bodyHeaderICross :: bodyHeader}"></div><br>
+<header class="bg-white shadow">
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900">I-CROSS</h1>
+    </div>
+</header>
+<main class="flex-grow">
+    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <div class="container" style="width: 80%; margin-top: 50px">
+            <h1 class="text-2xl font-bold tracking-tight text-gray-900 mb-2">제출하지 않은 과제 (퀴즈)</h1>
+            <div th:if="${remainAssignments.size() == 0}">
+                <h4>남아있는 과제가 없습니다! 🎉🎉🎉</h4>
+            </div>
+            <div th:each="task, iterStat : ${remainAssignments}">
+                <div class="item slide-in" th:style="|animation-delay: ${iterStat.index * 0.1}s|">
+                    <input type="checkbox" onchange="checkboxTask(this)" th:attr="data-id=${task.webId}">
+                    <p th:text="'[' + ${task.subjectName} + '] '"></p>
+                    <p th:text="${task.taskName}"></p>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p th:text="'~ ' + ${#temporals.format(task.deadLine, 'MM/dd HH:mm')}"></p>
+                    <div th:if="${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), task.deadLine) == 0}">
+                        <p th:text="' (D-' + ${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), task.deadLine)} + ')'" style="color: red; font-weight: bold"></p>
+                    </div>
+                    <div th:if="${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), task.deadLine) == 1}">
+                        <p th:text="' (D-' + ${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), task.deadLine)} + ')'" style="color: #ff5f27; font-weight: bold"></p>
+                    </div>
+                    <div th:if="${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), task.deadLine) == 2}">
+                        <p th:text="' (D-' + ${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), task.deadLine)} + ')'" style="color: #ff9356; font-weight: bold"></p>
+                    </div>
+                    <div th:if="${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), task.deadLine) > 2}">
+                        <p th:text="' (D-' + ${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), task.deadLine)} + ')'" style="color: black"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container" style="width: 80%; margin-top: 100px; margin-bottom: 50px">
+            <h1 class="text-2xl font-bold tracking-tight text-gray-900 mb-2">시청하지 않은 웹강</h1>
+            <div th:if="${remainVideos.size() == 0}">
+                <h4>남아있는 웹강이 없습니다! 🎉🎉🎉</h4>
+            </div>
+            <div th:each="task, iterStat : ${remainVideos}">
+                <div class="item slide-in" th:style="|animation-delay: ${iterStat.index * 0.1}s|">
+                    <input type="checkbox" onchange="checkboxTask(this)" th:attr="data-id=${task.webId}">
+                    <p th:text="'[' + ${task.subjectName} + '] '"></p>
+                    <p th:text="${task.taskName}"></p>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p th:text="'~ ' + ${#temporals.format(task.deadLine, 'MM/dd HH:mm')}"></p>
+                    <div th:if="${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), task.deadLine) == 0}">
+                        <p th:text="' (D-' + ${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), task.deadLine)} + ')'" style="color: red; font-weight: bold"></p>
+                    </div>
+                    <div th:if="${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), task.deadLine) == 1}">
+                        <p th:text="' (D-' + ${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), task.deadLine)} + ')'" style="color: #ff5f27; font-weight: bold"></p>
+                    </div>
+                    <div th:if="${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), task.deadLine) == 2}">
+                        <p th:text="' (D-' + ${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), task.deadLine)} + ')'" style="color: #ff9356; font-weight: bold"></p>
+                    </div>
+                    <div th:if="${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), task.deadLine) > 2}">
+                        <p th:text="' (D-' + ${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), task.deadLine)} + ')'" style="color: black"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<a href="/i-cross" class="left-btn" style="text-decoration: none"><</a>
+<a href="/i-cross/subjects" class="right-btn" style="text-decoration: none">></a>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+<script src="/js/icross/task-checkbox.js"></script>
+</html>

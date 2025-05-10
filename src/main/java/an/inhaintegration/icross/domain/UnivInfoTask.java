@@ -1,5 +1,6 @@
 package an.inhaintegration.icross.domain;
 
+import an.inhaintegration.icross.dto.TaskResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,5 +36,10 @@ public class UnivInfoTask { // Task, UnivInfo 사이의 중간 테이블
 
         this.task = task;
         task.getUnivInfoTaskList().add(this);
+    }
+
+    public TaskResponseDto mapUnivInfoToTaskResponseDto() {
+
+        return new TaskResponseDto(this.task.getId(), this.task.getSubject().getName(), this.task.getName(), this.task.getDeadline());
     }
 }

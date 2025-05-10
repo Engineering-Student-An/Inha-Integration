@@ -1,5 +1,6 @@
 package an.inhaintegration.icross.repository;
 
+import an.inhaintegration.icross.domain.TaskType;
 import an.inhaintegration.icross.domain.UnivInfoTask;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +24,14 @@ public interface UnivInfoTaskRepository extends JpaRepository<UnivInfoTask, Long
     List<UnivInfoTask> findIncompleteTasksDueWithinThreeDays(@Param("targetDate") LocalDateTime targetDate);
 
     List<UnivInfoTask> findUnivInfoTasksByCompletedIs(boolean completed);
+
+    @Query("SELECT ut FROM UnivInfoTask ut " +
+            "WHERE ut.univInfo.id = :univInfoId " +
+            "AND ut.completed = false " +
+            "AND ut.task.type IN (:taskTypes) " +
+            "ORDER BY ut.task.deadline ASC")
+    List<UnivInfoTask> findIncompleteTasksByUnivInfoIdAndTaskTypes(@Param("univInfoId") Long univInfoId,
+                                                                   @Param("taskTypes") List<TaskType> taskTypes);
+
+    Optional<UnivInfoTask> findUnivInfoTaskByUnivInfoIdAndTaskIdAndCompletedIs(Long univInfoId, Long taskId, boolean completed);
 }
