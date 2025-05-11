@@ -2,10 +2,7 @@ package an.inhaintegration.icross.domain;
 
 import an.inhaintegration.rentalee.domain.Student;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +18,7 @@ public class UnivInfo {
     @Column(name = "univ_info_id")
     private Long id;
 
+    @Setter
     private String password;
 
     @OneToOne

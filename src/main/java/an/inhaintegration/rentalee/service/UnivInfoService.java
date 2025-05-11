@@ -30,12 +30,18 @@ public class UnivInfoService {
 
         Student loginStudent = studentRepository.findById(studentId).orElseThrow(StudentNotFoundException::new);
 
-        UnivInfo univInfo = UnivInfo.builder()
-                .password(password)
-                .build();
-        univInfo.setStudent(loginStudent);
+        UnivInfo univInfo = univInfoRepository.findByStudentId(studentId).orElse(null);
 
-        univInfoRepository.save(univInfo);
+        if(univInfo == null) {
+            UnivInfo newUnivInfo = UnivInfo.builder()
+                    .password(password)
+                    .build();
+            univInfo.setStudent(loginStudent);
+
+            univInfoRepository.save(univInfo);
+        } else {
+            univInfo.setPassword(password);
+        }
     }
 
     @Transactional
