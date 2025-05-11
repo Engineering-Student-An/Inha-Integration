@@ -59,8 +59,8 @@ public class CoursemosService {
         HttpEntity<String> request = new HttpEntity<>(headers);
 
         // 프록시 세팅
-        System.setProperty("http.proxyHost", "localhost");
-        System.setProperty("http.proxyPort", "9494");
+//        System.setProperty("http.proxyHost", "localhost");
+//        System.setProperty("http.proxyPort", "9494");
 
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
 
