@@ -70,9 +70,9 @@ jobs:
           -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
           -e DB_URL=${{ secrets.DB_URL }} \
           -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
-          -e GITHUB_CLIENT_ID=${{ secrets.GITHUB_CLIENT_ID }} \
-          -e GITHUB_CLIENT_SECRET=${{ secrets.GITHUB_CLIENT_SECRET }} \
-          -e GITHUB_REDIRECT_URI=${{ secrets.GITHUB_REDIRECT_URI }} \
+          -e GITHUB_CLIENT_ID=${{ secrets.GIT_HUB_CLIENT_ID }} \
+          -e GITHUB_CLIENT_SECRET=${{ secrets.GIT_HUB_CLIENT_SECRET }} \
+          -e GITHUB_REDIRECT_URI=${{ secrets.GIT_HUB_REDIRECT_URI }} \
           -e GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
           -e GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
           -e GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }} \
