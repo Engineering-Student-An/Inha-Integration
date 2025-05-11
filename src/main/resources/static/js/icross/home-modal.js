@@ -3,7 +3,7 @@ function openModal(modalId, url) {
     var modal = document.getElementById(modalId);
     var contentDiv = modal.querySelector('.schedule-modal-content'); // iframe 대신 modal-content를 사용
 
-    fetch("http://localhost:8080" + url) // 서버에 요청
+    fetch("https://5vwyouaxq0.execute-api.ap-northeast-2.amazonaws.com" + url) // 서버에 요청
         .then(response => response.text()) // 응답을 텍스트로 변환
         .then(html => {
             contentDiv.innerHTML = html; // 모달 내용에 HTML 삽입
