@@ -103,15 +103,18 @@ public class CoursemosService {
 
         try {
             String jsonString = response.getBody();
+            System.out.println("jsonString = " + jsonString);
             // ObjectMapper 인스턴스 생성
             ObjectMapper objectMapper = new ObjectMapper();
             // JSON 문자열을 JsonNode 객체로 변환
             JsonNode rootNode = objectMapper.readTree(jsonString);
+            System.out.println("rootNode = " + rootNode);
             // "data" 객체로 이동
             JsonNode dataNode = rootNode.path("data");
+            System.out.println("dataNode = " + dataNode);
             // "utoken" 값 추출
             String utoken = dataNode.get("utoken").textValue();
-
+            System.out.println("utoken = " + utoken);
             return utoken;
         } catch (Exception e) {
             throw new CoursemosCrawlingException();
