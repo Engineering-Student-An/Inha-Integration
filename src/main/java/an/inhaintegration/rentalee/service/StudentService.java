@@ -8,8 +8,6 @@ import an.inhaintegration.rentalee.dto.student.StudentOauthRequestDto;
 import an.inhaintegration.rentalee.dto.student.StudentRequestDto;
 import an.inhaintegration.rentalee.exception.StudentNotFoundException;
 import an.inhaintegration.rentalee.repository.StudentRepository;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -77,31 +75,6 @@ public class StudentService {
 
     @Transactional
     public void updateOauthInfo(Long studentId, StudentOauthRequestDto studentOauthRequestDto) {
-
-        // 로그인한 회원 조회
-        Student loginStudent = studentRepository.findById(studentId).orElseThrow(StudentNotFoundException::new);
-
-        // 추가적인 정보 업데이트
-        loginStudent.addInfoAfterOauth(studentOauthRequestDto.getStuId(), studentOauthRequestDto.getName(), studentOauthRequestDto.getPhoneNumber());
-
-        // SecurityContextHolder에 반영
-        SecurityContextHolder.getContext().setAuthentication(getAuthenticationToken(loginStudent));
-    }
-
-    @Transactional
-    public void updateOauthInfo(HttpServletRequest request, StudentOauthRequestDto studentOauthRequestDto) {
-
-        // 쿠키에서 studentId 꺼내기
-        Cookie[] cookies = request.getCookies();
-        Long studentId = 0L;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("googleLoginId")) {
-                    studentId = Long.parseLong(cookie.getValue());
-                    break;
-                }
-            }
-        }
 
         // 로그인한 회원 조회
         Student loginStudent = studentRepository.findById(studentId).orElseThrow(StudentNotFoundException::new);
