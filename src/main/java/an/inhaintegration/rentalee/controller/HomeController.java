@@ -1,7 +1,7 @@
 package an.inhaintegration.rentalee.controller;
 
-import an.inhaintegration.rentalee.domain.Student;
 import an.inhaintegration.oauth2.CustomUserDetails;
+import an.inhaintegration.rentalee.domain.Student;
 import an.inhaintegration.rentalee.dto.student.LoginRequestDto;
 import an.inhaintegration.rentalee.dto.student.StudentOauthRequestDto;
 import an.inhaintegration.rentalee.dto.student.StudentRequestDto;
@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -76,9 +77,17 @@ public class HomeController {
     }
 
     @PostMapping("/oauth")
-    public String validateStuId(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                @Valid @ModelAttribute("studentOauthRequestDto") StudentOauthRequestDto studentOauthRequestDto,
+    public String validateStuId(@Valid @ModelAttribute("studentOauthRequestDto") StudentOauthRequestDto studentOauthRequestDto,
                                 BindingResult bindingResult, Model model) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails userDetails)) {
+            model.addAttribute("errorMessage", "인증 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
+            model.addAttribute("nextUrl", "/login");
+
+            return "error/errorMessage";
+        }
 
         feeStudentService.validateOauthFeeStudent(studentOauthRequestDto, bindingResult);    // oauth 로그인 후 학생회비 납부 여부 검증
 
