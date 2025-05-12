@@ -36,6 +36,7 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
 
             if(loginStudent.getProvider().equals("google")) {
                 response.sendRedirect("/home/" + loginStudent.getId());
+                return;
             }
         }
 
