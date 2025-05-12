@@ -17,7 +17,7 @@
                 <div class="mb-4 flex items-center space-x-4">
                     <select th:field="*{rentalStatus}" class="border border-gray-300 rounded-lg px-4 py-2">
                         <option value="">대여 상태</option>
-                        <option th:each="status : ${T(an.inhaintegration.domain.RentalStatus).values()}"
+                        <option th:each="status : ${T(an.inhaintegration.rentalee.domain.RentalStatus).values()}"
                                 th:value="${status}"
                                 th:text="${status.getDisplayName()}">option
                         </option>
