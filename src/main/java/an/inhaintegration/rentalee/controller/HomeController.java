@@ -51,6 +51,14 @@ public class HomeController {
         return "rentalee/home/dashboard";
     }
 
+    @GetMapping("/home/{studentId}")
+    public String googleLoginHome(@PathVariable("studentId") Long studentId, HttpServletRequest request) {
+
+        studentService.setAuthentication(request, studentId);
+
+        return "redirect:/home";
+    }
+
     @GetMapping("/login")
     public String loginPage(Model model) {
 

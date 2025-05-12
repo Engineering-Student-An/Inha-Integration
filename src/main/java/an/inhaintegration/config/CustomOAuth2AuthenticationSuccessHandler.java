@@ -33,6 +33,10 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
                 response.sendRedirect((loginStudent.getProvider().equals("google")) ? "/oauth?studentId=" + loginStudent.getId() : "/oauth");
                 return;
             }
+
+            if(loginStudent.getProvider().equals("google")) {
+                response.sendRedirect("/home/" + loginStudent.getId());
+            }
         }
 
         SavedRequest savedRequest = requestCache.getRequest(request, response);

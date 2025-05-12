@@ -8,9 +8,11 @@ import an.inhaintegration.rentalee.dto.student.StudentOauthRequestDto;
 import an.inhaintegration.rentalee.dto.student.StudentRequestDto;
 import an.inhaintegration.rentalee.exception.StudentNotFoundException;
 import an.inhaintegration.rentalee.repository.StudentRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -217,5 +219,25 @@ public class StudentService {
         Student student = studentRepository.findByLoginId(loginId).orElseThrow(StudentNotFoundException::new);
 
         session.setAttribute("studentId", student.getId());
+    }
+
+    // 구글 로그인 시 직접 인증객체를 SecurityContextHolder에 등록하는 메서드
+    public void setAuthentication(HttpServletRequest request, Long studentId) {
+
+        Student student = studentRepository.findById(studentId).orElseThrow(StudentNotFoundException::new);
+
+        // UserDetails 구현체 생성
+        CustomUserDetails userDetails = new CustomUserDetails(student);
+
+        // 인증 객체 생성
+        UsernamePasswordAuthenticationToken auth =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+        // SecurityContext에 등록
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        // 세션에도 등록
+        HttpSession session = request.getSession(true);
+        session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
     }
 }
