@@ -15,6 +15,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,6 +80,7 @@ public class SubjectService {
                             String timePart = time.replaceAll("^[가-힣]+", "");
                             return new SubjectResponseDto(subject.getName(), timePart);
                         }))
+                .sorted(Comparator.comparing(SubjectResponseDto::getTime))
                 .collect(Collectors.toList());
     }
 
