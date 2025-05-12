@@ -88,6 +88,8 @@ public class CoursemosService {
 
         String url = "https://learn.inha.ac.kr/webservice/rest/server.php";
 
+        System.out.println("userId = " + userId);
+        System.out.println("password = " + password);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setConnection("keep-alive");
