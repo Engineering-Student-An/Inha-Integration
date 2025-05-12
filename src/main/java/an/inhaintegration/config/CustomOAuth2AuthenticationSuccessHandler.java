@@ -1,10 +1,10 @@
 package an.inhaintegration.config;
 
-import an.inhaintegration.rentalee.domain.Student;
 import an.inhaintegration.oauth2.CustomUserDetails;
-import jakarta.servlet.ServletException;
+import an.inhaintegration.rentalee.domain.Student;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -21,7 +21,7 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
+                                        Authentication authentication) throws IOException{
 
         Object principal = authentication.getPrincipal();
 
@@ -29,9 +29,13 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
             CustomUserDetails userDetails = (CustomUserDetails) principal;
             Student loginStudent = userDetails.getStudent();
 
+            if(loginStudent.getProvider().equals("google")) {
+                HttpSession session = request.getSession();
+                session.setAttribute("googleLoginStudent", loginStudent);
+            }
+
             // 학번이 비어있으면 stuId 입력 페이지로 리다이렉트
             if (loginStudent.getStuId() == null || loginStudent.getStuId().isBlank()) {
-//                request.getRequestDispatcher("/oauth").forward(request, response);
                 response.sendRedirect("/oauth");
                 return;
             }
