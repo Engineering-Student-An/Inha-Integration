@@ -13,6 +13,7 @@ import an.inhaintegration.icross.exception.UnivInfoNotFoundException;
 import an.inhaintegration.icross.repository.SubjectRepository;
 import an.inhaintegration.icross.repository.TaskRepository;
 import an.inhaintegration.icross.repository.UnivInfoRepository;
+import an.inhaintegration.rentalee.service.RestTemplateWithProxy;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -366,7 +367,7 @@ public class CoursemosService {
         HttpEntity<String> request = new HttpEntity<>(headers);
 
 // RestTemplate 생성
-        RestTemplate restTemplate = new RestTemplate();
+        RestTemplate restTemplate = RestTemplateWithProxy.createRestTemplateWithProxy();
 
 // 요청 보내기
         ResponseEntity<String> responseEntity = restTemplate.exchange(
