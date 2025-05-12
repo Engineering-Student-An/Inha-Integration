@@ -309,13 +309,17 @@ public class CoursemosService {
         // RestTemplate에 HttpClient 사용 설정
         RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
 
-        String response = restTemplate.exchange(
-                "https://learn.inha.ac.kr/mod/assign/view.php?id=" + assignId,
-                HttpMethod.GET,
-                entity,
-                String.class
-        ).getBody();
+//        String response = restTemplate.exchange(
+//                "https://learn.inha.ac.kr/mod/assign/view.php?id=" + assignId,
+//                HttpMethod.GET,
+//                entity,
+//                String.class
+//        ).getBody();
+        String response = restTemplate.postForObject("https://learn.inha.ac.kr/local/coursemos/webviewapi.php?lang=ko",
+                entity, // 첫 번째 요청의 HttpEntity
+                String.class);
 
+        System.out.println("response = " + response);
         Document doc = (Document) Jsoup.parse(response);
 
         // "종료 일시"가 포함된 행을 선택
