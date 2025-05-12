@@ -164,8 +164,8 @@ public class StudentService {
     public void checkStudentInfo(StudentInfoRequestDto studentInfoRequestDto, BindingResult bindingResult) {
 
         // 학번이 비어있는 경우
-        if(studentInfoRequestDto.getStuId() == null || studentInfoRequestDto.getStuId().isEmpty()) {
-            bindingResult.addError(new FieldError("studentInfoRequestDto", "stuId", "학번을 입력해주세요!"));
+        if(studentInfoRequestDto.getLoginId() == null || studentInfoRequestDto.getLoginId().isEmpty()) {
+            bindingResult.addError(new FieldError("studentInfoRequestDto", "loginId", "ID를 입력해주세요!"));
         }
 
         // 이름이 비어있는 경우
@@ -180,11 +180,11 @@ public class StudentService {
 
         if(bindingResult.hasErrors()) return;
 
-        Student foundStudent = studentRepository.findByStuId(studentInfoRequestDto.getStuId()).orElse(null);
+        Student foundStudent = studentRepository.findByLoginId(studentInfoRequestDto.getLoginId()).orElse(null);
 
         // 회원이 없는 경우
         if(foundStudent == null) {
-            bindingResult.addError(new FieldError("studentInfoRequestDto", "stuId", "일치하는 학번의 계정이 없습니다. 회원가입 해 주세요!"));
+            bindingResult.addError(new FieldError("studentInfoRequestDto", "loginId", "일치하는 ID의 계정이 없습니다. 회원가입 해 주세요!"));
         } else if(!studentInfoRequestDto.getName().equals(foundStudent.getName())) {
             bindingResult.addError(new FieldError("studentInfoRequestDto", "name", "이름을 확인해주세요!"));
         } else if(!studentInfoRequestDto.getPhoneNumber().equals(foundStudent.getPhoneNumber())) {
@@ -197,7 +197,7 @@ public class StudentService {
                 case "github" -> "깃허브";
                 default -> null;
             };
-            bindingResult.addError(new FieldError("studentInfoRequestDto", "stuId", "해당 계정은 " + providerInKorean + " (소셜 로그인)으로 가입되었습니다!"));
+            bindingResult.addError(new FieldError("studentInfoRequestDto", "loginId", "해당 계정은 " + providerInKorean + " (소셜 로그인)으로 가입되었습니다!"));
         }
     }
 
@@ -212,9 +212,9 @@ public class StudentService {
         return null;
     }
 
-    public void setStudentIdToSession(String stuId, HttpSession session) {
+    public void setStudentIdToSession(String loginId, HttpSession session) {
 
-        Student student = studentRepository.findByStuId(stuId).orElseThrow(StudentNotFoundException::new);
+        Student student = studentRepository.findByLoginId(loginId).orElseThrow(StudentNotFoundException::new);
 
         session.setAttribute("studentId", student.getId());
     }

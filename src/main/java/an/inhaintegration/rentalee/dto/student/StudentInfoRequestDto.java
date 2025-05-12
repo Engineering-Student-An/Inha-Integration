@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class StudentInfoRequestDto {
 
-    private String stuId;
+    private String loginId;
     private String name;
     private String phoneNumber;
 }

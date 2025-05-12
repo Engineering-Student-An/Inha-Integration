@@ -198,7 +198,7 @@ public class StudentController {
         if(bindingResult.hasErrors()) return "rentalee/home/findPassword";
 
         // 비밀번호 초기화하려는 회원 id 세션에 저장
-        studentService.setStudentIdToSession(studentInfoRequestDto.getStuId(), session);
+        studentService.setStudentIdToSession(studentInfoRequestDto.getLoginId(), session);
 
         return "redirect:/password/email";
     }
