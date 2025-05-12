@@ -84,7 +84,7 @@ public class SecurityConfig {
         http.csrf((auth) -> auth.disable());
 
         http.sessionManagement((session) -> session
-                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
         );
 
         return http.build();
