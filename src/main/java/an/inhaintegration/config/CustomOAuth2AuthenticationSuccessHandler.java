@@ -2,9 +2,9 @@ package an.inhaintegration.config;
 
 import an.inhaintegration.oauth2.CustomUserDetails;
 import an.inhaintegration.rentalee.domain.Student;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -29,10 +29,13 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
             CustomUserDetails userDetails = (CustomUserDetails) principal;
             Student loginStudent = userDetails.getStudent();
 
-            System.out.println("loginStudent.getProvider() = " + loginStudent.getProvider());
             if(loginStudent.getProvider().equals("google")) {
-                HttpSession session = request.getSession();
-                session.setAttribute("googleLoginStudent", loginStudent);
+
+                Cookie cookie = new Cookie("googleLoginId", String.valueOf(loginStudent.getId()));
+                cookie.setPath("/");
+                cookie.setHttpOnly(true);
+                cookie.setMaxAge(600);
+                response.addCookie(cookie);
             }
 
             // 학번이 비어있으면 stuId 입력 페이지로 리다이렉트

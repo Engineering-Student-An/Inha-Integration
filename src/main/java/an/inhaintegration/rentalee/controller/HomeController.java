@@ -86,10 +86,9 @@ public class HomeController {
 
         if (bindingResult.hasErrors()) return "rentalee/home/join/addInfoAfterOauth";
 
+        // 구글 로그인인 경우
         if(userDetails == null) {
-            HttpSession session = request.getSession();
-            Student loginStudent = (Student) session.getAttribute("googleLoginStudent");
-            studentService.updateOauthInfo(loginStudent.getId(), studentOauthRequestDto);
+            studentService.updateOauthInfo(request, studentOauthRequestDto);
         } else {
             studentService.updateOauthInfo(userDetails.getId(), studentOauthRequestDto);
         }
