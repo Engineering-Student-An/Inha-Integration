@@ -295,30 +295,61 @@ public class CoursemosService {
     public void saveAssign(String utoken, TaskRequestDto taskRequestDto) {
 
         Long assignId = taskRequestDto.getWebId();
+//        // 헤더 설정
+//        HttpHeaders headers = createHttpHeaders();
+////        headers.set("Cookie", "_ga_E323M45YWM=GS1.1.1716918157.3.0.1716918157.0.0.0; MoodleSession=b9bgopakhbjc0v661qkvjtkqdb; _ga=GA1.1.1505350824.1716908448");
+//        headers.set("Cookie", "_ga_E323M45YWM=GS2.1.s1746804781$o1$g1$t1746804808$j0$l0$h0; MoodleSession=id40o9t44m63ide3585c5quo60; _ga=GA1.1.1990892485.1746804782");
+//
+//        // 바디 데이터 설정
+//        String body = "utoken="+utoken+"&modurl=https%3A//learn.inha.ac.kr/mod/assign/view.php?id%3D" + assignId;
+//
+//        // HttpEntity에 헤더와 데이터 설정
+//        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+//
+//        // RestTemplate에 HttpClient 사용 설정
+//        RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+//
+////        String response = restTemplate.exchange(
+////                "https://learn.inha.ac.kr/mod/assign/view.php?id=" + assignId,
+////                HttpMethod.GET,
+////                entity,
+////                String.class
+////        ).getBody();
+//        String response = restTemplate.postForObject("https://learn.inha.ac.kr/local/coursemos/webviewapi.php?lang=ko",
+//                entity, // 첫 번째 요청의 HttpEntity
+//                String.class);
+//
+//        System.out.println("response = " + response);
+
+        String url = "https://learn.inha.ac.kr/mod/assign/view.php?id=" + assignId + "&theme=coursemos_mobile";
+
         // 헤더 설정
-        HttpHeaders headers = createHttpHeaders();
-//        headers.set("Cookie", "_ga_E323M45YWM=GS1.1.1716918157.3.0.1716918157.0.0.0; MoodleSession=b9bgopakhbjc0v661qkvjtkqdb; _ga=GA1.1.1505350824.1716908448");
-        headers.set("Cookie", "_ga_E323M45YWM=GS2.1.s1746804781$o1$g1$t1746804808$j0$l0$h0; MoodleSession=id40o9t44m63ide3585c5quo60; _ga=GA1.1.1990892485.1746804782");
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Host", "learn.inha.ac.kr");
+        headers.set("Sec-Fetch-Site", "none");
+        headers.set("Connection", "keep-alive");
+        headers.set("Sec-Fetch-Mode", "navigate");
+        headers.set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+        headers.set("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 18_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148/DalbitMobile");
+        headers.set("Accept-Language", "ko-KR,ko;q=0.9");
+        headers.set("Sec-Fetch-Dest", "document");
+        headers.set("Cookie", "MoodleSession=rf76maksmh0vnqb1156askeuf6; _ga=GA1.1.1320772235.1747043599; _ga_E323M45YWM=GS2.1.s1747043598$o1$g0$t1747043598$j0$l0$h0; MoodleSession=v9dprb4rndrcvc6f51icbrj3ms");
 
-        // 바디 데이터 설정
-        String body = "utoken="+utoken+"&modurl=https%3A//learn.inha.ac.kr/mod/assign/view.php?id%3D" + assignId;
+        // HttpEntity 생성
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        // HttpEntity에 헤더와 데이터 설정
-        HttpEntity<String> entity = new HttpEntity<>(body, headers);
-
-        // RestTemplate에 HttpClient 사용 설정
+        // RestTemplate 설정
         RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
 
-//        String response = restTemplate.exchange(
-//                "https://learn.inha.ac.kr/mod/assign/view.php?id=" + assignId,
-//                HttpMethod.GET,
-//                entity,
-//                String.class
-//        ).getBody();
-        String response = restTemplate.postForObject("https://learn.inha.ac.kr/local/coursemos/webviewapi.php?lang=ko",
-                entity, // 첫 번째 요청의 HttpEntity
-                String.class);
+        // GET 요청
+        String response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                String.class
+        ).getBody();
 
+        // 결과 출력
         System.out.println("response = " + response);
         Document doc = (Document) Jsoup.parse(response);
 
