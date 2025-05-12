@@ -31,8 +31,8 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
 
             // 학번이 비어있으면 stuId 입력 페이지로 리다이렉트
             if (loginStudent.getStuId() == null || loginStudent.getStuId().isBlank()) {
-                request.getRequestDispatcher("/oauth").forward(request, response);
-//                response.sendRedirect("/oauth");
+//                request.getRequestDispatcher("/oauth").forward(request, response);
+                response.sendRedirect("/oauth");
                 return;
             }
         }
