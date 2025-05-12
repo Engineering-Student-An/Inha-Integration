@@ -29,6 +29,7 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
             CustomUserDetails userDetails = (CustomUserDetails) principal;
             Student loginStudent = userDetails.getStudent();
 
+            System.out.println("loginStudent.getProvider() = " + loginStudent.getProvider());
             if(loginStudent.getProvider().equals("google")) {
                 HttpSession session = request.getSession();
                 session.setAttribute("googleLoginStudent", loginStudent);
