@@ -59,8 +59,6 @@ public class Student {
         this.stuId = stuId;
         this.name = name;
         this.phoneNumber = phoneNumber;
-        this.role = StudentRole.USER;
-        this.email = this.loginId;
     }
 
     public StudentResponseDto toStudentResponseDto() {
