@@ -29,7 +29,7 @@ public class ApiICrossHomeController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("status", 400, "message", "로그인 실패"));
         }
-        return ResponseEntity.ok(Map.of("status", 200, "message", "성공"));
+        return ResponseEntity.ok(Map.of("status", 200, "message", "로그인 성공"));
     }
 
     @GetMapping("/i-cross/tasks")
@@ -38,8 +38,8 @@ public class ApiICrossHomeController {
         try {
             univInfoService.saveUnivInfoTask(userDetails.getId());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("status", 400, "message", "로그인 실패"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("status", 400, "message", "할 일 로드 실패"));
         }
-        return ResponseEntity.ok(Map.of("status", 200, "message", "성공"));
+        return ResponseEntity.ok(Map.of("status", 200, "message", "할 일 로드 성공"));
     }
 }

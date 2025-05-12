@@ -377,15 +377,17 @@ public class CoursemosService {
 
     // coursemos 로그인 이후 크롤링 및 없는 엔티티 생성하는 메서드
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public List<Long> fromLoginToSaveUnivInfoTask(String stuId, Long studentId) {
+    public void fromLoginToSaveUnivInfoTask(String stuId, Long studentId) {
 
         // wstoken 가져오기
         String wstoken = getWstoken();
         UnivInfo univInfo = univInfoRepository.findByStudentId(studentId).orElseThrow(UnivInfoNotFoundException::new);
         String password = univInfo.getPassword();
 
+        System.out.println("wstoken = " + wstoken);
         // utoken 가져오기
         String utoken = login(stuId, password, wstoken);
+        System.out.println("utoken = " + utoken);
         // 수강중인 강의의 id 가져오기
         List<Long> courseIds = getCourseIds(utoken);
         List<Long> existingSubjects = univInfo.getSubjectList();
@@ -394,6 +396,7 @@ public class CoursemosService {
                 existingSubjects.add(courseId);
             }
         }
+        System.out.println("courseIds.size() = " + courseIds.size());
 
         List<Long> taskIds = new ArrayList<>();
         for (Long courseId : courseIds) {
@@ -410,8 +413,8 @@ public class CoursemosService {
                 }
             }
         }
+        System.out.println("taskIds.size() = " + taskIds.size());
 
-        return taskIds;
     }
 
     private HttpHeaders createHttpHeaders() {
