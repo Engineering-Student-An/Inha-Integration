@@ -13,7 +13,6 @@ import an.inhaintegration.icross.exception.UnivInfoNotFoundException;
 import an.inhaintegration.icross.repository.SubjectRepository;
 import an.inhaintegration.icross.repository.TaskRepository;
 import an.inhaintegration.icross.repository.UnivInfoRepository;
-import an.inhaintegration.rentalee.service.RestTemplateWithProxy;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -324,7 +323,7 @@ public class CoursemosService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void saveAssign(String utoken, TaskRequestDto taskRequestDto) {
+    public void saveAssign(TaskRequestDto taskRequestDto) {
 
         Long assignId = taskRequestDto.getWebId();
 
@@ -349,37 +348,32 @@ public class CoursemosService {
 //                String.class
 //        ).getBody();
 
-        String url = "https://learn.inha.ac.kr/mod/assign/view.php?id=" + assignId + "&theme=coursemos_mobile";
+        Long subjectId = taskRequestDto.getSubjectId();
 
-// HttpHeaders 설정
+        String url = "https://learn.inha.ac.kr/mod/assign/view.php?id=" + assignId;
+
+        // 1. 요청 헤더 설정
         HttpHeaders headers = new HttpHeaders();
         headers.set("Host", "learn.inha.ac.kr");
-        headers.set("Sec-Fetch-Site", "none");
-        headers.set("Connection", "keep-alive");
-        headers.set("Sec-Fetch-Mode", "navigate");
-        headers.set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-        headers.set("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 18_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148/DalbitMobile");
-        headers.set("Accept-Language", "ko-KR,ko;q=0.9");
         headers.set("Sec-Fetch-Dest", "document");
-        headers.set("Cookie", "MoodleSession=9cb056hk4j5sn5sggser6nkkn5; _ga_E323M45YWM=GS2.1.s1747050876$o1$g1$t1747051100$j0$l0$h0; _ga=GA1.1.719908085.1747050877");
+        headers.set("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 18_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.4 Mobile/15E148 Safari/604.1");
+        headers.set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+        headers.set("Referer", "https://learn.inha.ac.kr/course/view.php?id=" + subjectId);
+        headers.set("Sec-Fetch-Site", "same-origin");
+        headers.set("Sec-Fetch-Mode", "navigate");
+        headers.set("Accept-Language", "ko-KR,ko;q=0.9");
+        headers.set("Priority", "u=0, i");
+        headers.set("Connection", "keep-alive");
+        headers.set("Cookie", "_ga_E323M45YWM=GS2.1.s1747054131$o3$g1$t1747054136$j0$l0$h0; MoodleSession=9pqc9v5na4p0oijmfmb2a6dm44; moodle_notice_1_275435=hide; moodle_notice_1_689387=hide; moodle_notice_1_768120=hide; moodle_notice_1_777569=hide; _ga=GA1.1.1990892485.1746804782");
 
-// HttpEntity 생성
+        // 2. HttpEntity 생성
         HttpEntity<String> request = new HttpEntity<>(headers);
 
-// RestTemplate 생성
-        RestTemplate restTemplate = RestTemplateWithProxy.createRestTemplateWithProxy();
+        // 3. RestTemplate 사용
+        RestTemplate restTemplate = new RestTemplate();
 
-// 요청 보내기
-        ResponseEntity<String> responseEntity = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                request,
-                String.class
-        );
-
-// 결과 확인
-        String response = responseEntity.getBody();
-
+        // 4. GET 요청 전송
+        String response = restTemplate.exchange(url, HttpMethod.GET, request, String.class).getBody();
 
         System.out.println("response = " + response);
         Document doc = (Document) Jsoup.parse(response);
@@ -510,7 +504,7 @@ public class CoursemosService {
                         System.out.println("taskRequestDto.getTaskType() = " + taskRequestDto.getTaskType());
                         switch (taskRequestDto.getTaskType()) {
                             case VIDEO -> saveVideo(utoken, taskRequestDto);
-                            case ASSIGNMENT -> saveAssign(utoken, taskRequestDto);
+                            case ASSIGNMENT -> saveAssign(taskRequestDto);
                             case QUIZ -> saveQuiz(utoken, taskRequestDto);
                         }
                     }
