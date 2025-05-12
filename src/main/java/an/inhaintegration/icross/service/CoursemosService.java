@@ -172,9 +172,10 @@ public class CoursemosService {
         try {
             // ========================== 각 과목 페이지 입장 ============================
             // URL 설정
-            String url = "https://learn.inha.ac.kr/webservice/rest/server.php";
+            String url = "https://learn.inha.ac.kr/webservice/rest/server.php?courseid=" + courseId +
+                    "&lang=ko&moodlewsrestformat=json&wsfunction=coursemos_course_get_contents_v2&wstoken=" + utoken;
 
-            // 헤더 설정
+// 헤더 설정
             HttpHeaders headers = new HttpHeaders();
             headers.set("Host", "learn.inha.ac.kr");
             headers.set("Connection", "keep-alive");
@@ -185,17 +186,15 @@ public class CoursemosService {
 
             headers.set("Cookie", "_ga_E323M45YWM=GS1.1.1716901219.1.1.1716901326.0.0.0; _ga=GA1.1.833759194.1716901220; MoodleSession=8s9fovhei8rtj145u1rb82ma3m; ubboard_read=%25AA%25A5ej%25C8%2593%25F6%25BEa%250B%2500i%25BA%2596");
 
-            // 바디 설정
-            String body = "courseid=" + courseId + "&lang=ko&moodlewsrestformat=json&wsfunction=coursemos_course_get_contents_v2&wstoken=" + utoken;
+// HttpEntity 생성 (GET 요청의 경우 바디는 필요 없음)
+            HttpEntity<String> entity = new HttpEntity<>(headers);
 
-            // HttpEntity 생성
-            HttpEntity<String> entity = new HttpEntity<>(body, headers);
-
-            // RestTemplate 생성
+// RestTemplate 생성
             RestTemplate restTemplate = new RestTemplate();
 
-            // 요청 실행
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+// 요청 실행
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
 
             // ========================== 각 페이지에서 동영상, 과제 찾음 =========================
             ObjectMapper objectMapper = new ObjectMapper();
