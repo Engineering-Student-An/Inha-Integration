@@ -395,21 +395,26 @@ public class CoursemosService {
         }
 
         List<Long> taskIds = new ArrayList<>();
-        for (Long courseId : courseIds) {
-            System.out.println("courseId = " + courseId);
-            List<TaskRequestDto> taskList = getTaskList(utoken, courseId);
-            System.out.println("taskList.size() = " + taskList.size());
-            for (TaskRequestDto taskRequestDto : taskList) {
-                // 기존에 없던 Task 라면 저장
-                taskIds.add(taskRequestDto.getWebId());
-                if (!taskRepository.existsById(taskRequestDto.getWebId())) {
-                    switch (taskRequestDto.getTaskType()) {
-                        case VIDEO -> saveVideo(utoken, taskRequestDto);
-                        case ASSIGNMENT -> saveAssign(utoken, taskRequestDto);
-                        case QUIZ -> saveQuiz(utoken, taskRequestDto);
+        try {
+            for (Long courseId : courseIds) {
+                System.out.println("courseId = " + courseId);
+                List<TaskRequestDto> taskList = getTaskList(utoken, courseId);
+                System.out.println("taskList.size() = " + taskList.size());
+                for (TaskRequestDto taskRequestDto : taskList) {
+                    // 기존에 없던 Task 라면 저장
+                    taskIds.add(taskRequestDto.getWebId());
+                    if (!taskRepository.existsById(taskRequestDto.getWebId())) {
+                        switch (taskRequestDto.getTaskType()) {
+                            case VIDEO -> saveVideo(utoken, taskRequestDto);
+                            case ASSIGNMENT -> saveAssign(utoken, taskRequestDto);
+                            case QUIZ -> saveQuiz(utoken, taskRequestDto);
+                        }
                     }
                 }
             }
+        } catch (Exception ex) {
+            System.out.println("ex.getMessage() = " + ex.getMessage());
+            System.out.println("ex.getLocalizedMessage() = " + ex.getLocalizedMessage());
         }
         System.out.println("taskIds.size() = " + taskIds.size());
 
