@@ -323,7 +323,7 @@ public class CoursemosService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void saveAssign(TaskRequestDto taskRequestDto) {
+    public void saveAssign(String utoken, TaskRequestDto taskRequestDto) {
 
         Long assignId = taskRequestDto.getWebId();
 //
@@ -348,27 +348,58 @@ public class CoursemosService {
 //                String.class
 //        ).getBody();
 
-        String url = "https://learn.inha.ac.kr/mod/assign/view.php?id=" + assignId + "&theme=coursemos_mobile";
+//        String url = "https://learn.inha.ac.kr/mod/assign/view.php?id=" + assignId + "&theme=coursemos_mobile";
+//
+//        // HttpHeaders 설정
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.set("Host", "learn.inha.ac.kr");
+//        headers.set("Sec-Fetch-Site", "none");
+//        headers.set("Connection", "keep-alive");
+//        headers.set("Sec-Fetch-Mode", "navigate");
+//        headers.set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+//        headers.set("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 18_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148/DalbitMobile");
+//        headers.set("Accept-Language", "ko-KR,ko;q=0.9");
+//        headers.set("Sec-Fetch-Dest", "document");
+//        headers.set("Cookie", "MoodleSession=5u65jbbpte17t0gpn5c9567mcl; _ga_E323M45YWM=GS2.1.s1747043598$o1$g1$t1747043669$j0$l0$h0; _ga=GA1.1.1320772235.1747043599");
+//
+//        // HttpEntity 생성
+//        HttpEntity<String> entity = new HttpEntity<>(headers);
+//
+//        // RestTemplate 생성 (프록시 없음)
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        String response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
 
-        // HttpHeaders 설정
+        String url = "https://learn.inha.ac.kr/local/coursemos/webviewapi.php?lang=ko";
+
+        // 요청 헤더 설정
         HttpHeaders headers = new HttpHeaders();
         headers.set("Host", "learn.inha.ac.kr");
-        headers.set("Sec-Fetch-Site", "none");
-        headers.set("Connection", "keep-alive");
-        headers.set("Sec-Fetch-Mode", "navigate");
         headers.set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-        headers.set("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 18_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148/DalbitMobile");
+        headers.set("Sec-Fetch-Site", "none");
         headers.set("Accept-Language", "ko-KR,ko;q=0.9");
+        headers.set("Sec-Fetch-Mode", "navigate");
+        headers.set("Origin", "null");
+        headers.set("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 18_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148/DalbitMobile");
+        headers.set("Connection", "keep-alive");
         headers.set("Sec-Fetch-Dest", "document");
-        headers.set("Cookie", "MoodleSession=5u65jbbpte17t0gpn5c9567mcl; _ga_E323M45YWM=GS2.1.s1747043598$o1$g1$t1747043669$j0$l0$h0; _ga=GA1.1.1320772235.1747043599");
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        // 요청 바디 설정
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("utoken", utoken);
+        body.add("modurl", "https://learn.inha.ac.kr/mod/assign/view.php?id=" + assignId);
+        body.add("authkey", "ZJZJNDKYNZCYY2MXZJRIMMQXOTRJMJNHNDKYM2NJYZNMMWQ5NZKWOWZMNTUYZDIXZJDHNTAWMMFLNDCWNZFLNW==");
 
         // HttpEntity 생성
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
-        // RestTemplate 생성 (프록시 없음)
+        // RestTemplate 생성
         RestTemplate restTemplate = new RestTemplate();
 
-        String response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
+        // POST 요청 전송
+        String response = restTemplate.postForEntity(url, request, String.class).getBody();
+
 
         Document doc = (Document) Jsoup.parse(response);
 
