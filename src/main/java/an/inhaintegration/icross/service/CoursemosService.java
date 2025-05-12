@@ -364,7 +364,7 @@ public class CoursemosService {
         headers.set("Accept-Language", "ko-KR,ko;q=0.9");
         headers.set("Priority", "u=0, i");
         headers.set("Connection", "keep-alive");
-        headers.set("Cookie", "_ga_E323M45YWM=GS2.1.s1747054131$o3$g1$t1747054136$j0$l0$h0; MoodleSession=9pqc9v5na4p0oijmfmb2a6dm44; moodle_notice_1_275435=hide; moodle_notice_1_689387=hide; moodle_notice_1_768120=hide; moodle_notice_1_777569=hide; _ga=GA1.1.1990892485.1746804782");
+        headers.set("Cookie", "_ga_E323M45YWM=GS2.1.s1747054131$o3$g1$t1747054136$j0$l0$h0; moodle_notice_1_275435=hide; moodle_notice_1_689387=hide; moodle_notice_1_768120=hide; moodle_notice_1_777569=hide; _ga=GA1.1.1990892485.1746804782");
 
         // 2. HttpEntity 생성
         HttpEntity<String> request = new HttpEntity<>(headers);
