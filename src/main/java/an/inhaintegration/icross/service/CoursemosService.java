@@ -529,7 +529,7 @@ public class CoursemosService {
                         System.out.println("taskRequestDto.getTaskType() = " + taskRequestDto.getTaskType());
                         switch (taskRequestDto.getTaskType()) {
                             case VIDEO -> saveVideo(utoken, taskRequestDto);
-                            case ASSIGNMENT -> saveAssign(taskRequestDto);
+                            case ASSIGNMENT -> saveAssign(utoken, taskRequestDto);
                             case QUIZ -> saveQuiz(utoken, taskRequestDto);
                         }
                     }
