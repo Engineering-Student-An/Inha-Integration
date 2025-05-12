@@ -183,7 +183,7 @@ public class CoursemosService {
             headers.set("Accept-Language", "ko-KR;q=1.0, io-KR;q=0.9");
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-            headers.set("Cookie", "_ga_E323M45YWM=GS1.1.1716901219.1.1.1716901326.0.0.0; _ga=GA1.1.833759194.1716901220; MoodleSession=8s9fovhei8rtj145u1rb82ma3m; ubboard_read=%25AA%25A5ej%25C8%2593%25F6%25BEa%250B%2500i%25BA%2596");
+//            headers.set("Cookie", "_ga_E323M45YWM=GS1.1.1716901219.1.1.1716901326.0.0.0; _ga=GA1.1.833759194.1716901220; MoodleSession=8s9fovhei8rtj145u1rb82ma3m; ubboard_read=%25AA%25A5ej%25C8%2593%25F6%25BEa%250B%2500i%25BA%2596");
 
             // 바디 설정
             String body = "courseid=" + courseId + "&lang=ko&moodlewsrestformat=json&wsfunction=coursemos_course_get_contents_v2&wstoken=" + utoken;
