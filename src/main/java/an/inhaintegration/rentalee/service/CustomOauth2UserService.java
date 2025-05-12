@@ -2,6 +2,7 @@ package an.inhaintegration.rentalee.service;
 
 import an.inhaintegration.rentalee.domain.Student;
 import an.inhaintegration.oauth2.*;
+import an.inhaintegration.rentalee.domain.StudentRole;
 import an.inhaintegration.rentalee.repository.StudentRepository;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -50,6 +51,8 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
                     .provider(provider)
                     .providerId(providerId)
                     .picture(picture)
+                    .role(StudentRole.USER)
+                    .email(email)
                     .build();
             return studentRepository.save(newStudent);
         });
