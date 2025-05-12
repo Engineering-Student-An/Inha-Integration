@@ -93,9 +93,9 @@ public class HomeController {
 
         // 구글 로그인인 경우
         if(userDetails == null) {
-            studentService.updateOauthInfo(studentOauthRequestDto.getStudentId(), studentOauthRequestDto);
+            studentService.updateOauthInfo(true, studentOauthRequestDto.getStudentId(), studentOauthRequestDto);
         } else {
-            studentService.updateOauthInfo(userDetails.getId(), studentOauthRequestDto);
+            studentService.updateOauthInfo(false, userDetails.getId(), studentOauthRequestDto);
         }
 
         model.addAttribute("errorMessage", "정보 입력이 완료되었습니다! 대시보드로 이동합니다.");

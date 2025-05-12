@@ -74,7 +74,7 @@ public class StudentService {
     }
 
     @Transactional
-    public void updateOauthInfo(Long studentId, StudentOauthRequestDto studentOauthRequestDto) {
+    public void updateOauthInfo(boolean isGoogle, Long studentId, StudentOauthRequestDto studentOauthRequestDto) {
 
         // 로그인한 회원 조회
         Student loginStudent = studentRepository.findById(studentId).orElseThrow(StudentNotFoundException::new);
@@ -83,7 +83,7 @@ public class StudentService {
         loginStudent.addInfoAfterOauth(studentOauthRequestDto.getStuId(), studentOauthRequestDto.getName(), studentOauthRequestDto.getPhoneNumber());
 
         // SecurityContextHolder에 반영
-        SecurityContextHolder.getContext().setAuthentication(getAuthenticationToken(loginStudent));
+        if(!isGoogle) SecurityContextHolder.getContext().setAuthentication(getAuthenticationToken(loginStudent));
     }
 
     // 비밀번호 검증 메서드
