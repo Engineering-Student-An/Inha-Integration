@@ -400,6 +400,7 @@ public class CoursemosService {
         // POST 요청 전송
         String response = restTemplate.postForEntity(url, request, String.class).getBody();
 
+        System.out.println("response = " + response);
 
         Document doc = (Document) Jsoup.parse(response);
 
