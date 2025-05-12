@@ -2,6 +2,7 @@ package an.inhaintegration.config;
 
 import an.inhaintegration.rentalee.domain.Student;
 import an.inhaintegration.oauth2.CustomUserDetails;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -20,7 +21,7 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException {
+                                        Authentication authentication) throws IOException, ServletException {
 
         Object principal = authentication.getPrincipal();
 
@@ -30,7 +31,8 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
 
             // 학번이 비어있으면 stuId 입력 페이지로 리다이렉트
             if (loginStudent.getStuId() == null || loginStudent.getStuId().isBlank()) {
-                response.sendRedirect("/oauth");
+                request.getRequestDispatcher("/oauth").forward(request, response);
+//                response.sendRedirect("/oauth");
                 return;
             }
         }
