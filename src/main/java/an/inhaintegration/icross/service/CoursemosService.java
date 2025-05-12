@@ -21,7 +21,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.http.*;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,8 +58,8 @@ public class CoursemosService {
         HttpEntity<String> request = new HttpEntity<>(headers);
 
         // 프록시 세팅
-//        System.setProperty("http.proxyHost", "localhost");
-//        System.setProperty("http.proxyPort", "9494");
+        System.setProperty("http.proxyHost", "localhost");
+        System.setProperty("http.proxyPort", "9494");
 
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
 
@@ -245,23 +244,55 @@ public class CoursemosService {
 
         Long videoId = taskRequestDto.getWebId();
 
-        // 헤더 설정
-        HttpHeaders headers = createHttpHeaders();
+//        // 헤더 설정
+//        HttpHeaders headers = createHttpHeaders();
+//
+//        headers.add("Cookie", "_ga_E323M45YWM=GS2.1.s1746807549$o2$g1$t1746807560$j0$l0$h0; moodle_notice_1_275435=hide; moodle_notice_1_689387=hide; moodle_notice_1_768120=hide; moodle_notice_1_777569=hide; MoodleSession=id40o9t44m63ide3585c5quo60; _ga=GA1.1.1990892485.1746804782");
+//
+//        // 바디 데이터 설정
+//        String body = "utoken="+utoken+"&modurl=https%3A//learn.inha.ac.kr/mod/vod/view.php?id%3D" + videoId;
+//
+//        // HttpEntity에 헤더와 데이터 설정
+//        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+//
+//        // RestTemplate에 HttpClient 사용 설정
+//        RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+//
+//        // 첫 번째 요청을 실행하고, 자동으로 리다이렉트됨
+//        String response = restTemplate.exchange(
+//                "https://learn.inha.ac.kr/mod/vod/view.php?id=" + videoId,
+//                HttpMethod.GET,
+//                entity,
+//                String.class
+//        ).getBody();
 
-        headers.add("Cookie", "_ga_E323M45YWM=GS2.1.s1746807549$o2$g1$t1746807560$j0$l0$h0; moodle_notice_1_275435=hide; moodle_notice_1_689387=hide; moodle_notice_1_768120=hide; moodle_notice_1_777569=hide; MoodleSession=id40o9t44m63ide3585c5quo60; _ga=GA1.1.1990892485.1746804782");
+        // 요청할 URL
+        String url = "https://learn.inha.ac.kr/mod/vod/view.php?id=" + videoId + "&theme=coursemos_mobile";
 
-        // 바디 데이터 설정
-        String body = "utoken="+utoken+"&modurl=https%3A//learn.inha.ac.kr/mod/vod/view.php?id%3D" + videoId;
+        // HttpHeaders 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Host", "learn.inha.ac.kr");
+        headers.set("Sec-Fetch-Site", "none");
+        headers.set("Connection", "keep-alive");
+        headers.set("Sec-Fetch-Mode", "navigate");
+        headers.set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+        headers.set("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 18_4_1 like Mac OS X) " +
+                "AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148/DalbitMobile");
+        headers.set("Accept-Language", "ko-KR,ko;q=0.9");
+        headers.set("Sec-Fetch-Mode", "navigate");
+        headers.set("Sec-Fetch-Dest", "document");
 
-        // HttpEntity에 헤더와 데이터 설정
-        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+        headers.set("Cookie", "MoodleSession=fgfdgsci8b4cgl2iuet0pvoujf");
 
-        // RestTemplate에 HttpClient 사용 설정
-        RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+        // HttpEntity 생성
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        // 첫 번째 요청을 실행하고, 자동으로 리다이렉트됨
+        // RestTemplate 생성
+        RestTemplate restTemplate = new RestTemplate();
+
+        // 요청 수행
         String response = restTemplate.exchange(
-                "https://learn.inha.ac.kr/mod/vod/view.php?id=" + videoId,
+                url,
                 HttpMethod.GET,
                 entity,
                 String.class
@@ -274,7 +305,7 @@ public class CoursemosService {
         for (Element element : vodInfoElements) {
             Elements infoLabels = element.getElementsByClass("vod_info");
             for (Element label : infoLabels) {
-                if (label.text().contains("출석인정기간:")) {
+                if (label.text().contains("출석인정기간:") || label.text().contains("Period to take attendance:")) {
                     Element valueElement = element.selectFirst(".vod_info_value");
                     if (valueElement != null) {
                         // DateTimeFormatter 정의 (문자열 형태에 맞춤)
@@ -292,9 +323,10 @@ public class CoursemosService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void saveAssign(String utoken, TaskRequestDto taskRequestDto) {
+    public void saveAssign(TaskRequestDto taskRequestDto) {
 
         Long assignId = taskRequestDto.getWebId();
+//
 //        // 헤더 설정
 //        HttpHeaders headers = createHttpHeaders();
 ////        headers.set("Cookie", "_ga_E323M45YWM=GS1.1.1716918157.3.0.1716918157.0.0.0; MoodleSession=b9bgopakhbjc0v661qkvjtkqdb; _ga=GA1.1.1505350824.1716908448");
@@ -309,21 +341,16 @@ public class CoursemosService {
 //        // RestTemplate에 HttpClient 사용 설정
 //        RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
 //
-////        String response = restTemplate.exchange(
-////                "https://learn.inha.ac.kr/mod/assign/view.php?id=" + assignId,
-////                HttpMethod.GET,
-////                entity,
-////                String.class
-////        ).getBody();
-//        String response = restTemplate.postForObject("https://learn.inha.ac.kr/local/coursemos/webviewapi.php?lang=ko",
-//                entity, // 첫 번째 요청의 HttpEntity
-//                String.class);
-//
-//        System.out.println("response = " + response);
+//        String response = restTemplate.exchange(
+//                "https://learn.inha.ac.kr/mod/assign/view.php?id=" + assignId,
+//                HttpMethod.GET,
+//                entity,
+//                String.class
+//        ).getBody();
 
         String url = "https://learn.inha.ac.kr/mod/assign/view.php?id=" + assignId + "&theme=coursemos_mobile";
 
-        // 헤더 설정
+        // HttpHeaders 설정
         HttpHeaders headers = new HttpHeaders();
         headers.set("Host", "learn.inha.ac.kr");
         headers.set("Sec-Fetch-Site", "none");
@@ -333,24 +360,16 @@ public class CoursemosService {
         headers.set("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 18_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148/DalbitMobile");
         headers.set("Accept-Language", "ko-KR,ko;q=0.9");
         headers.set("Sec-Fetch-Dest", "document");
-        headers.set("Cookie", "MoodleSession=rf76maksmh0vnqb1156askeuf6; _ga=GA1.1.1320772235.1747043599; _ga_E323M45YWM=GS2.1.s1747043598$o1$g0$t1747043598$j0$l0$h0; MoodleSession=v9dprb4rndrcvc6f51icbrj3ms");
+        headers.set("Cookie", "MoodleSession=5u65jbbpte17t0gpn5c9567mcl; _ga_E323M45YWM=GS2.1.s1747043598$o1$g1$t1747043669$j0$l0$h0; _ga=GA1.1.1320772235.1747043599");
 
         // HttpEntity 생성
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        // RestTemplate 설정
-        RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+        // RestTemplate 생성 (프록시 없음)
+        RestTemplate restTemplate = new RestTemplate();
 
-        // GET 요청
-        String response = restTemplate.exchange(
-                url,
-                HttpMethod.GET,
-                entity,
-                String.class
-        ).getBody();
+        String response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
 
-        // 결과 출력
-        System.out.println("response = " + response);
         Document doc = (Document) Jsoup.parse(response);
 
         // "종료 일시"가 포함된 행을 선택
@@ -372,24 +391,58 @@ public class CoursemosService {
     public void saveQuiz(String utoken, TaskRequestDto taskRequestDto) {
 
         Long quizId = taskRequestDto.getWebId();
-        // 헤더 설정
-        HttpHeaders headers = createHttpHeaders();
-        headers.set("Cookie", "_ga_E323M45YWM=GS2.1.1716918157.3.0.1716918157.0.0.0; MoodleSession=b9bgopakhbjc0v661qkvjtkqdb; _ga=GA1.1.1505350824.1716908448");
+//        // 헤더 설정
+//        HttpHeaders headers = createHttpHeaders();
+//        headers.set("Cookie", "_ga_E323M45YWM=GS2.1.1716918157.3.0.1716918157.0.0.0; MoodleSession=b9bgopakhbjc0v661qkvjtkqdb; _ga=GA1.1.1505350824.1716908448");
+//
+//        // 바디 데이터 설정
+//        String body = "utoken="+utoken+"&modurl=https%3A//learn.inha.ac.kr/mod/quiz/view.php?id%3D" + quizId;
+//
+//        // HttpEntity에 헤더와 데이터 설정
+//        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+//
+//        // RestTemplate에 HttpClient 사용 설정
+//        RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+//
+//        // 첫 번째 요청을 실행하고, 자동으로 리다이렉트됨
+//        String response = restTemplate.exchange("https://learn.inha.ac.kr/local/coursemos/webviewapi.php?lang=ko",
+//                HttpMethod.GET,
+//                entity, // 첫 번째 요청의 HttpEntity
+//                String.class).getBody();
 
-        // 바디 데이터 설정
-        String body = "utoken="+utoken+"&modurl=https%3A//learn.inha.ac.kr/mod/quiz/view.php?id%3D" + quizId;
+        // 요청 URL
+        String url = "https://learn.inha.ac.kr/mod/quiz/view.php?id=" + quizId + "&theme=coursemos_mobile";
 
-        // HttpEntity에 헤더와 데이터 설정
-        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+        // HttpHeaders 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Host", "learn.inha.ac.kr");
+        headers.set("Sec-Fetch-Site", "none");
+        headers.set("Connection", "keep-alive");
+        headers.set("Sec-Fetch-Mode", "navigate");
+        headers.set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+        headers.set("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 18_4_1 like Mac OS X) " +
+                "AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148/DalbitMobile");
+        headers.set("Accept-Language", "ko-KR,ko;q=0.9");
+        headers.set("Sec-Fetch-Dest", "document");
 
-        // RestTemplate에 HttpClient 사용 설정
-        RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+        // 쿠키 설정
+        headers.set("Cookie", "MoodleSession=3msp07e7h7npdlkd60qv6mla9q; " +
+                "_ga=GA1.1.784777227.1747046618; " +
+                "_ga_E323M45YWM=GS2.1.s1747046618$o1$g0$t1747046618$j0$l0$h0");
 
-        // 첫 번째 요청을 실행하고, 자동으로 리다이렉트됨
-        String response = restTemplate.exchange("https://learn.inha.ac.kr/local/coursemos/webviewapi.php?lang=ko",
+        // HttpEntity 생성
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        // RestTemplate 생성
+        RestTemplate restTemplate = new RestTemplate();
+
+        // 요청 실행
+        String response = restTemplate.exchange(
+                url,
                 HttpMethod.GET,
-                entity, // 첫 번째 요청의 HttpEntity
-                String.class).getBody();
+                entity,
+                String.class
+        ).getBody();
 
         Document doc = (Document) Jsoup.parse(response);
 
@@ -437,15 +490,15 @@ public class CoursemosService {
                 List<TaskRequestDto> taskList = getTaskList(utoken, courseId);
                 System.out.println("taskList.size() = " + taskList.size());
                 for (TaskRequestDto taskRequestDto : taskList) {
-                    System.out.println("taskRequestDto.getWebId() = " + taskRequestDto.getWebId());
-                }
-                for (TaskRequestDto taskRequestDto : taskList) {
                     // 기존에 없던 Task 라면 저장
                     taskIds.add(taskRequestDto.getWebId());
                     if (!taskRepository.existsById(taskRequestDto.getWebId())) {
+                        System.out.println("taskRequestDto.getWebId() = " + taskRequestDto.getWebId());
+                        System.out.println("taskRequestDto.getName() = " + taskRequestDto.getName());
+                        System.out.println("taskRequestDto.getTaskType() = " + taskRequestDto.getTaskType());
                         switch (taskRequestDto.getTaskType()) {
                             case VIDEO -> saveVideo(utoken, taskRequestDto);
-                            case ASSIGNMENT -> saveAssign(utoken, taskRequestDto);
+                            case ASSIGNMENT -> saveAssign(taskRequestDto);
                             case QUIZ -> saveQuiz(utoken, taskRequestDto);
                         }
                     }
@@ -457,23 +510,6 @@ public class CoursemosService {
         }
         System.out.println("taskIds.size() = " + taskIds.size());
 
-    }
-
-    private HttpHeaders createHttpHeaders() {
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Host", "learn.inha.ac.kr");
-        headers.set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-        headers.set("Sec-Fetch-Site", "none");
-        headers.set("Accept-Language", "ko-KR,ko;q=0.9");
-        headers.set("Sec-Fetch-Mode", "navigate");
-        headers.set("Origin", "null");
-        headers.set("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148");
-        headers.set("Connection", "keep-alive");
-        headers.set("Sec-Fetch-Dest", "document");
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-        return headers;
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
