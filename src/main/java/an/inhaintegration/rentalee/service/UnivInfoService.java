@@ -36,9 +36,9 @@ public class UnivInfoService {
             UnivInfo newUnivInfo = UnivInfo.builder()
                     .password(password)
                     .build();
-            univInfo.setStudent(loginStudent);
+            newUnivInfo.setStudent(loginStudent);
 
-            univInfoRepository.save(univInfo);
+            univInfoRepository.save(newUnivInfo);
         } else {
             univInfo.setPassword(password);
         }
