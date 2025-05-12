@@ -58,7 +58,8 @@ public class KakaoMessageService extends HttpCallService {
         parameters.add("grant_type", "authorization_code");
         parameters.add("client_id", KAKAO_CLIENT_ID);
         parameters.add("client_secret", KAKAO_CLIENT_SECRET);
-        parameters.add("redirect_uri", "https://5vwyouaxq0.execute-api.ap-northeast-2.amazonaws.com/i-cross");
+//        parameters.add("redirect_uri", "https://5vwyouaxq0.execute-api.ap-northeast-2.amazonaws.com/i-cross");
+        parameters.add("redirect_uri", "http://ec2-13-209-198-107.ap-northeast-2.compute.amazonaws.com:8082/i-cross");
         parameters.add("scope", "talk_message"); // 필요한 권한을 요청하는 부분 추가
 
         HttpEntity<?> requestEntity = httpClientEntity(header, parameters);
