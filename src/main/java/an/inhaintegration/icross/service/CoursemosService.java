@@ -88,8 +88,6 @@ public class CoursemosService {
 
         String url = "https://learn.inha.ac.kr/webservice/rest/server.php";
 
-        System.out.println("userId = " + userId);
-        System.out.println("password = " + password);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setConnection("keep-alive");
@@ -105,18 +103,14 @@ public class CoursemosService {
 
         try {
             String jsonString = response.getBody();
-            System.out.println("jsonString = " + jsonString);
             // ObjectMapper 인스턴스 생성
             ObjectMapper objectMapper = new ObjectMapper();
             // JSON 문자열을 JsonNode 객체로 변환
             JsonNode rootNode = objectMapper.readTree(jsonString);
-            System.out.println("rootNode = " + rootNode);
             // "data" 객체로 이동
             JsonNode dataNode = rootNode.path("data");
-            System.out.println("dataNode = " + dataNode);
             // "utoken" 값 추출
             String utoken = dataNode.get("utoken").textValue();
-            System.out.println("utoken = " + utoken);
             return utoken;
         } catch (Exception e) {
             throw new CoursemosCrawlingException();
@@ -389,10 +383,8 @@ public class CoursemosService {
         UnivInfo univInfo = univInfoRepository.findByStudentId(studentId).orElseThrow(UnivInfoNotFoundException::new);
         String password = univInfo.getPassword();
 
-        System.out.println("wstoken = " + wstoken);
         // utoken 가져오기
         String utoken = login(stuId, password, wstoken);
-        System.out.println("utoken = " + utoken);
         // 수강중인 강의의 id 가져오기
         List<Long> courseIds = getCourseIds(utoken);
         List<Long> existingSubjects = univInfo.getSubjectList();
@@ -401,11 +393,12 @@ public class CoursemosService {
                 existingSubjects.add(courseId);
             }
         }
-        System.out.println("courseIds.size() = " + courseIds.size());
 
         List<Long> taskIds = new ArrayList<>();
         for (Long courseId : courseIds) {
+            System.out.println("courseId = " + courseId);
             List<TaskRequestDto> taskList = getTaskList(utoken, courseId);
+            System.out.println("taskList.size() = " + taskList.size());
             for (TaskRequestDto taskRequestDto : taskList) {
                 // 기존에 없던 Task 라면 저장
                 taskIds.add(taskRequestDto.getWebId());
