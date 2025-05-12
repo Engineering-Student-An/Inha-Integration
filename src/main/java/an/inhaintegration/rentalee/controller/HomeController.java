@@ -69,9 +69,14 @@ public class HomeController {
     }
 
     @GetMapping("/oauth")
-    public String oauthUpdate(Model model) {
+    public String oauthUpdate(@RequestParam(value = "studentId", required = false) Long studentId, Model model) {
 
-        model.addAttribute("studentOauthRequestDto", new StudentOauthRequestDto());
+        StudentOauthRequestDto studentOauthRequestDto = new StudentOauthRequestDto();
+
+        if(studentId != null) {
+            studentOauthRequestDto.setStudentId(studentId);
+        }
+        model.addAttribute("studentOauthRequestDto", studentOauthRequestDto);
 
         return "rentalee/home/join/addInfoAfterOauth";
     }
@@ -88,7 +93,7 @@ public class HomeController {
 
         // 구글 로그인인 경우
         if(userDetails == null) {
-            studentService.updateOauthInfo(request, studentOauthRequestDto);
+            studentService.updateOauthInfo(studentOauthRequestDto.getStudentId(), studentOauthRequestDto);
         } else {
             studentService.updateOauthInfo(userDetails.getId(), studentOauthRequestDto);
         }

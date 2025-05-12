@@ -2,7 +2,6 @@ package an.inhaintegration.config;
 
 import an.inhaintegration.oauth2.CustomUserDetails;
 import an.inhaintegration.rentalee.domain.Student;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -29,18 +28,9 @@ public class CustomOAuth2AuthenticationSuccessHandler implements AuthenticationS
             CustomUserDetails userDetails = (CustomUserDetails) principal;
             Student loginStudent = userDetails.getStudent();
 
-            if(loginStudent.getProvider().equals("google")) {
-
-                Cookie cookie = new Cookie("googleLoginId", String.valueOf(loginStudent.getId()));
-                cookie.setPath("/");
-                cookie.setHttpOnly(true);
-                cookie.setMaxAge(600);
-                response.addCookie(cookie);
-            }
-
             // 학번이 비어있으면 stuId 입력 페이지로 리다이렉트
             if (loginStudent.getStuId() == null || loginStudent.getStuId().isBlank()) {
-                response.sendRedirect("/oauth");
+                response.sendRedirect((loginStudent.getProvider().equals("google")) ? "/oauth?studentId=" + loginStudent.getId() : "/oauth");
                 return;
             }
         }
