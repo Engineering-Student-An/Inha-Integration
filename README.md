@@ -8,8 +8,11 @@
 
 ### [SWITCH (Inha-Integration)](http://ec2-13-209-198-107.ap-northeast-2.compute.amazonaws.com:8082/)
 
-![image.png](https://mosoobucket.s3.ap-northeast-2.amazonaws.com/rental-logo.png)
-![id.png](https://mosoobucket.s3.ap-northeast-2.amazonaws.com/icross-logo.png)
+<p align="center">
+  <img src="https://mosoobucket.s3.ap-northeast-2.amazonaws.com/rental-logo.png" width="200"/>
+  <img src="https://mosoobucket.s3.ap-northeast-2.amazonaws.com/icross-logo.png" width="200"/>
+</p>
+
 
 SWITCH는 인하대학교 전자공학과 학생회의 대여 사업과 학업 지원 서비스를 제공하는 웹 애플리케이션입니다.
 
