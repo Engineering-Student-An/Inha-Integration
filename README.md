@@ -129,7 +129,7 @@ SWITCH는 인하대학교 전자공학과 학생회의 대여 사업과 학업 �
 
 ---
 
-[기능 명세서](https://www.notion.so/1f2f13087dbf81059aaee26d4ff44f03?pvs=21)
+[기능 명세서](https://github.com/Engineering-Student-An/Inha-Integration/wiki/%EA%B8%B0%EB%8A%A5-%EB%AA%85%EC%84%B8%EC%84%9C)
 
 ## ERD
 
