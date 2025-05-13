@@ -8,7 +8,7 @@
 
 ### [SWITCH (Inha-Integration)](http://ec2-13-209-198-107.ap-northeast-2.compute.amazonaws.com:8082/)
 
-<p align="center">
+<p>
   <img src="https://mosoobucket.s3.ap-northeast-2.amazonaws.com/rental-logo.png" width="200"/>
   <img src="https://mosoobucket.s3.ap-northeast-2.amazonaws.com/icross-logo.png" width="200"/>
 </p>
