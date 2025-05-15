@@ -84,6 +84,12 @@ dependencies {
     // org.json
     implementation group: 'org.json', name: 'json', version: '20231013'
 
+    // Spring Boot Actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // Prometheus
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
     //JUnit4 추가
     testImplementation("org.junit.vintage:junit-vintage-engine") {
         exclude group: "org.hamcrest", module: "hamcrest-core"

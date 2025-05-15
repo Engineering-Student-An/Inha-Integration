@@ -86,3 +86,9 @@ jobs:
           -e MAIL_USERNAME=${{ secrets.MAIL_USERNAME }} \
           -e WEATHER_API_KEY=${{ secrets.WEATHER_API_KEY }} \
           -d ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.PROJECT_NAME }}
+          
+          # Prometheus 컨테이너 정지 및 삭제 (이미 실행 중이면)
+          sudo docker-compose -f ~/docker-compose-monitoring.yml down || true
+
+          # Prometheus 컨테이너 실행
+          sudo docker-compose -f ~/docker-compose-monitoring.yml up -d
