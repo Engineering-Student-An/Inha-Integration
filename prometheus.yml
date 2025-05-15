@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 5s  # 매 5초마다 수집
+
+scrape_configs:
+  - job_name: 'SWITCH'
+    metrics_path: '/actuator/prometheus'  # Spring에서 제공하는 메트릭 경로
+    static_configs:
+      - targets: ['inha-integration:8082']  # 또는 EC2 내 컨테이너 IP/이름

@@ -5,4 +5,6 @@ services:
     image: prom/prometheus:latest
     container_name: prometheus
     ports:
-      - "9090:9090"
+      - "9090:9090" # Prometheus는 기본적으로 9090 포트 사용
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
