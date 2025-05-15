@@ -37,3 +37,4 @@ out/
 .vscode/
 
 /src/main/java/an/inhaintegration/service/InsertAdmin.java
+/src/main/java/an/inhaintegration/icross/service/ChangeCoursemosService.java
