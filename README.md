@@ -31,7 +31,7 @@ SWITCH는 인하대학교 전자공학과 학생회의 대여 사업과 학업 �
 
 ---
 
-## 모니터링
+## 모니터링 (Grafana 링크)
 
 ---
 http://ec2-13-209-198-107.ap-northeast-2.compute.amazonaws.com:3000/d/spring_boot_21/spring-boot-2-1-system-monitor?orgId=1&from=now-1h&to=now&timezone=browser&var-application=&var-instance=ec2-13-209-198-107.ap-northeast-2.compute.amazonaws.com:8082&var-hikaricp=HikariPool-1&var-memory_pool_heap=$__all&var-memory_pool_nonheap=$__all&refresh=5s
